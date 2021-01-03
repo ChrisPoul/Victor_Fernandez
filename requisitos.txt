@@ -1,0 +1,19 @@
+Base de datos de cada producto con:
+-Código del producto
+-Nombre
+-Descripción
+-Precio de compra
+-Precio de venta
+
+Cotizaciones
+-Todos los datos resumidos
+-Desglose de cada sistema
+
+
+Syscom:
+-Numero de cliente: 104525337
+-Contraseña: F8rnandez
+
+TVCEnLinea:
+-Numero de cliente: 60226
+-Contraseña: D4aniela
