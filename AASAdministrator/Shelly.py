@@ -10,164 +10,187 @@ def get_with_iva(price):
     return f"${price_with_iva}"
 
 
+class Item:
+
+    def __init__(self, values):
+        code, name, description, my_price, sell_price = values
+
+        self.code = code
+        self.name = name
+        self.description = dedent(description)
+        self.wholesaler_price = my_price
+        self.customer_price = sell_price
+
+
 class Shelly:
 
-    def __init__(self):
+    def __init__(self, values):
+        Item.__init__(self, values)
         self.brand = "ALLTERCO ROBOTICS EOOD"
+        self.image = ""
 
 
 class Shelly_1:
 
     def __init__(self):
-        self.code = "SHELLY1"
-        self.brand = "ALLTERCO ROBOTICS EOOD"
-        self.name = "Shelly 1"
-        self.image = ""
-        self.description = dedent("""
+        code = "SHELLY1"
+        name = "Shelly 1"
+        description = """
         Relevador / Interruptor WIFI
         Industrial y residencial inteligente /
         Hasta 16A / Soporta Google /Alexa /
         Nube P2P y control Local /
-        """)
-        self.wholesaler_price = 13.19
-        self.customer_price = 22.62
+        """
+        my_price = 13.19
+        sell_price = 22.62
+
+        values = [code, name, description, my_price, sell_price]
+        Shelly.__init__(self, values)
 
 
 class Shelly_Plug:
 
     def __init__(self):
-        self.code = "SHELLYPLUGS"
-        self.brand = "ALLTERCO ROBOTICS EOOD"
-        self.name = "Shelly Plug"
-        self.image = ""
-        self.description = dedent("""
+        code = "SHELLYPLUGS"
+        name = "Shelly Plug"
+        description = """
         Adaptador WIFI NUBE P2P Shelly,
         Tomacorriente, Calendarios,
         MEDICIÓN DE CONSUMO
-        """)
-        self.wholesaler_price = 24.94
-        self.customer_price = 40.60
+        """
+        my_price = 24.94
+        sell_price = 40.60
+
+        values = [code, name, description, my_price, sell_price]
+        Shelly.__init__(self, values)
 
 
 class Shelly_Dimmer:
 
     def __init__(self):
-        self.code = "SHELLYDIMMER"
-        self.brand = "ALLTERCO ROBOTICS EOOD"
-        self.name = "Shelly Dimmer"
-        self.image = ""
-        self.description = dedent("""
+        code = "SHELLYDIMMER"
+        name = "Shelly Dimmer"
+        description = """
         (MÁS PEQUEÑO DEL MUNDO) DIMMMER WIFI CLOUD /
         Inalámbrico residencial inteligente
         / Protección de sobre carga / 16A
         / Soporta Google / Alexa / Nube P2P y local /
-        """)
-        self.wholesaler_price = 27.80
-        self.customer_price = 45.24
+        """
+        my_price = 27.80
+        sell_price = 45.24
+
+        values = [code, name, description, my_price, sell_price]
+        Shelly.__init__(self, values)
 
 
 class Shelly_25:
 
     def __init__(self):
-        self.code = "SHELLY25"
-        self.brand = "ALLTERCO ROBOTICS EOOD"
-        self.name = "Shelly 25"
-        self.image = ""
-        self.description = dedent("""
+        code = "SHELLY25"
+        name = "Shelly 25"
+        description = """
         Doble Relevador / Interruptor WIFI
         CLOUD Industrial y residencial
         Inteligente / Medidor de consumo /
         10A / Soporta Google /Alexa /
         Nube P2P y local / Ideal para
         persinas y garege
-        """)
-        self.wholesaler_price = 21.38
-        self.customer_price = 45.24
+        """
+        my_price = 21.38
+        sell_price = 45.24
+
+        values = [code, name, description, my_price, sell_price]
+        Shelly.__init__(self, values)
 
 
 class Shelly_1_PM:
 
     def __init__(self):
-        self.code = "SHELLY1PM"
-        self.brand = "ALLTERCO ROBOTICS EOOD"
-        self.name = ""
-        self.image = "Shelly 1 PM"
-        self.description = dedent("""
+        code = "SHELLY1PM"
+        name = "Shelly 1 PM"
+        description = """
         Relevador / Interruptor WIFI CLOUD
         / Industrial y residencial Inteligente
         / Medidor de consumo, protección
         hasta 3500W / 16A / Soporta
         Google / Alexa / Nube P2P y
         control local /
-        """)
-        self.wholesaler_price = 16.39
-        self.customer_price = 33.64
+        """
+        my_price = 16.39
+        sell_price = 33.64
+
+        values = [code, name, description, my_price, sell_price]
+        Shelly.__init__(self, values)
 
 
 class Shelly_HT:
 
     def __init__(self):
-        self.code = "SHELLYHT"
-        self.brand = "ALLTERCO ROBOTICS EOOD"
-        self.name = "Shelly HT"
-        self.image = ""
-        self.description = dedent("""
+        code = "SHELLYHT"
+        name = "Shelly HT"
+        description = """
         Sensor inalámbrico de temperatura
         y humedad, App gratis, métricas de
         lectura en graficas y notificaciones
         en celular.
-        """)
-        self.wholesaler_price = 26.37
-        self.customer_price = 42.92
+        """
+        my_price = 26.37
+        sell_price = 42.92
+
+        values = [code, name, description, my_price, sell_price]
+        Shelly.__init__(self, values)
 
 
 class Shelly_RGBW2:
 
     def __init__(self):
-        self.code = "SHELLY-RGBW2"
-        self.brand = "ALLTERCO ROBOTICS EOOD"
-        self.name = "Shelly RGBW2"
-        self.image = ""
-        self.description = dedent("""
+        code = "SHELLY-RGBW2"
+        name = "Shelly RGBW2"
+        description = """
         Relevador inalámbrico para el
         control de iluminación color en
         tiras LED.
-        """)
-        self.wholesaler_price = 28.51
-        self.customer_price = 46.40
+        """
+        my_price = 28.51
+        sell_price = 46.40
+
+        values = [code, name, description, my_price, sell_price]
+        Shelly.__init__(self, values)
 
 
 class Shelly_1L:
 
     def __init__(self):
-        self.code = "SHELLY1L"
-        self.brand = "ALLTERCO ROBOTICS EOOD"
-        self.name = "Shelly 1L"
-        self.image = ""
-        self.description = dedent("""
+        code = "SHELLY1L"
+        name = "Shelly 1L"
+        description = """
         Relevador SIN usar cable Neutro /
         Interruptor WIFI INDUSTRIAL
         Industrial y residencial inteligente /
         Hasta 5A / Soporta Google /Alexa /
         Nube P2P y control Local /
-        """)
-        self.wholesaler_price = 21.38
-        self.customer_price = 34.80
+        """
+        my_price = 21.38
+        sell_price = 34.80
+
+        values = [code, name, description, my_price, sell_price]
+        Shelly.__init__(self, values)
 
 
 class Shelly_HC7:
 
     def __init__(self):
-        self.code = "HC7"
-        self.brand = "ALLTERCO ROBOTICS EOOD"
-        self.name = "Shelly HC7"
-        self.image = ""
-        self.description = dedent("""
+        code = "HC7"
+        name = "Shelly HC7"
+        description = """
         HUB Controlador inteligente para
         dispositivos Zwave, Zigbee,
         integrable con Shelly, Lutron entre
         otras, APP gratis sin pago de
         anualidad o mensualidad.
-        """)
-        self.wholesaler_price = 144.68
-        self.customer_price = 235.48
+        """
+        my_price = 144.68
+        sell_price = 235.48
+
+        values = [code, name, description, my_price, sell_price]
+        Shelly.__init__(self, values)
