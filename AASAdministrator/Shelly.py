@@ -7,7 +7,7 @@ def get_with_iva(price):
     if price_with_iva[-2:] == ".0":
         price_with_iva += "0"
 
-    return "$" + price_with_iva
+    return f"${price_with_iva}"
 
 
 class Shelly:
