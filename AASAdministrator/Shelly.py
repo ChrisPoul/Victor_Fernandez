@@ -1,28 +1,7 @@
-from textwrap import dedent
+from Base_Item import Item
 
 
-def get_with_iva(price):
-    price_with_iva = str(round(price * 1.16, 2))
-
-    if price_with_iva[-2:] == ".0":
-        price_with_iva += "0"
-
-    return f"${price_with_iva}"
-
-
-class Item:
-
-    def __init__(self, values):
-        code, name, description, my_price, sell_price = values
-
-        self.code = code
-        self.name = name
-        self.description = dedent(description)
-        self.wholesaler_price = my_price
-        self.customer_price = sell_price
-
-
-class Shelly:
+class Shelly(Item):
 
     def __init__(self, values):
         Item.__init__(self, values)
@@ -30,7 +9,7 @@ class Shelly:
         self.image = ""
 
 
-class Shelly_1:
+class Shelly_1(Shelly):
 
     def __init__(self):
         code = "SHELLY1"
@@ -48,7 +27,7 @@ class Shelly_1:
         Shelly.__init__(self, values)
 
 
-class Shelly_Plug:
+class Shelly_Plug(Shelly):
 
     def __init__(self):
         code = "SHELLYPLUGS"
@@ -65,7 +44,7 @@ class Shelly_Plug:
         Shelly.__init__(self, values)
 
 
-class Shelly_Dimmer:
+class Shelly_Dimmer(Shelly):
 
     def __init__(self):
         code = "SHELLYDIMMER"
@@ -83,7 +62,7 @@ class Shelly_Dimmer:
         Shelly.__init__(self, values)
 
 
-class Shelly_25:
+class Shelly_25(Shelly):
 
     def __init__(self):
         code = "SHELLY25"
@@ -103,7 +82,7 @@ class Shelly_25:
         Shelly.__init__(self, values)
 
 
-class Shelly_1_PM:
+class Shelly_1_PM(Shelly):
 
     def __init__(self):
         code = "SHELLY1PM"
@@ -123,7 +102,7 @@ class Shelly_1_PM:
         Shelly.__init__(self, values)
 
 
-class Shelly_HT:
+class Shelly_HT(Shelly):
 
     def __init__(self):
         code = "SHELLYHT"
@@ -141,7 +120,7 @@ class Shelly_HT:
         Shelly.__init__(self, values)
 
 
-class Shelly_RGBW2:
+class Shelly_RGBW2(Shelly):
 
     def __init__(self):
         code = "SHELLY-RGBW2"
@@ -158,7 +137,7 @@ class Shelly_RGBW2:
         Shelly.__init__(self, values)
 
 
-class Shelly_1L:
+class Shelly_1L(Shelly):
 
     def __init__(self):
         code = "SHELLY1L"
@@ -177,7 +156,7 @@ class Shelly_1L:
         Shelly.__init__(self, values)
 
 
-class Shelly_HC7:
+class Shelly_HC7(Shelly):
 
     def __init__(self):
         code = "HC7"
