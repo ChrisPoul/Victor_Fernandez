@@ -18,8 +18,7 @@ class Shelly_1(Shelly):
         Relevador / Interruptor WIFI
         Industrial y residencial inteligente /
         Hasta 16A / Soporta Google /Alexa /
-        Nube P2P y control Local /
-        """
+        Nube P2P y control Local /"""
         my_price = 13.19
         sell_price = 22.62
 
@@ -35,8 +34,7 @@ class Shelly_Plug(Shelly):
         description = """
         Adaptador WIFI NUBE P2P Shelly,
         Tomacorriente, Calendarios,
-        MEDICIÓN DE CONSUMO
-        """
+        MEDICIÓN DE CONSUMO"""
         my_price = 24.94
         sell_price = 40.60
 
@@ -53,8 +51,7 @@ class Shelly_Dimmer(Shelly):
         (MÁS PEQUEÑO DEL MUNDO) DIMMMER WIFI CLOUD /
         Inalámbrico residencial inteligente
         / Protección de sobre carga / 16A
-        / Soporta Google / Alexa / Nube P2P y local /
-        """
+        / Soporta Google / Alexa / Nube P2P y local /"""
         my_price = 27.80
         sell_price = 45.24
 
@@ -73,8 +70,7 @@ class Shelly_25(Shelly):
         Inteligente / Medidor de consumo /
         10A / Soporta Google /Alexa /
         Nube P2P y local / Ideal para
-        persinas y garege
-        """
+        persinas y garage"""
         my_price = 21.38
         sell_price = 45.24
 
@@ -93,8 +89,7 @@ class Shelly_1_PM(Shelly):
         / Medidor de consumo, protección
         hasta 3500W / 16A / Soporta
         Google / Alexa / Nube P2P y
-        control local /
-        """
+        control local /"""
         my_price = 16.39
         sell_price = 33.64
 
@@ -111,8 +106,7 @@ class Shelly_HT(Shelly):
         Sensor inalámbrico de temperatura
         y humedad, App gratis, métricas de
         lectura en graficas y notificaciones
-        en celular.
-        """
+        en celular."""
         my_price = 26.37
         sell_price = 42.92
 
@@ -128,8 +122,7 @@ class Shelly_RGBW2(Shelly):
         description = """
         Relevador inalámbrico para el
         control de iluminación color en
-        tiras LED.
-        """
+        tiras LED."""
         my_price = 28.51
         sell_price = 46.40
 
@@ -147,8 +140,7 @@ class Shelly_1L(Shelly):
         Interruptor WIFI INDUSTRIAL
         Industrial y residencial inteligente /
         Hasta 5A / Soporta Google /Alexa /
-        Nube P2P y control Local /
-        """
+        Nube P2P y control Local /"""
         my_price = 21.38
         sell_price = 34.80
 
@@ -166,8 +158,7 @@ class Shelly_HC7(Shelly):
         dispositivos Zwave, Zigbee,
         integrable con Shelly, Lutron entre
         otras, APP gratis sin pago de
-        anualidad o mensualidad.
-        """
+        anualidad o mensualidad."""
         my_price = 144.68
         sell_price = 235.48
 
