@@ -10,7 +10,7 @@ class Item:
         self.code = code
         self.name = name
         self.description = dedent(description)
-        self.wholesaler_price = my_price
-        self.wholesaler_price_iva = add_iva(my_price)
-        self.customer_price = sell_price
-        self.customer_price_iva = add_iva(sell_price)
+        self.my_price = my_price
+        self.my_price_iva = add_iva(my_price)
+        self.sell_price = sell_price
+        self.sell_price_iva = add_iva(sell_price)
