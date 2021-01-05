@@ -21,7 +21,7 @@ while stop_signal == 0:
         print(f"Total de venta con IVA: {add_iva(sell_total)} USD o {add_iva(convert_to_pesos(sell_total))} MXN")
 
     products_list = product_catalog.product_catalog
-    names_list = [product["name"] for product in products_list]
+    names_list = product_catalog.product_catalog
 
     for product in products_list:
         product_name = product["name"]

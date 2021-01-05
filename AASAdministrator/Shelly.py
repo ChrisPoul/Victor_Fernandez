@@ -1,12 +1,4 @@
-from Base_Item import Item
-
-
-class Shelly(Item):
-
-    def __init__(self, values):
-        Item.__init__(self, values)
-        self.brand = "ALLTERCO ROBOTICS EOOD"
-        self.image = ""
+from AASAdministrator.Base_Item import Item
 
 
 class Shelly_1(Shelly):
