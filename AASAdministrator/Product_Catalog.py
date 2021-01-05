@@ -1,11 +1,11 @@
-from Shelly import Shelly_1, Shelly_1L, Shelly_HC7, Shelly_Plug, Shelly_RGBW2
-from Shelly import Shelly_Dimmer, Shelly_25, Shelly_1_PM, Shelly_HT
-from Functions import get_name_list, get_correct_object, get_correct_name
+from AASAdministrator.Shelly import Shelly_1, Shelly_1L, Shelly_HC7, Shelly_Plug, Shelly_RGBW2
+from AASAdministrator.Shelly import Shelly_Dimmer, Shelly_25, Shelly_1_PM, Shelly_HT
+from AASAdministrator.Functions import get_name_list
 
 
-def get_all_products(product_list):
+def get_all_products(product_object_list):
     products = []
-    for product_sub_list in product_list:
+    for product_sub_list in product_object_list:
         products += [vars(product) for product in product_sub_list]
 
     return products
@@ -36,24 +36,59 @@ class Product_Catalog:
         self.product_names = get_name_list(self.product_catalog)
 
 
-    def get_product_attributes(self, product_name):
-        for product in self.product_catalog:
-            if product_attributes["name"] == product_name:
-                return product_attributes
+    def get_attribute_values(self, search_term):
+        values = []
+        dict_list = self.product_catalog
+
+        for dictionary in dict_list:
+            for attribute in dictionary:
+                if attribute in search_term:
+                    values.append(dictionary[attribute])
+
+        return values
 
 
-    def add_products(self, products):
+    def get_correct_name(self, search_term):
+        names_list = self.product_names
+        similar_names = [name for name in names_list if name in search_term]
+
+        max_len = 0
+        larger_name = ""
+        for name in similar_names:
+            if len(name) > max_len:
+                max_len = len(name)
+                larger_name = name
+
+        return larger_name
+
+
+    def get_object(self, name):
+        dictionary_list = self.product_catalog
+        for dictionary in dictionary_list:
+            if dictionary["name"] == name:
+                return dictionary
+
+
+    def get_correct_object(self, search_term):
+        dictionary_list = self.product_catalog
+        name_list = get_name_list(dictionary_list)
+        correct_name = self.get_correct_name(search_term)
+
+        return self.get_object(correct_name)
+
+
+    def add_products(self, name_and_cuantity):
         total = 0
-        for product_name in products:
-            product_cuantity = products[product_name]
+        for product_name in name_and_cuantity:
+            product_cuantity = name_and_cuantity[product_name]
 
-            product_attributes = self.get_product_attributes(product_name)
+            product_attributes = self.get_object(product_name)
             unit_price = product_attributes["my_price"]
 
             product_total_price = unit_price * product_cuantity
             total += product_total_price
 
-        return total
+        return round(total, 2)
 
 
     def sum_mode(self):
@@ -67,21 +102,21 @@ class Product_Catalog:
                 stop_signal = 1
                 break
 
-            product_name = get_correct_name(user_input, self.product_names)
+            product_name = self.get_correct_name(user_input)
 
             if product_name == "" or product_name not in self.product_names:
                 print("Not an option")
 
             else:
-                product = get_correct_object(user_input, self.product_catalog)
-                unit_my_price = product["my_price"]
+                product = self.get_object(product_name)
+                my_unit_price = product["my_price"]
                 unit_sell_price = product["sell_price"]
 
                 start = len(product_name) + 1
                 cuantity = user_input[start:].strip(" ")
                 try:
                     cuantity = int(cuantity)
-                    my_total += unit_my_price * cuantity
+                    my_total += my_unit_price * cuantity
                     sell_total += unit_sell_price * cuantity
 
                 except ValueError:
