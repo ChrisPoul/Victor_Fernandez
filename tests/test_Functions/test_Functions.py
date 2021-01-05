@@ -1,5 +1,5 @@
-from AASAdministrator.Functions import format_price, add_iva, convert_to_pesos, get_name_list
-from AASAdministrator.Functions import get_repeated_characters, get_unique_characters
+from Functions import format_price, add_iva, convert_to_pesos, get_name_list
+from Functions import get_repeated_characters, get_unique_characters
 
 
 def test_get_name_list():
