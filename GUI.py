@@ -4,64 +4,64 @@ from Product_Catalog import Product_Catalog
 product_catalog = Product_Catalog()
 
 window = tk.Tk()
-window.rowconfigure([0, 1], weight=1, minsize=1)
 
-product = product_catalog.product_catalog[0]
-for i, key in enumerate(product):
-    window.columnconfigure(i, weight=1, minsize=50)
-
-    frame = tk.Frame(
-        master=window,
-        relief=tk.RAISED,
-        borderwidth=1
-    )
-    frame.grid(row=0, column=i, padx=3, pady=3, sticky="ew")
-
-    lbl_key = tk.Label(
-        master=frame,
-        text=key,
-        relief=tk.RIDGE,
-        height=2,
-        borderwidth=1
-    )
-    lbl_key.pack(fill=tk.X, padx=5, pady=5)
-
-    lbl_value = tk.Label(
-        master=frame,
-        text=product[key],
-        relief=tk.SUNKEN,
-        height=6
-    )
-    lbl_value.pack(fill=tk.X, padx=5, pady=5)
-
-
-window.columnconfigure(i+1, weight=1, minsize=50)
-frm_amnt = tk.Frame(
+top_frm = tk.Frame(
     master=window,
-    relief=tk.RAISED,
-    borderwidth=1
+    relief=tk.GROOVE,
+    borderwidth=2
 )
-frm_amnt.grid(row=0, column=i+1, padx=3, pady=3, sticky="w")
+top_frm.pack(fill=tk.X, expand=True,)
 
-lbl_amnt = tk.Label(
-    master=frm_amnt,
-    text="amnt.",
-    relief=tk.RIDGE,
-    height=2,
-    width=5,
-    borderwidth=1
-)
-lbl_amnt.pack(padx=5, pady=5)
+for key in product_catalog.products_list[0]:
+    key_frame = tk.Frame(
+        master=top_frm,
+        relief=tk.RIDGE,
+        borderwidth=1
+    )
+    key_frame.pack(fill=tk.X, expand=True, side=tk.LEFT)
 
-lbl_amnt_value = tk.Label(
-    master=frm_amnt,
-    text=0,
-    relief=tk.SUNKEN,
-    height=6,
-    width=5,
+    key_lbl = tk.Label(
+        master=key_frame,
+        text=key,
+        height=1
+    )
+    key_lbl.pack(fill=tk.X, expand=True, padx=5, pady=5)
+
+bottom_frm = tk.Frame(
+    master=window,
     borderwidth=1
 )
-lbl_amnt_value.pack(padx=5, pady=5)
+bottom_frm.pack(fill=tk.BOTH, expand=True)
+
+for i, product in enumerate(product_catalog.products_list):
+    product["amnt."] = 0
+    product["Total"] = 0
+
+    bottom_frm.rowconfigure(i, weight=1, minsize=50)
+
+    for j, key in enumerate(product):
+        bottom_frm.columnconfigure(j, weight=1, minsize=50)
+
+        main_frame = tk.Frame(
+            master=bottom_frm,
+            relief=tk.RAISED,
+            borderwidth=1
+        )
+        main_frame.grid(row=i, column=j, padx=2, pady=2, sticky="nsew")
+
+        frm_value = tk.Frame(
+            master=main_frame,
+            relief=tk.SUNKEN,
+            borderwidth=1
+        )
+        frm_value.pack(fill=tk.X, expand=True)
+
+        lbl_value = tk.Label(
+            master=frm_value,
+            text=product[key],
+            height=5
+        )
+        lbl_value.pack(fill=tk.X, expand=True)
 
 
 window.mainloop()
