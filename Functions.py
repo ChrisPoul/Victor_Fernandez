@@ -35,11 +35,11 @@ def convert_to_pesos(price):
 
 def get_product_total(product, cuantity):
     total = 0
-    unit_price = float(product["my_price"])
+    unit_price = float(product["sell_price"])
 
     total = unit_price * int(cuantity)
 
-    return round(total, 2)
+    return add_iva(total)
 
 
 def add_totals(totals_lst):
