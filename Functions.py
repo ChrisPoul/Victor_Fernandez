@@ -39,7 +39,7 @@ def get_product_total(product, cuantity):
 
     total = unit_price * int(cuantity)
 
-    return add_iva(total)
+    return round(total, 2)
 
 
 def add_totals(totals_lst):

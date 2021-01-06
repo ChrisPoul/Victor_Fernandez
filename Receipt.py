@@ -46,7 +46,7 @@ class Receipt:
             user_input = ent_amnt.get()
             amnt = int(user_input)
             total = get_product_total(product, amnt)
-            lbl_value["text"] = total
+            lbl_value["text"] = add_iva(total)
 
 
         for i, product in enumerate(products):
