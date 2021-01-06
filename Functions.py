@@ -29,37 +29,18 @@ def convert_to_pesos(price):
     return price_in_pesos
 
 
-def get_repeated_characters(product_names):
-    repeated_chars = product_names[0]
-    for name in product_names:
-        register = ""
-        for i, char in enumerate(name):
-            try:
-                if char == repeated_chars[i]:
-                    register += char
+def get_product_total(product, cuantity):
+    total = 0
+    unit_price = float(product["my_price"])
 
-            except IndexError:
-                pass
+    total = unit_price * int(cuantity)
 
-        repeated_chars = register
-
-    return repeated_chars
+    return round(total, 2)
 
 
-def get_unique_characters(names):
-    repeated_chars = get_repeated_characters(names)
-    unique_chars = []
+def add_totals(totals_lst):
+    grand_total = 0
+    for total in totals_lst:
+        grand_total += float(total)
 
-    for name in names:
-        register = ""
-        for i, char in enumerate(name):
-            try:
-                if char == repeated_chars[i]:
-                    pass
-
-            except IndexError:
-                register += char
-
-        unique_chars.append(register)
-
-    return unique_chars
+    return round(grand_total, 2)
