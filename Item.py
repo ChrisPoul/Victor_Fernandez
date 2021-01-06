@@ -14,11 +14,6 @@ class Item:
         self.image = image
 
         self.my_price = float(my_price)
+        self.my_price_iva = add_iva(my_price)
         self.sell_price = float(sell_price)
-
-
-    def prices_iva(self):
-        my_price_iva = add_iva(self.my_price)
-        sell_price_iva = add_iva(self.sell_price)
-
-        return my_price_iva, sell_price_iva
+        self.sell_price_iva = add_iva(sell_price)
