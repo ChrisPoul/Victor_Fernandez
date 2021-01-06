@@ -17,7 +17,6 @@ def get_product_values():
 
     product_catalog = Product_Catalog()
     product_catalog.add_product(product_values)
-    print(product_catalog.product_names[-1])
 
 
 window = tk.Tk()

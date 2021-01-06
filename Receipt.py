@@ -85,6 +85,7 @@ class Receipt:
 
                 else:
                     if key == "Total":
+                        value = format_price(value)
                         btn_total = tk.Button(
                             master=frm_value,
                             text="=",
