@@ -3,8 +3,8 @@ from Product_Catalog import Product_Catalog
 from Functions import format_price, add_iva, convert_to_pesos
 
 product_catalog = Product_Catalog()
-products_list = product_catalog.product_catalog
-names_list = product_catalog.product_catalog
+products_list = product_catalog.products_list
+names_list = product_catalog.products_list
 
 stop_signal = 0
 system("clear")
@@ -23,7 +23,11 @@ while stop_signal == 0:
         print(f"Total de venta con IVA: {add_iva(sell_total)} USD o {add_iva(convert_to_pesos(sell_total))} MXN")
 
     elif user_input.startswith("Add Product"):
-        user_inputs = [input(f"{key}: ") for key in product_catalog.product_catalog[0]]
+        user_inputs = []
+        for key in product_catalog.products_list[0]:
+            if key != "my_price_iva" and key != "sell_price_iva":
+                user_inputs.append(input(f"{key}: "))
+
         product_catalog.add_product(user_inputs)
 
     for product in products_list:
@@ -33,7 +37,6 @@ while stop_signal == 0:
             print(product[user_input])
 
         if product_name == product_catalog.get_correct_name(user_input):
-            print("yes")
             correct_product = product_catalog.get_correct_product(user_input)
 
             for attribute in correct_product:
