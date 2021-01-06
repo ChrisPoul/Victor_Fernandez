@@ -17,7 +17,11 @@ def format_price(price):
 
 
 def add_iva(price):
-    price_with_iva = round(price * 1.16, 2)
+    try:
+        price_with_iva = round(price * 1.16, 2)
+
+    except TypeError:
+        return "error"
 
     return format_price(price_with_iva)
 
