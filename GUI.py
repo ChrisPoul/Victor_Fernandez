@@ -1,15 +1,14 @@
 import tkinter as tk
 from Product_Catalog import Product_Catalog
+from Functions import format_price, add_iva
 
 product_catalog = Product_Catalog()
 
 window = tk.Tk()
 
-first_product = product_catalog.products_list[0]
-first_product["amnt."] = 0
-first_product["Total"] = 0
+spanish_keys = ["Codigo", "Nombre", "Descripción", "Marca", "Imagen", "Mi precio", "Mi precio mas iva", "Precio de Venta", "Precio Venta mas iva", "amnt.", "Total"]
 
-for i, key in enumerate(first_product):
+for i, key in enumerate(spanish_keys):
     window.rowconfigure(0, weight=1, minsize=50)
     window.columnconfigure(i, weight=1, minsize=50)
 
@@ -35,6 +34,16 @@ for i, product in enumerate(product_catalog.products_list):
 
     for j, key in enumerate(product):
         window.columnconfigure(j, weight=1, minsize=50)
+        value = product[key]
+        my_wrap_length = 400
+        my_justify = "left"
+
+        if key == "my_price" or key == "sell_price":
+            value = format_price(value)
+
+        elif key == "brand":
+            my_wrap_length = 60
+            my_justify = "center"
 
         frm_value = tk.Frame(
             master=window,
@@ -46,9 +55,10 @@ for i, product in enumerate(product_catalog.products_list):
 
         lbl_value = tk.Label(
             master=frm_value,
-            text=product[key],
+            text=value,
             relief=tk.GROOVE,
-            wraplength=400,
+            wraplength=my_wrap_length,
+            justify=my_justify,
             height=3
         )
         lbl_value.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
