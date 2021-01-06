@@ -1,144 +1,31 @@
 from Item import Item
 from Functions import get_name_list, get_product_total
+import json
 
 
-def get_all_products(product_object_list):
-    products = [vars(product) for product in product_object_list]
+def open_database():
+    with open("Product_Database.json", "r") as database:
+        product_list = json.load(database)
 
-    return products
+        return product_list
 
-group = "Electronicos"
-line = "Shelly"
-code = "SHELLY1"
-name = "Shelly 1"
-description = """Relevador / Interruptor WIFI Industrial y residencial inteligente / Hasta 16A / Soporta Google /Alexa / Nube P2P y control Local /"""
-brand = "ALLTERCO ROBOTICS EOOD"
-image = ""
-my_price = 13.19
-sell_price = 22.62
-values = [group, line, code, name, description, brand, image, my_price, sell_price]
-shelly_1 = Item(values)
 
-group = "Electronicos"
-line = "Shelly"
-code = "SHELLYPLUGS"
-name = "Shelly Plug"
-description = """Adaptador WIFI NUBE P2P Shelly, Tomacorriente, Calendarios, MEDICIÓN DE CONSUMO"""
-brand = "ALLTERCO ROBOTICS EOOD"
-image = ""
-my_price = 24.94
-sell_price = 40.60
-values = [group, line, code, name, description, brand, image, my_price, sell_price]
-shelly_plug = Item(values)
+def close_database(product_list):
+    json_data = json.dumps(product_list, indent=4)
 
-group = "Electronicos"
-line = "Shelly"
-code = "SHELLYDIMMER"
-name = "Shelly Dimmer"
-description = """(MÁS PEQUEÑO DEL MUNDO) DIMMMER WIFI CLOUD / Inalámbrico residencial inteligente / Protección de sobre carga / 16A / Soporta Google / Alexa / Nube P2P y local /"""
-brand = "ALLTERCO ROBOTICS EOOD"
-image = ""
-my_price = 27.80
-sell_price = 45.24
-values = [group, line, code, name, description, brand, image, my_price, sell_price]
-shelly_dimmer = Item(values)
-
-group = "Electronicos"
-line = "Shelly"
-code = "SHELLY25"
-name = "Shelly 25"
-description = """Doble Relevador / Interruptor WIFI CLOUD Industrial y residencial Inteligente / Medidor de consumo / 10A / Soporta Google /Alexa / Nube P2P y local / Ideal para persinas y garage"""
-brand = "ALLTERCO ROBOTICS EOOD"
-image = ""
-my_price = 21.38
-sell_price = 45.24
-values = [group, line, code, name, description, brand, image, my_price, sell_price]
-shelly_25 = Item(values)
-
-group = "Electronicos"
-line = "Shelly"
-code = "SHELLY1PM"
-name = "Shelly 1 PM"
-description = """Relevador / Interruptor WIFI CLOUD / Industrial y residencial Inteligente / Medidor de consumo, protección hasta 3500W / 16A / Soporta Google / Alexa / Nube P2P y control local /"""
-brand = "ALLTERCO ROBOTICS EOOD"
-image = ""
-my_price = 16.39
-sell_price = 33.64
-values = [group, line, code, name, description, brand, image, my_price, sell_price]
-shelly_1_pm = Item(values)
-
-group = "Electronicos"
-line = "Shelly"
-code = "SHELLYHT"
-name = "Shelly HT"
-description = """Sensor inalámbrico de temperatura y humedad, App gratis, métricas de lectura en graficas y notificaciones en celular."""
-brand = "ALLTERCO ROBOTICS EOOD"
-image = ""
-my_price = 26.37
-sell_price = 42.92
-values = [group, line, code, name, description, brand, image, my_price, sell_price]
-shelly_ht = Item(values)
-
-group = "Electronicos"
-line = "Shelly"
-code = "SHELLY-RGBW2"
-name = "Shelly RGBW2"
-description = "Relevador inalámbrico para el control de iluminación color en tiras LED."
-brand = "ALLTERCO ROBOTICS EOOD"
-image = ""
-my_price = 28.51
-sell_price = 46.40
-values = [group, line, code, name, description, brand, image, my_price, sell_price]
-shelly_rgbw2 = Item(values)
-
-group = "Electronicos"
-line = "Shelly"
-code = "SHELLY1L"
-name = "Shelly 1L"
-description = """Relevador SIN usar cable Neutro / Interruptor WIFI INDUSTRIAL Industrial y residencial inteligente / Hasta 5A / Soporta Google /Alexa / Nube P2P y control Local /"""
-brand = "ALLTERCO ROBOTICS EOOD"
-image = ""
-my_price = 21.38
-sell_price = 34.80
-values = [group, line, code, name, description, brand, image, my_price, sell_price]
-shelly_1l = Item(values)
-
-group = "Electronicos"
-line = "Shelly"
-code = "HC7"
-name = "Shelly HC7"
-description = """HUB Controlador inteligente para dispositivos Zwave, Zigbee, integrable con Shelly, Lutron entreotras, APP gratis sin pago de anualidad o mensualidad."""
-brand = "ALLTERCO ROBOTICS EOOD"
-image = ""
-my_price = 144.68
-sell_price = 235.48
-values = [group, line, code, name, description, brand, image, my_price, sell_price]
-shelly_hc7 = Item(values)
-
-product_list = [
-    shelly_1, shelly_1l, shelly_hc7,
-    shelly_plug, shelly_dimmer, shelly_25,
-    shelly_1_pm, shelly_ht, shelly_rgbw2
-]
+    with open("Product_Database.json", "w") as database:
+        database.write(json_data)
 
 
 class Product_Catalog:
 
     def __init__(self):
-        self.products_list = get_all_products(product_list)
+        self.products_list = open_database()
         self.product_names = get_name_list(self.products_list)
 
 
-    def get_attribute_values(self, search_term):
-        values = []
-        dict_list = self.products_list
-
-        for dictionary in dict_list:
-            for attribute in dictionary:
-                if attribute in search_term:
-                    values.append(dictionary[attribute])
-
-        return values
+    def get_initial_keys(self):
+        pass
 
 
     def get_correct_name(self, search_term):
@@ -176,6 +63,7 @@ class Product_Catalog:
         new_product_name = new_product_dict["name"]
 
         self.products_list.append(new_product_dict)
+        close_database(self.products_list)
         self.product_names.append(new_product_name)
 
 
