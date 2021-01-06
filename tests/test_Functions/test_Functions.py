@@ -1,5 +1,5 @@
 from Functions import format_price, add_iva, convert_to_pesos, get_name_list
-from Functions import get_repeated_characters, get_unique_characters
+from Functions import get_product_total, add_totals
 
 
 def test_get_name_list():
@@ -24,6 +24,7 @@ def test_add_iva():
 
     assert add_iva(price1) == "$116.00"
     assert add_iva(price2) == "$965.27"
+    assert add_iva("string") == "error"
 
 
 def test_convert_to_pesos():
@@ -34,13 +35,18 @@ def test_convert_to_pesos():
     assert convert_to_pesos(dollars2) == 954.24
 
 
-def test_get_repeated_characters():
-    names_list = ["Shelly 1", "Shelly 1 PM", "Shelly Plug"]
+def test_get_product_total():
+    product1 = {"name": "Test", "sell_price": 10}
+    product2 = {"name": "Test 2", "sell_price": 16.12}
+    cuantity = "4"
 
-    assert get_repeated_characters(names_list) == "Shelly "
+    assert get_product_total(product1, cuantity) == 40.0
+    assert get_product_total(product2, cuantity) == 64.48
 
 
-def test_get_unique_characters():
-    names_list = ["Shelly 1", "Shelly 1 PM", "Shelly Plug"]
+def test_add_totals():
+    totals1 = [350, 156.23]
+    totals2 = [0, -100.02, 110]
 
-    assert get_unique_characters(names_list) == ["1", "1 PM", "Plug"]
+    assert add_totals(totals1) == 506.23
+    assert add_totals(totals2) == 9.98
