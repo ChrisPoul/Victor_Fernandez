@@ -7,11 +7,9 @@ product_catalog = Product_Catalog()
 receipt = Receipt()
 window = tk.Tk()
 
-# Top line
 for key in receipt.wanted_names:
     receipt.first_row(window)
 
-# Body
 receipt.body(window, product_catalog.products_list)
 
 window.mainloop()
