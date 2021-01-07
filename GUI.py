@@ -1,38 +1,68 @@
 import tkinter as tk
 from Product_Catalog import Product_Catalog
-from Receipt import Receipt
-from Functions import format_price, add_iva, get_product_total
+from Receipt_GUI import Receipt_GUI
+from Inventory_GUI import Inventory_GUI
+from Product_Manager_GUI import Product_Manager_GUI
 
-product_catalog = Product_Catalog()
-products = product_catalog.products_list
-
-receipt = Receipt()
 
 window = tk.Tk()
 
-frm_body = tk.Frame(
+def open_receipt():
+    frame.destroy()
+    frm_receipt = tk.Frame(
+        master=window
+    )
+    frm_receipt.pack(fill=tk.BOTH, expand=True)
+
+    receipt = Receipt_GUI(frm_receipt)
+
+
+def open_inventory():
+    frame.destroy()
+
+    frm_inventory = tk.Frame(
+        master=window
+    )
+    frm_inventory.pack(fill=tk.BOTH, expand=True)
+
+    inventory = Inventory_GUI(frm_inventory)
+
+
+def open_product_manager():
+    frame.destroy()
+
+    frm_product_manager = tk.Frame(
+        master=window
+    )
+    frm_product_manager.pack(fill=tk.BOTH, expand=True)
+    product_manager = Product_Manager_GUI(frm_product_manager)
+
+
+frame = tk.Frame(
     master=window
 )
-frm_body.pack(fill=tk.BOTH, expand=True)
+frame.pack(fill=tk.BOTH, expand=True)
 
-frm_main_body = tk.Frame(
-    master=frm_body
+btn_receipt = tk.Button(
+    master=frame,
+    text="Receipt",
+    command=open_receipt
 )
-frm_main_body.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
-receipt.main_body(frm_main_body, products)
+btn_receipt.pack()
 
-frm_totals_body = tk.Frame(
-    master=frm_body
+btn_inventory = tk.Button(
+    master=frame,
+    text="Inventory",
+    command=open_inventory
 )
-frm_totals_body.pack(fill=tk.BOTH, expand=True, side=tk.RIGHT)
-receipt.totals_body(frm_totals_body, products)
+btn_inventory.pack()
 
-frm_submit = tk.Frame(
-    master=window,
-    height=2
+btn_product_manager = tk.Button(
+    master=frame,
+    text="Product Manager",
+    command=open_product_manager
 )
-frm_submit.pack(fill=tk.X)
-receipt.submit(frm_submit, products)
+btn_product_manager.pack()
 
 
 window.mainloop()
