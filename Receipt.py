@@ -21,13 +21,13 @@ class Receipt:
         }
 
 
-    def first_row(self, window):
+    def first_row(self, frm_body):
         for i, key in enumerate(self.wanted_names):
-            window.rowconfigure(0, weight=1, minsize=50)
-            window.columnconfigure(i, weight=1, minsize=50)
+            frm_body.rowconfigure(0, weight=1, minsize=50)
+            frm_body.columnconfigure(i, weight=1, minsize=50)
 
             key_frame = tk.Frame(
-                master=window,
+                master=frm_body,
                 relief=tk.RAISED,
                 borderwidth=1
             )
@@ -41,7 +41,7 @@ class Receipt:
             key_lbl.pack(fill=tk.X, expand=True, side=tk.BOTTOM)
 
 
-    def body(self, window, products):
+    def main_body(self, frm_body, products):
         def get_total():
             user_input = ent_amnt.get()
             amnt = int(user_input)
@@ -52,10 +52,10 @@ class Receipt:
         for i, product in enumerate(products):
             product["amnt."] = 0
             product["Total"] = 0
-            window.rowconfigure(i+1, weight=1, minsize=50)
+            frm_body.rowconfigure(i+1, weight=1, minsize=50)
 
             for j, key in enumerate(self.wanted_names):
-                window.columnconfigure(j, weight=1, minsize=50)
+                frm_body.columnconfigure(j, weight=1, minsize=50)
                 value = product[key]
                 my_wrap_length = 400
                 my_justify = "left"
@@ -68,7 +68,7 @@ class Receipt:
                     my_justify = "center"
 
                 frm_value = tk.Frame(
-                    master=window,
+                    master=frm_body,
                     relief=tk.SUNKEN,
                     height=4,
                     borderwidth=1
@@ -79,19 +79,14 @@ class Receipt:
                     ent_amnt = tk.Entry(
                         master=frm_value,
                         justify="center",
-                        width=5
+                        width=5,
+                        textvariable=value
                     )
                     ent_amnt.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
 
                 else:
                     if key == "Total":
                         value = format_price(value)
-                        btn_total = tk.Button(
-                            master=frm_value,
-                            text="=",
-                            command=get_total
-                        )
-                        btn_total.pack(side=tk.LEFT)
 
                     lbl_value = tk.Label(
                         master=frm_value,
@@ -102,3 +97,11 @@ class Receipt:
                         height=3
                     )
                     lbl_value.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
+
+
+    def totals_body(self, frm_totals_body):
+        pass
+
+
+    def submit(self, frm_submit):
+        pass
