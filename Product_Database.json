@@ -128,18 +128,5 @@
         "my_price_iva": "$23.20",
         "sell_price": 40.0,
         "sell_price_iva": "$46.40"
-    },
-    {
-        "group": "Test Group",
-        "line": "Test Line",
-        "code": "TEST2",
-        "name": "Test 2",
-        "description": "a test",
-        "brand": "Test",
-        "image": "",
-        "my_price": 14.56,
-        "my_price_iva": "$16.89",
-        "sell_price": 20.9,
-        "sell_price_iva": "$24.24"
     }
 ]
