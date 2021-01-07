@@ -1,5 +1,5 @@
 from Functions import format_price, add_iva, convert_to_pesos, get_name_list
-from Functions import get_product_total, add_totals
+from Functions import get_product_total, add_totals, add_commas_price
 
 
 def test_get_name_list():
@@ -8,6 +8,12 @@ def test_get_name_list():
 
     assert get_name_list(dictionary_list) == ["Shelly 1", "Shelly 1 PM"]
     assert get_name_list(empty_list) == []
+
+
+def test_add_commas_price():
+    assert add_commas_price("1000.00") == "1,000.00"
+    assert add_commas_price("0.00") == "0.00"
+    assert add_commas_price("1000000000.00") == "1,000,000,000.00"
 
 
 def test_format_price():
@@ -24,7 +30,7 @@ def test_add_iva():
 
     assert add_iva(price1) == "$116.00"
     assert add_iva(price2) == "$965.27"
-    assert add_iva("string") == "error"
+    assert add_iva("string") == "$0.00"
 
 
 def test_convert_to_pesos():

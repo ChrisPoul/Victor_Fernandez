@@ -6,6 +6,25 @@ def get_name_list(dictionary_list):
     return names
 
 
+def add_commas_price(price):
+    price_parts = price.split(".")
+    price_int = price_parts[0]
+
+    comma_track = 1
+    int_with_commas = ""
+    for i, num in enumerate(price_int[::-1]):
+        int_with_commas += num
+        if comma_track == 3 and i != len(price_int)-1:
+            int_with_commas += ","
+            comma_track = 0
+
+        comma_track += 1
+
+    price_with_commas = f"{int_with_commas[::-1]}.{price_parts[1]}"
+
+    return price_with_commas
+
+
 def format_price(price):
     price = str(price)
     if "." not in price:
@@ -14,7 +33,9 @@ def format_price(price):
     elif price[-2] == ".":
         price += "0"
 
-    return f"${price}"
+    price_with_commas = add_commas_price(price)
+
+    return f"${price_with_commas}"
 
 
 def add_iva(price):
@@ -22,7 +43,7 @@ def add_iva(price):
         price_with_iva = round(price * 1.16, 2)
 
     except TypeError:
-        return "error"
+        price_with_iva = 0
 
     return format_price(price_with_iva)
 
@@ -48,10 +69,10 @@ def add_totals(totals_lst):
     for total in totals_lst:
         grand_total += float(total)
 
-    return grand_total
+    return round(grand_total, 2)
 
 
-def first_row(frm_body, wanted_names):
+def top_row(frm_body, wanted_names):
     for i, key in enumerate(wanted_names):
         frm_body.rowconfigure(0, weight=1, minsize=50)
         frm_body.columnconfigure(i, weight=1, minsize=50)
@@ -69,3 +90,49 @@ def first_row(frm_body, wanted_names):
             height=2
         )
         key_lbl.pack(fill=tk.X, expand=True, side=tk.BOTTOM)
+
+
+def main_body(frm_body, products, wanted_names):
+
+    top_row(frm_body, wanted_names)
+
+    def get_total():
+        user_input = ent_amnt.get()
+        amnt = int(user_input)
+        total = get_product_total(product, amnt)
+        lbl_value["text"] = add_iva(total)
+
+
+    for i, product in enumerate(products):
+        frm_body.rowconfigure(i+1, weight=1, minsize=50)
+
+        for j, key in enumerate(wanted_names):
+            frm_body.columnconfigure(j, weight=1, minsize=50)
+            value = product[key]
+            my_wrap_length = 400
+            my_justify = "left"
+
+            if key == "my_price" or key == "sell_price":
+                value = format_price(value)
+
+            elif key == "brand":
+                my_wrap_length = 60
+                my_justify = "center"
+
+            frm_value = tk.Frame(
+                master=frm_body,
+                relief=tk.SUNKEN,
+                height=4,
+                borderwidth=1
+            )
+            frm_value.grid(row=i+1, column=j, padx=2, pady=2, sticky="nsew")
+
+            lbl_value = tk.Label(
+                master=frm_value,
+                text=value,
+                relief=tk.GROOVE,
+                wraplength=my_wrap_length,
+                justify=my_justify,
+                height=3
+            )
+            lbl_value.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
