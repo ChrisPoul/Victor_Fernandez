@@ -2,22 +2,9 @@ import tkinter as tk
 from Item import Item
 from Product_Catalog import Product_Catalog
 
-def get_product_values():
-    product_values = [
-        ent_group.get(),
-        ent_line.get(),
-        ent_code.get(),
-        ent_name.get(),
-        ent_description.get(),
-        ent_brand.get(),
-        ent_image.get(),
-        float(ent_my_price.get()),
-        float(ent_sell_price.get())
-    ]
+product_catalog = Product_Catalog()
 
-    product_catalog = Product_Catalog()
-    product_catalog.add_product(product_values)
-
+product_attributes = [attribute for attribute in product_catalog.products_list[0] if "iva" not in attribute][2:]
 
 window = tk.Tk()
 
@@ -76,103 +63,33 @@ frm_items = tk.Frame(
 )
 frm_items.pack(side=tk.LEFT)
 
+entries = [ent_group, ent_line]
+for i, attribute in enumerate(product_attributes):
+    lbl_attribute = tk.Label(
+        master=frm_items,
+        text=attribute
+    )
+    lbl_attribute.grid(row=i, column=0)
 
+    ent_attribute = tk.Entry(
+        master=frm_items
+    )
+    ent_attribute.grid(row=i, column=1)
+    entries.append(ent_attribute)
 
-lbl_code = tk.Label(
-    master=frm_items,
-    text="code"
-)
-lbl_code.grid(row=0, column=0, sticky="w")
+def get_user_input():
+    values = []
+    for entry in entries:
+        values.append(entry.get())
+        entry.delete(0, tk.END)
 
-ent_code = tk.Entry(
-    master=frm_items,
-    width=15
-)
-ent_code.grid(row=0, column=1, sticky="w")
-
-
-lbl_name = tk.Label(
-    master=frm_items,
-    text="name"
-)
-lbl_name.grid(row=1, column=0, sticky="w")
-
-ent_name = tk.Entry(
-    master=frm_items,
-    width=15
-)
-ent_name.grid(row=1, column=1, sticky="w")
-
-
-lbl_description = tk.Label(
-    master=frm_items,
-    text="description"
-)
-lbl_description.grid(row=2, column=0, sticky="w")
-
-ent_description = tk.Entry(
-    master=frm_items,
-    width=15
-)
-ent_description.grid(row=2, column=1, sticky="w")
-
-
-lbl_brand = tk.Label(
-    master=frm_items,
-    text="brand"
-)
-lbl_brand.grid(row=3, column=0, sticky="w")
-
-ent_brand = tk.Entry(
-    master=frm_items,
-    width=15
-)
-ent_brand.grid(row=3, column=1, sticky="w")
-
-
-lbl_image = tk.Label(
-master=frm_items,
-text="image"
-)
-lbl_image.grid(row=4, column=0, sticky="w")
-
-ent_image = tk.Entry(
-master=frm_items,
-width=15
-)
-ent_image.grid(row=4, column=1, sticky="w")
-
-
-lbl_my_price = tk.Label(
-    master=frm_items,
-    text="my_price"
-)
-lbl_my_price.grid(row=5, column=0, sticky="w")
-
-ent_my_price = tk.Entry(
-    master=frm_items,
-    width=15
-)
-ent_my_price.grid(row=5, column=1, sticky="w")
-
-
-lbl_sell_price = tk.Label(
-    master=frm_items,
-    text="sell_price"
-)
-lbl_sell_price.grid(row=6, column=0, sticky="w")
-
-ent_sell_price = tk.Entry(
-    master=frm_items,
-    width=15
-)
-ent_sell_price.grid(row=6, column=1, sticky="w")
+    product_catalog.add_product(values)
 
 
 btn_done = tk.Button(
     master=window,
     text="Done",
-    command=get_product_values
+    command=get_user_input
 )
 btn_done.pack()
 
