@@ -1,5 +1,5 @@
 import tkinter as tk
-from Functions import format_price, add_iva, get_product_total, first_row
+from Functions import format_price, add_iva, get_product_total, first_row, add_totals, convert_to_pesos
 
 
 
@@ -82,7 +82,7 @@ class Receipt:
 
 
         self.amnts = []
-        self.totals = []
+        self.lbl_totals = []
         for i, product in enumerate(products):
             frm_totals_body.rowconfigure(i+1, weight=1, minsize=50)
 
@@ -119,21 +119,48 @@ class Receipt:
                         height=3
                     )
                     lbl_value.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
-                    self.totals.append(lbl_value)
+                    self.lbl_totals.append(lbl_value)
 
 
 
     def submit(self, frm_submit, products):
+        self.total = 0
         def get_totals():
+            totals = [0]
             for i, amnt in enumerate(self.amnts):
                 try:
                     cuantity = int(amnt.get())
                     product_total = get_product_total(products[i], cuantity)
-                    self.totals[i]["text"] = add_iva(product_total)
+                    products[i]["Total"] = product_total
+                    totals.append(product_total)
+                    self.lbl_totals[i]["text"] = add_iva(product_total)
 
                 except ValueError:
                     pass
 
+            self.total = add_totals(totals)
+            lbl_total_dollars["text"] = add_iva(self.total)
+
+            total_pesos = add_iva(convert_to_pesos(self.total))
+            lbl_total_pesos["text"] = total_pesos
+
+        lbl_total_dollars = tk.Label(
+            master=frm_submit,
+            text=format_price(self.total),
+            relief=tk.RAISED,
+            borderwidth=2,
+            height=2
+        )
+        lbl_total_dollars.pack(side=tk.RIGHT, padx=5, pady=5)
+
+        lbl_total_pesos = tk.Label(
+            master=frm_submit,
+            text=f"Pesos Mexicanos: {format_price(self.total)}",
+            relief=tk.RAISED,
+            borderwidth=2,
+            height=2
+        )
+        lbl_total_pesos.pack(side=tk.RIGHT, padx=5, pady=5)
 
         btn_submit = tk.Button(
             master=frm_submit,
@@ -143,4 +170,4 @@ class Receipt:
             height=2,
             command=get_totals
         )
-        btn_submit.pack(fill=tk.X, expand=True, side=tk.RIGHT)
+        btn_submit.pack(side=tk.RIGHT)
