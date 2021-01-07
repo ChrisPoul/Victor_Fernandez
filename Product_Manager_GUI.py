@@ -8,11 +8,11 @@ class Product_Manager_GUI(Product_Catalog):
 
     def __init__(self, window):
         product = Product()
-        product = vars(product)
+        self.product = vars(product)
         Product_Catalog.__init__(self)
         self.window = window
 
-        keys = [key for key in product]
+        keys = [key for key in self.product]
         self.first_two = keys[:2]
         self.fields = keys[2:]
         self.entries = []
@@ -46,13 +46,9 @@ class Product_Manager_GUI(Product_Catalog):
             self.entries.append(ent)
 
 
-    def main_body(self):
-        window = self.window
-
-        self.top_part()
-
+    def bottom_part(self):
         frm_product = tk.Frame(
-            master=window
+            master=self.window
         )
         frm_product.pack()
 
@@ -62,23 +58,32 @@ class Product_Manager_GUI(Product_Catalog):
         )
         lbl_product.pack()
 
-        frm_items = tk.Frame(
+        frm_field = tk.Frame(
             master=frm_product
         )
-        frm_items.pack(side=tk.LEFT)
+        frm_field.pack(side=tk.LEFT)
 
         for i, field in enumerate(self.fields):
             lbl_attribute = tk.Label(
-                master=frm_items,
+                master=frm_field,
                 text=field
             )
             lbl_attribute.grid(row=i, column=0)
 
             ent_attribute = tk.Entry(
-                master=frm_items
+                master=frm_field
             )
+            ent_attribute.insert(0, self.product[field])
             ent_attribute.grid(row=i, column=1)
             self.entries.append(ent_attribute)
+
+
+    def main_body(self):
+        window = self.window
+
+        self.top_part()
+
+        self.bottom_part()
 
         def get_user_input():
             values = []
