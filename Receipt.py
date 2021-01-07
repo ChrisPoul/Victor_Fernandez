@@ -1,5 +1,5 @@
 import tkinter as tk
-from Functions import format_price, add_iva, get_product_total
+from Functions import format_price, add_iva, get_product_total, first_row
 
 
 
@@ -21,27 +21,14 @@ class Receipt:
         }
 
 
-    def first_row(self, frm_body):
-        for i, key in enumerate(self.wanted_names):
-            frm_body.rowconfigure(0, weight=1, minsize=50)
-            frm_body.columnconfigure(i, weight=1, minsize=50)
-
-            key_frame = tk.Frame(
-                master=frm_body,
-                relief=tk.RAISED,
-                borderwidth=1
-            )
-            key_frame.grid(row=0, column=i, padx=2, pady=5, sticky="ews")
-
-            key_lbl = tk.Label(
-                master=key_frame,
-                text=self.wanted_names[key],
-                height=2
-            )
-            key_lbl.pack(fill=tk.X, expand=True, side=tk.BOTTOM)
-
-
     def main_body(self, frm_body, products):
+        wanted_names = {}
+        for key in self.wanted_names:
+            if key != "amnt." and key != "Total":
+                wanted_names[key] = self.wanted_names[key]
+
+        first_row(frm_body, wanted_names)
+
         def get_total():
             user_input = ent_amnt.get()
             amnt = int(user_input)
@@ -50,11 +37,9 @@ class Receipt:
 
 
         for i, product in enumerate(products):
-            product["amnt."] = 0
-            product["Total"] = 0
             frm_body.rowconfigure(i+1, weight=1, minsize=50)
 
-            for j, key in enumerate(self.wanted_names):
+            for j, key in enumerate(wanted_names):
                 frm_body.columnconfigure(j, weight=1, minsize=50)
                 value = product[key]
                 my_wrap_length = 400
@@ -75,33 +60,87 @@ class Receipt:
                 )
                 frm_value.grid(row=i+1, column=j, padx=2, pady=2, sticky="nsew")
 
+                lbl_value = tk.Label(
+                    master=frm_value,
+                    text=value,
+                    relief=tk.GROOVE,
+                    wraplength=my_wrap_length,
+                    justify=my_justify,
+                    height=3
+                )
+                lbl_value.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
+
+
+    def totals_body(self, frm_totals_body, products):
+
+        wanted_names = {}
+        for key in self.wanted_names:
+            if key == "amnt." or key == "Total":
+                wanted_names[key] = self.wanted_names[key]
+
+        first_row(frm_totals_body, wanted_names)
+
+
+        self.amnts = []
+        self.totals = []
+        for i, product in enumerate(products):
+            frm_totals_body.rowconfigure(i+1, weight=1, minsize=50)
+
+            for key in wanted_names:
+                product[key] = 0
+
+            for j, key in enumerate(wanted_names):
+                frm_totals_body.columnconfigure(j, weight=1, minsize=50)
+                value = product[key]
+
+                frm_value = tk.Frame(
+                master=frm_totals_body,
+                relief=tk.SUNKEN,
+                height=4,
+                borderwidth=1
+                )
+                frm_value.grid(row=i+1, column=j, padx=2, pady=2, sticky="nsew")
+
                 if key == "amnt.":
                     ent_amnt = tk.Entry(
                         master=frm_value,
                         justify="center",
-                        width=5,
-                        textvariable=value
+                        width=5
                     )
                     ent_amnt.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
+                    self.amnts.append(ent_amnt)
 
-                else:
-                    if key == "Total":
-                        value = format_price(value)
-
+                elif key == "Total":
+                    value = format_price(value)
                     lbl_value = tk.Label(
                         master=frm_value,
                         text=value,
                         relief=tk.GROOVE,
-                        wraplength=my_wrap_length,
-                        justify=my_justify,
                         height=3
                     )
                     lbl_value.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
+                    self.totals.append(lbl_value)
 
 
-    def totals_body(self, frm_totals_body):
-        pass
+
+    def submit(self, frm_submit, products):
+        def get_totals():
+            for i, amnt in enumerate(self.amnts):
+                try:
+                    cuantity = int(amnt.get())
+                    product_total = get_product_total(products[i], cuantity)
+                    self.totals[i]["text"] = add_iva(product_total)
+
+                except ValueError:
+                    pass
 
 
-    def submit(self, frm_submit):
-        pass
+        btn_submit = tk.Button(
+            master=frm_submit,
+            text="Get Total",
+            relief=tk.RAISED,
+            borderwidth=2,
+            height=2,
+            command=get_totals
+        )
+        btn_submit.pack(fill=tk.X, expand=True, side=tk.RIGHT)

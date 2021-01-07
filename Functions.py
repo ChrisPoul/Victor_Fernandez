@@ -1,3 +1,4 @@
+import tkinter as tk
 
 def get_name_list(dictionary_list):
     names = [dictionary["name"] for dictionary in dictionary_list]
@@ -47,4 +48,24 @@ def add_totals(totals_lst):
     for total in totals_lst:
         grand_total += float(total)
 
-    return round(grand_total, 2)
+    return grand_total
+
+
+def first_row(frm_body, wanted_names):
+    for i, key in enumerate(wanted_names):
+        frm_body.rowconfigure(0, weight=1, minsize=50)
+        frm_body.columnconfigure(i, weight=1, minsize=50)
+
+        key_frame = tk.Frame(
+            master=frm_body,
+            relief=tk.RAISED,
+            borderwidth=1
+        )
+        key_frame.grid(row=0, column=i, padx=2, pady=5, sticky="ews")
+
+        key_lbl = tk.Label(
+            master=key_frame,
+            text=wanted_names[key],
+            height=2
+        )
+        key_lbl.pack(fill=tk.X, expand=True, side=tk.BOTTOM)
