@@ -1,59 +1,55 @@
 import tkinter as tk
 from Item import Item
 from Product_Catalog import Product_Catalog
+from Item import Product
 
 
 class Product_Manager_GUI(Product_Catalog):
 
     def __init__(self, window):
+        product = Product()
+        product = vars(product)
         Product_Catalog.__init__(self)
         self.window = window
-        self.fields = [attribute for attribute in self.products_list[0] if "iva" not in attribute][2:]
+
+        keys = [key for key in product]
+        self.first_two = keys[:2]
+        self.fields = keys[2:]
+        self.entries = []
 
         self.main_body()
+
+
+    def top_part(self):
+        for key in self.first_two:
+            frm = tk.Frame(
+                master=self.window
+            )
+            frm.pack()
+
+            lbl = tk.Label(
+                master=frm,
+                text=f"{key}:"
+            )
+            lbl.pack()
+            ent = tk.Entry(
+                master=frm
+            )
+            ent.pack()
+
+            frm_empty = tk.Frame(
+                master=self.window,
+                height=50
+            )
+            frm_empty.pack()
+
+            self.entries.append(ent)
 
 
     def main_body(self):
         window = self.window
 
-        frm_group = tk.Frame(
-            master=window
-        )
-        frm_group.pack()
-
-        lbl_group = tk.Label(
-            master=frm_group,
-            text="Enter a Group:"
-        )
-        lbl_group.pack()
-        ent_group = tk.Entry(
-            master=frm_group
-        )
-        ent_group.pack()
-
-        frm_empty = tk.Frame(
-            master=window,
-            height=50
-        )
-        frm_empty.pack()
-
-
-        frm_line = tk.Frame(
-            master=window
-        )
-        frm_line.pack()
-
-
-        lbl_line = tk.Label(
-            master=frm_line,
-            text="Enter a Line:"
-        )
-        lbl_line.pack()
-        ent_line = tk.Entry(
-            master=frm_line
-        )
-        ent_line.pack()
-
+        self.top_part()
 
         frm_product = tk.Frame(
             master=window
@@ -71,7 +67,6 @@ class Product_Manager_GUI(Product_Catalog):
         )
         frm_items.pack(side=tk.LEFT)
 
-        entries = [ent_group, ent_line]
         for i, field in enumerate(self.fields):
             lbl_attribute = tk.Label(
                 master=frm_items,
@@ -83,15 +78,15 @@ class Product_Manager_GUI(Product_Catalog):
                 master=frm_items
             )
             ent_attribute.grid(row=i, column=1)
-            entries.append(ent_attribute)
+            self.entries.append(ent_attribute)
 
         def get_user_input():
             values = []
-            for entry in entries:
+            for entry in self.entries:
                 values.append(entry.get())
                 entry.delete(0, tk.END)
 
-            product_catalog.add_product(values)
+            self.add_product(values)
 
 
         btn_done = tk.Button(
