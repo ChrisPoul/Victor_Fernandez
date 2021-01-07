@@ -24,10 +24,6 @@ class Product_Catalog:
         self.product_names = get_name_list(self.products_list)
 
 
-    def get_initial_keys(self):
-        pass
-
-
     def get_correct_name(self, search_term):
         names_list = self.product_names
         similar_names = [name for name in names_list if name in search_term]
@@ -48,6 +44,8 @@ class Product_Catalog:
             if dictionary["name"] == name:
                 return dictionary
 
+        return "NA"
+
 
     def get_correct_product(self, search_term):
         dictionary_list = self.products_list
@@ -67,35 +65,8 @@ class Product_Catalog:
         self.product_names.append(new_product_name)
 
 
-    def sum_mode(self):
-        stop_signal = 0
-        my_total = 0
-        sell_total = 0
-        while stop_signal == 0:
-            user_input = input("Enter product and cuantity:\n")
-
-            if user_input == "exit" or user_input == "":
-                stop_signal = 1
-                break
-
-            product_name = self.get_correct_name(user_input)
-
-            if product_name == "" or product_name not in self.product_names:
-                print("Not an option")
-
-            else:
-                product = self.get_product(product_name)
-                my_unit_price = product["my_price"]
-                unit_sell_price = product["sell_price"]
-
-                start = len(product_name) + 1
-                cuantity = user_input[start:].strip(" ")
-                try:
-                    cuantity = int(cuantity)
-                    my_total += my_unit_price * cuantity
-                    sell_total += unit_sell_price * cuantity
-
-                except ValueError:
-                    print("Not a valid number, try again.")
-
-        return my_total, sell_total
+    def remove_product(self, name):
+        product = self.get_product(name)
+        self.products_list.remove(product)
+        close_database(self.products_list)
+        self.product_names.remove(name)
