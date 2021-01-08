@@ -66,7 +66,7 @@ class Product_Catalog:
 
 
     def remove_product(self, name):
-        product = self.get_product(name)
+        product = self.get_correct_product(name)
         self.products_list.remove(product)
         close_database(self.products_list)
         self.product_names.remove(name)

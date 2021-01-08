@@ -32,3 +32,18 @@ class Inventory_GUI(Product_Catalog):
         frm_main_body.pack(fill=tk.BOTH, expand=True)
 
         main_body(frm_main_body, products, wanted_names)
+        frm_main_body.columnconfigure(len(wanted_names), weight=1)
+
+        for i, product in enumerate(products):
+            def delete_product():
+                self.remove_product(btn_delete["text"])
+                frm_main_body.destroy()
+                self.main_body()
+
+            btn_delete = tk.Button(
+                master=frm_main_body,
+                text=product["name"],
+                command=delete_product,
+                width=1
+            )
+            btn_delete.grid(row=i+1, column=len(wanted_names), padx=1, pady=1, sticky="wn")
