@@ -74,8 +74,8 @@ def add_totals(totals_lst):
 
 def top_row(frm_body, wanted_names):
     for i, key in enumerate(wanted_names):
-        frm_body.rowconfigure(0, weight=1, minsize=50)
-        frm_body.columnconfigure(i, weight=1, minsize=50)
+        frm_body.rowconfigure(0, weight=1)
+        frm_body.columnconfigure(i, weight=1)
 
         key_frame = tk.Frame(
             master=frm_body,
@@ -104,10 +104,10 @@ def main_body(frm_body, products, wanted_names):
 
 
     for i, product in enumerate(products):
-        frm_body.rowconfigure(i+1, weight=1, minsize=50)
+        frm_body.rowconfigure(i+1, weight=1)
 
         for j, key in enumerate(wanted_names):
-            frm_body.columnconfigure(j, weight=1, minsize=50)
+            frm_body.columnconfigure(j, weight=1)
             value = product[key]
             my_wrap_length = 400
             my_justify = "left"
@@ -122,7 +122,6 @@ def main_body(frm_body, products, wanted_names):
             frm_value = tk.Frame(
                 master=frm_body,
                 relief=tk.SUNKEN,
-                height=4,
                 borderwidth=1
             )
             frm_value.grid(row=i+1, column=j, padx=2, pady=2, sticky="nsew")
@@ -132,7 +131,6 @@ def main_body(frm_body, products, wanted_names):
                 text=value,
                 relief=tk.GROOVE,
                 wraplength=my_wrap_length,
-                justify=my_justify,
-                height=3
+                justify=my_justify
             )
             lbl_value.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)

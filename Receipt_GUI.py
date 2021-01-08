@@ -28,7 +28,6 @@ class Receipt_GUI(Product_Catalog):
         self.frm_body.pack(fill=tk.BOTH, expand=True)
 
         self.main_body()
-        self.totals_body()
         self.submit_body()
 
 
@@ -46,9 +45,10 @@ class Receipt_GUI(Product_Catalog):
         frm_main.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
         main_body(frm_main, products, wanted_names)
+        self.totals_body(frm_main)
 
 
-    def totals_body(self):
+    def totals_body(self, frm_main):
         products = self.products_list
 
         wanted_names = {}
@@ -56,53 +56,46 @@ class Receipt_GUI(Product_Catalog):
             if key == "amnt." or key == "Total":
                 wanted_names[key] = self.wanted_names[key]
 
-        frm_totals = tk.Frame(
-            master=self.frm_body
-        )
-        frm_totals.pack(fill=tk.BOTH, expand=True, side=tk.RIGHT)
-
-        top_row(frm_totals, wanted_names)
+        top_row(frm_main, self.wanted_names)
 
         self.amnts = []
         self.lbl_totals = []
         for i, product in enumerate(products):
-            frm_totals.rowconfigure(i+1, weight=1, minsize=50)
+            frm_main.rowconfigure(i+1, weight=1)
 
             for key in wanted_names:
                 product[key] = 0
 
-            for j, key in enumerate(wanted_names):
-                frm_totals.columnconfigure(j, weight=1, minsize=50)
-                value = product[key]
+            for j, key in enumerate(self.wanted_names):
+                if key == "Total" or key == "amnt.":
+                    frm_main.columnconfigure(j, weight=1)
+                    value = product[key]
 
-                frm_value = tk.Frame(
-                master=frm_totals,
-                relief=tk.SUNKEN,
-                height=4,
-                borderwidth=1
-                )
-                frm_value.grid(row=i+1, column=j, padx=2, pady=2, sticky="nsew")
-
-                if key == "amnt.":
-                    ent_amnt = tk.Entry(
-                        master=frm_value,
-                        justify="center",
-                        width=5
+                    frm_value = tk.Frame(
+                        master=frm_main,
+                        relief=tk.SUNKEN,
+                        borderwidth=1
                     )
-                    ent_amnt.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
-                    self.amnts.append(ent_amnt)
+                    frm_value.grid(row=i+1, column=j, padx=2, pady=2, sticky="nsew")
 
-                elif key == "Total":
-                    value = format_price(value)
-                    lbl_value = tk.Label(
-                        master=frm_value,
-                        text=value,
-                        relief=tk.GROOVE,
-                        height=3
-                    )
-                    lbl_value.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
-                    self.lbl_totals.append(lbl_value)
+                    if key == "amnt.":
+                        ent_amnt = tk.Entry(
+                            master=frm_value,
+                            justify="center",
+                            width=5
+                        )
+                        ent_amnt.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
+                        self.amnts.append(ent_amnt)
 
+                    elif key == "Total":
+                        value = format_price(value)
+                        lbl_value = tk.Label(
+                            master=frm_value,
+                            text=value,
+                            relief=tk.GROOVE
+                        )
+                        lbl_value.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
+                        self.lbl_totals.append(lbl_value)
 
 
     def submit_body(self):

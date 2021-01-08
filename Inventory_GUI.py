@@ -26,4 +26,9 @@ class Inventory_GUI(Product_Catalog):
         wanted_names = self.wanted_names
         products = self.products_list
 
-        main_body(self.window, products, wanted_names)
+        frm_main_body = tk.Frame(
+            master=self.window
+        )
+        frm_main_body.pack(fill=tk.BOTH, expand=True)
+
+        main_body(frm_main_body, products, wanted_names)
