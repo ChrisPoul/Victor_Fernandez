@@ -88,8 +88,10 @@ class Product_Manager_GUI(Product_Catalog):
         def get_user_input():
             values = []
             for entry in self.entries:
-                values.append(entry.get())
-                entry.delete(0, tk.END)
+                value = entry.get()
+                values.append(value)
+                if value != "0.0":
+                    entry.delete(0, tk.END)
 
             self.add_product(values)
 
