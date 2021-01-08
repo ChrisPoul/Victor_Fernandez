@@ -92,45 +92,42 @@ def top_row(frm_body, wanted_names):
         key_lbl.pack(fill=tk.X, expand=True, side=tk.BOTTOM)
 
 
+def add_row(frm_body, product, wanted_names, row_number):
+    for j, key in enumerate(wanted_names):
+        frm_body.columnconfigure(j, weight=1)
+        value = product[key]
+        my_wrap_length = 400
+        my_justify = "left"
+
+        if key == "my_price" or key == "sell_price":
+            value = format_price(value)
+
+        elif key == "brand":
+            my_wrap_length = 60
+            my_justify = "center"
+
+        frm_value = tk.Frame(
+            master=frm_body,
+            relief=tk.SUNKEN,
+            borderwidth=1
+        )
+        frm_value.grid(row=row_number+1, column=j, padx=2, pady=2, sticky="nsew")
+
+        lbl_value = tk.Label(
+            master=frm_value,
+            text=value,
+            relief=tk.GROOVE,
+            wraplength=my_wrap_length,
+            justify=my_justify
+        )
+        lbl_value.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
+
+
 def main_body(frm_body, products, wanted_names):
 
     top_row(frm_body, wanted_names)
 
-    def get_total():
-        user_input = ent_amnt.get()
-        amnt = int(user_input)
-        total = get_product_total(product, amnt)
-        lbl_value["text"] = add_iva(total)
-
-
     for i, product in enumerate(products):
         frm_body.rowconfigure(i+1, weight=1)
 
-        for j, key in enumerate(wanted_names):
-            frm_body.columnconfigure(j, weight=1)
-            value = product[key]
-            my_wrap_length = 400
-            my_justify = "left"
-
-            if key == "my_price" or key == "sell_price":
-                value = format_price(value)
-
-            elif key == "brand":
-                my_wrap_length = 60
-                my_justify = "center"
-
-            frm_value = tk.Frame(
-                master=frm_body,
-                relief=tk.SUNKEN,
-                borderwidth=1
-            )
-            frm_value.grid(row=i+1, column=j, padx=2, pady=2, sticky="nsew")
-
-            lbl_value = tk.Label(
-                master=frm_value,
-                text=value,
-                relief=tk.GROOVE,
-                wraplength=my_wrap_length,
-                justify=my_justify
-            )
-            lbl_value.pack(fill=tk.BOTH, expand=True, padx=1, pady=1)
+        add_row(frm_body, product, wanted_names, i)
