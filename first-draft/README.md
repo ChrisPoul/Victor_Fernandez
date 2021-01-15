@@ -8,10 +8,8 @@ se solucionó el problema de adquirir el input del usuario para las cantidades. 
 producto el sistema nos arroja los totales.
 
 POR HACER:
--Es necesario limpiar todo el código que se tiene hasta ahora antes de poder seguir, más especificamente es
- necesario limpiar Product_Manager, Receipt y GUI.
--Una vez hecho esto se puede proceder a crear una interfaz para ver el inverntario en la que se puedan ver todos
- sus datos y que estos puedan ser editados.
+-Debido a las limitacione del lenguaje se tendrá que re hacer el front end usando javascript.
+-El inventario debe ser editable
 -Despues se procederá a hacer que se puedan agregar productos al recibo con solo escribir el nombre.
 -Se debe contar con un "centro de control" gráfico donde se pueda llevar la administración de todas las variables
  que requieran ser cambiadas por el usuario.

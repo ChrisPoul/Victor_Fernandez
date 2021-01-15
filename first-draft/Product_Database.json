@@ -117,16 +117,16 @@
         "sell_price_iva": "$53.82"
     },
     {
-        "group": "Test Group",
-        "line": "Test Line",
-        "code": "TEST1",
-        "name": "Test 1",
-        "description": "a test",
-        "brand": "Test",
+        "group": "CONTROL DE ILUMINACI\u00d3N",
+        "line": "My Home Bticino",
+        "code": "F411/4",
+        "name": "Actuador 4 Relee",
+        "description": "BUS SCS",
+        "brand": "Bticino",
         "image": "",
-        "my_price": 20.0,
-        "my_price_iva": "$23.20",
-        "sell_price": 40.0,
-        "sell_price_iva": "$46.40"
+        "my_price": 200.0,
+        "my_price_iva": "$232.00",
+        "sell_price": 285.0,
+        "sell_price_iva": "$330.60"
     }
 ]

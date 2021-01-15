@@ -117,10 +117,10 @@ class Receipt_GUI(Product_Catalog):
                     pass
 
             self.total = add_totals(totals)
-            lbl_total_dollars["text"] = add_iva(self.total)
+            lbl_total_dollars["text"] = add_iva(self.total) + "USD"
 
             total_pesos = add_iva(convert_to_pesos(self.total))
-            lbl_total_pesos["text"] = total_pesos
+            lbl_total_pesos["text"] = f"{total_pesos}MXN"
 
         frm_submit = tk.Frame(
             master=window,
