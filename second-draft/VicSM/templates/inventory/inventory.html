@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>{% block title %}Inventory{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <nav class="post">
+        <h2 align="left">Código</h2>
+        <hr>
+        <h2>Nombre</h2>
+        <hr>
+        <h2>Descripción</h2>
+        <hr>
+        <h2>Marca</h2>
+        <hr>
+        <h2>Imagen</h2>
+        <hr>
+        <h2>Mi precio</h2>
+        <hr>
+        <h2>Precio Venta</h2>
+        <hr>
+        <h2>Inventario</h2>
+    </nav>
+    <hr>
+
+    {% for product in products %}
+        <article>
+            <nav class="post">
+                <h2 align="left">{{ product["codigo"] }}</h2>
+                <hr>
+                <h2>{{ product["nombre"] }}</h2>
+                <hr>
+                <input name="descripcion" id="descripcion" value="{{ product['descripcion'] }}">
+                <hr>
+                <h2>{{ product['marca'] }}</h2>
+                <hr>
+                <h2>{{ product['imagen'] }}</h2>
+                <hr>
+                <h2>{{ product['mi_precio'] }}</h2>
+                <hr>
+                <h2>{{ product['precio_venta'] }}</h2>
+                <hr>
+                <h2>{{ product['inventario'] }}</h2>
+            </nav>
+            <a href="{{ url_for('inventory.update_product', codigo=product['codigo']) }}">Update</a>
+        </article>
+    {% endfor %}
+{% endblock %}

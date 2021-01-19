@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>{% block title %}Update Product{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <label for="grupo">Grupo</label>
+    <input name="grupo" id="grupo" value="{{ product['grupo'] }}" required>
+    <label for="serie">Serie</label>
+    <input name="serie" id="serie" value="{{ product['serie'] }}" required>
+    <label for="descripcion">Descripción</label>
+    <textarea name="descripcion" id="descripcion">{{ product['descripcion'] }}</textarea>
+    <label for="marca">Marca</label>
+    <input name="marca" id="marca" value="{{ product['marca'] }}" required>
+    <label for="imagen">Imagen</label>
+    <input name="imagen" id="imagen" value="{{ product['imagen'] }}">
+    <label for="mi_precio">Mi precio</label>
+    <input name="mi_precio" id="mi_precio" value="{{ product['mi_precio'] }}" required>
+    <label for="precio_venta">Precio de venta</label>
+    <input name="precio_venta" id="precio_venta" value="{{ product['precio_venta'] }}" required>
+    <label for="inventario">Inventario</label>
+    <input name="inventario" id="inventario" value="{{ product['inventario'] }}" required>
+    <input type="submit" value="Submit">
+</form>
+<hr>
+<form action="{{ url_for('inventory.remove_product', codigo=product['codigo']) }}" method="post">
+    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+</form>
+{% endblock %}

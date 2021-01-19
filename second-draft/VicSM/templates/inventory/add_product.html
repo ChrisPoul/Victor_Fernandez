@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>{% block title %} Add Product{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <label for="grupo">Grupo</label>
+        <input name="grupo" id="grupo" required>
+        <label for="serie">Serie</label>
+        <input name="serie" id="serie" required>
+        <label for="codigo">Codigo</label>
+        <input name="codigo" id="codigo" required>
+        <label for="nombre">Nombre</label>
+        <input name="nombre" id="nombre" required>
+        <label for="descripcion">Descripción</label>
+        <textarea name="descripcion" id="descripcion"></textarea>
+        <label for="marca">Marca</label>
+        <input name="marca" id="marca" required>
+        <label for="imagen">Imagen</label>
+        <input name="imagen" id="imagen">
+        <label for="mi_precio">Mi precio</label>
+        <input name="mi_precio" id="mi_precio" required>
+        <label for="precio_venta">Precio de venta</label>
+        <input name="precio_venta" id="precio_venta" required>
+        <label for="inventario">Inventario</label>
+        <input name="inventario" id="inventario" required>
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}
