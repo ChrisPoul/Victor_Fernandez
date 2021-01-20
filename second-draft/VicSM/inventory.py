@@ -4,8 +4,9 @@ from flask import (
 from VicSM.db import get_db
 
 bp = Blueprint('inventory', __name__, url_prefix='/inventory')
+
 heads = [
-    "codigo", "nombre", "descripcion", "marca", 
+    "grupo", "serie", "codigo", "nombre", "descripcion", "marca", 
     "imagen", "mi_precio", "precio_venta", "inventario"
     ]
 
@@ -13,13 +14,14 @@ heads = [
 @bp.route('/')
 def inventory():
     db = get_db()
+    inv_heads = heads[2:]
     products = db.execute(
         'SELECT p.codigo, grupo, serie, nombre, descripcion,'
         ' marca, imagen, mi_precio, precio_venta, inventario'
         ' FROM product p'
     ).fetchall()
 
-    return render_template('inventory/inventory.html', products=products, heads=heads)
+    return render_template('inventory/inventory.html', products=products, heads=inv_heads)
 
 
 @bp.route('/add_product', methods=('GET', 'POST'))
@@ -55,7 +57,7 @@ def add_product():
 
             return redirect(url_for('inventory.inventory'))
 
-    return render_template('inventory/add_product.html')
+    return render_template('inventory/add_product.html', heads=heads)
 
 
 def get_product(codigo):
@@ -70,10 +72,13 @@ def get_product(codigo):
 @bp.route('/<string:codigo>/update_product', methods=('GET', 'POST'))
 def update_product(codigo):
     product = get_product(codigo)
+    update_heads = [head for head in heads if head != "codigo"]
+
 
     if request.method == 'POST':
         grupo = request.form["grupo"]
         serie = request.form["serie"]
+        nombre = request.form["nombre"]
         descripcion = request.form["descripcion"] 
         marca = request.form["marca"]
         imagen = request.form["imagen"]
@@ -91,16 +96,16 @@ def update_product(codigo):
         else:
             db = get_db()
             db.execute(
-                'UPDATE product SET grupo = ?, serie = ?, descripcion = ?,'
+                'UPDATE product SET grupo = ?, serie = ?, nombre = ?, descripcion = ?,'
                 ' marca = ?, imagen = ?, mi_precio = ?, precio_venta = ?,'
-                ' inventario = ? WHERE codigo = ?', (grupo, serie, descripcion,
+                ' inventario = ? WHERE codigo = ?', (grupo, serie, nombre, descripcion,
                 marca, imagen, mi_precio, precio_venta, inventario, codigo)
             )
             db.commit()
 
             return redirect(url_for('inventory.inventory'))
 
-    return render_template('inventory/update_product.html', product=product)
+    return render_template('inventory/update_product.html', product=product, heads=update_heads)
 
 
 @bp.route('/<string:codigo>/remove_product', methods=('POST',))
