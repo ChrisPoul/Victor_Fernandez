@@ -7,7 +7,31 @@
 {% block content %}
 <table style="width:100%">
     {% for head in heads %}
-    <th>{{ head }}</th>
+    <th>{{ head.capitalize() }}</th>
     {% endfor %}
+    <form method="post">
+    {% for product in products %}
+    <tr>
+        {% for head in heads %}
+        {% if head == "cantidad" %}
+        <td><input style="width: 50px" name="cantidad" id="cantidad"></td>
+        {% else %}
+        <td>{{ product[head] }}</td>
+        {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    <tr>
+        {% for head in heads %}
+            {% if head == "codigo" %}
+            <td><input style="width: 100px" name="codigo" id="codigo" value="{{ empty_product[head] }}"></td>
+            {% elif head == "total" %}
+            <td><input type="submit" value="Submit"></td>
+            {% else %}
+            <td>{{ empty_product[head] }}</td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    </form>
 </table>
 {% endblock %}

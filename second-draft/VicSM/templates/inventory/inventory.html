@@ -6,11 +6,9 @@
 
 {% block content %}
     <table style="width:100%">
-        <tr>
-            {% for head in heads %}
-                <th>{{ head.capitalize() }}</th>
-            {% endfor %}
-        </tr>
+        {% for head in heads %}
+            <th>{{ head.capitalize() }}</th>
+        {% endfor %}
         {% for product in products %}
             <tr>
                 {% for head in heads %}
