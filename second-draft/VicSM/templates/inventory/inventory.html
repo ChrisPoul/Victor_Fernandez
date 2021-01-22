@@ -12,7 +12,11 @@
         {% for product in products %}
             <tr>
                 {% for head in heads %}
+                    {% if head == "imagen" %}
+                    <td><image width="100px" height="100px" src="{{ url_for('static', filename='images/{}'.format(product[head])) }}"></image></td>
+                    {% else %}
                     <td>{{ product[head] }}</td>
+                    {% endif %}
                 {% endfor %}
                 <td><a href="{{ url_for('inventory.update_product', codigo=product['codigo']) }}">Update</a></td>
             </tr>

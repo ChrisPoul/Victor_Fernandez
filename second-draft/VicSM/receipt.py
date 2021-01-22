@@ -9,7 +9,8 @@ heads = [
     "codigo", "nombre", "descripcion", "marca", 
     "imagen", "precio_venta", "cantidad", "total"
     ]
-products = []
+products = {}
+totals = {}
 
 
 @bp.route('/receipt', methods=('GET', 'POST'))
@@ -23,11 +24,23 @@ def receipt():
     if request.method == "POST":
         codigo = request.form["codigo"]
         try:
-            cantidad = request.form["cantidad"]
+            for code in products:
+                cantidad = request.form[code]
+                try:
+                    cantidad = int(cantidad)
+                except ValueError:
+                    cantidad = 0
+
+                product = products[code]
+                totals[code] = cantidad * product["precio_venta"]
+                    
         except KeyError:
             pass
 
         product = get_product(codigo)
-        products.append(product)
 
-    return render_template('receipt/receipt.html', heads=heads, products=products, empty_product=empty_product)
+        if product is not None:
+            products[codigo] = product
+            
+
+    return render_template('receipt/receipt.html', heads=heads, products=products, empty_product=empty_product, totals=totals)

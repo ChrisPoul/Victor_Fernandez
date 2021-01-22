@@ -10,13 +10,15 @@
     <th>{{ head.capitalize() }}</th>
     {% endfor %}
     <form method="post">
-    {% for product in products %}
+    {% for code in products %}
     <tr>
         {% for head in heads %}
         {% if head == "cantidad" %}
-        <td><input style="width: 50px" name="cantidad" id="cantidad"></td>
+            <td><input style="width: 50px" name="{{ code }}" id="{{ code }}"></td>
+        {% elif head == "total" %}
+            <td>{{ totals[code] }}</td>
         {% else %}
-        <td>{{ product[head] }}</td>
+        <td>{{ products[code][head] }}</td>
         {% endif %}
         {% endfor %}
     </tr>

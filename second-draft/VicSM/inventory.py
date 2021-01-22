@@ -1,7 +1,8 @@
 from flask import (
-    Blueprint, g, render_template, request, flash, redirect, url_for
+    Blueprint, g, render_template, request, flash, redirect, url_for, current_app
 )
 from VicSM.db import get_db
+import os
 
 bp = Blueprint('inventory', __name__, url_prefix='/inventory')
 
@@ -33,7 +34,8 @@ def add_product():
         nombre = request.form["nombre"]
         descripcion = request.form["descripcion"] 
         marca = request.form["marca"]
-        imagen = request.form["imagen"]
+        imagen_file = request.files["imagen"]
+        imagen = imagen_file.filename
         mi_precio = request.form["mi_precio"]
         precio_venta = request.form["precio_venta"]
         inventario = request.form["inventario"]
@@ -54,6 +56,10 @@ def add_product():
                 descripcion, marca, imagen, mi_precio, precio_venta, inventario)
             )
             db.commit()
+
+            images_path = os.path.join(current_app.root_path, "static/images")
+            image_path = os.path.join(images_path, imagen)
+            imagen_file.save(image_path)
 
             return redirect(url_for('inventory.inventory'))
 
@@ -111,7 +117,7 @@ def update_product(codigo):
 @bp.route('/<string:codigo>/remove_product', methods=('POST',))
 def remove_product(codigo):
     db = get_db()
-    db.execute('DELETE FROM product WHERE codigo = ?', (codigo))
+    db.execute('DELETE FROM product WHERE codigo = ?', (codigo,))
     db.commit()
 
     return redirect(url_for('inventory.inventory'))
