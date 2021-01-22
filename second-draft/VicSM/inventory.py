@@ -87,7 +87,8 @@ def update_product(codigo):
         nombre = request.form["nombre"]
         descripcion = request.form["descripcion"] 
         marca = request.form["marca"]
-        imagen = request.form["imagen"]
+        imagen_file = request.files["imagen"]
+        imagen = imagen_file.filename
         mi_precio = request.form["mi_precio"]
         precio_venta = request.form["precio_venta"]
         inventario = request.form["inventario"]
@@ -108,6 +109,10 @@ def update_product(codigo):
                 marca, imagen, mi_precio, precio_venta, inventario, codigo)
             )
             db.commit()
+
+            images_path = os.path.join(current_app.root_path, "static/images")
+            image_path = os.path.join(images_path, imagen)
+            imagen_file.save(image_path)
 
             return redirect(url_for('inventory.inventory'))
 

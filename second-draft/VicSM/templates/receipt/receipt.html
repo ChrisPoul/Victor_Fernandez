@@ -15,6 +15,8 @@
         {% for head in heads %}
         {% if head == "cantidad" %}
             <td><input style="width: 50px" name="{{ code }}" id="{{ code }}"></td>
+        {% elif head == "imagen" %}
+        <td><image width="100px" height="100px" src="{{ url_for('static', filename='images/{}'.format(products[code][head])) }}"></image></td>
         {% elif head == "total" %}
             <td>{{ totals[code] }}</td>
         {% else %}

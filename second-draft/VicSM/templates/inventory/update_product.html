@@ -5,11 +5,13 @@
 {% endblock %}
 
 {% block content %}
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% for head in heads %}
     <label for="{{ head }}">{{ head }}</label>
     {% if head == "descripcion" %}
         <textarea name="{{ head }}" id="{{ head }}">{{ product[head] }}</textarea>
+    {% elif head == "imagen" %}
+        <input type="file" name="{{ head }}" id="{{ head }}" required>
     {% else %}
         <input name="{{ head }}" id="{{ head }}" value="{{ product[head] }}" required>
     {% endif %}
