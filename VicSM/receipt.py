@@ -16,7 +16,7 @@ def get_total(totals):
     for key in totals:
         total += totals[key]
 
-    return total
+    return round(total, 2)
 
 
 products = {}
@@ -26,6 +26,8 @@ totals = {}
 @bp.route('/receipt', methods=('GET', 'POST'))
 def receipt():
     empty_product = {}
+    global totals
+    global products
 
     for head in heads:
         empty_product[head] = ""
@@ -42,7 +44,7 @@ def receipt():
                     cantidad = 0
 
                 product = products[code]
-                totals[code] = cantidad * product["precio_venta"]
+                totals[code] = round(cantidad * product["precio_venta"], 2)
                     
         except KeyError:
             pass
@@ -52,6 +54,11 @@ def receipt():
             products[codigo] = product
 
         total = get_total(totals)
+
+    elif request.method == "GET":
+        total = 0
+        products = {}
+        totals = {}
             
 
     return render_template('receipt/receipt.html', heads=heads, products=products, empty_product=empty_product, totals=totals, total=total)

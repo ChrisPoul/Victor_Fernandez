@@ -11,7 +11,7 @@
     {% if head == "descripcion" %}
         <textarea name="{{ head }}" id="{{ head }}">{{ product[head] }}</textarea>
     {% elif head == "imagen" %}
-        <input type="file" name="{{ head }}" id="{{ head }}" required>
+        <input type="file" name="{{ head }}" id="{{ head }}" value="{{ request.files[head] }}">
     {% else %}
         <input name="{{ head }}" id="{{ head }}" value="{{ product[head] }}" required>
     {% endif %}

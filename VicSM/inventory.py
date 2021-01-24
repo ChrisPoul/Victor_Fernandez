@@ -25,6 +25,12 @@ def inventory():
     return render_template('inventory/inventory.html', products=products, heads=inv_heads)
 
 
+def save_image(current_app, image_file):
+    images_path = os.path.join(current_app.root_path, "static/images")
+    image_path = os.path.join(images_path, image_file.filename)
+    image_file.save(image_path)
+
+
 @bp.route('/add_product', methods=('GET', 'POST'))
 def add_product():
     if request.method == 'POST':
@@ -57,9 +63,7 @@ def add_product():
             )
             db.commit()
 
-            images_path = os.path.join(current_app.root_path, "static/images")
-            image_path = os.path.join(images_path, imagen)
-            imagen_file.save(image_path)
+            save_image(current_app, imagen_file)
 
             return redirect(url_for('inventory.inventory'))
 
@@ -101,6 +105,11 @@ def update_product(codigo):
         if error is not None:
             flash(error)
         else:
+            if not imagen_file:
+                imagen = product["imagen"]
+            else:
+                save_image(current_app, imagen_file)
+
             db = get_db()
             db.execute(
                 'UPDATE product SET grupo = ?, serie = ?, nombre = ?, descripcion = ?,'
@@ -109,10 +118,6 @@ def update_product(codigo):
                 marca, imagen, mi_precio, precio_venta, inventario, codigo)
             )
             db.commit()
-
-            images_path = os.path.join(current_app.root_path, "static/images")
-            image_path = os.path.join(images_path, imagen)
-            imagen_file.save(image_path)
 
             return redirect(url_for('inventory.inventory'))
 

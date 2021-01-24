@@ -13,7 +13,7 @@
             <tr>
                 {% for head in heads %}
                     {% if head == "imagen" %}
-                    <td><image width="100px" height="100px" src="{{ url_for('static', filename='images/{}'.format(product[head])) }}"></image></td>
+                    <td><image width="150px" height="150px" src="{{ url_for('static', filename='images/{}'.format(product[head])) }}"></image></td>
                     {% else %}
                     <td>{{ product[head] }}</td>
                     {% endif %}
