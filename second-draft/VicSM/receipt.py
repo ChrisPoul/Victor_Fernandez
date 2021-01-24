@@ -9,6 +9,16 @@ heads = [
     "codigo", "nombre", "descripcion", "marca", 
     "imagen", "precio_venta", "cantidad", "total"
     ]
+
+
+def get_total(totals):
+    total = 0
+    for key in totals:
+        total += totals[key]
+
+    return total
+
+
 products = {}
 totals = {}
 
@@ -38,9 +48,10 @@ def receipt():
             pass
 
         product = get_product(codigo)
-
         if product is not None:
             products[codigo] = product
+
+        total = get_total(totals)
             
 
-    return render_template('receipt/receipt.html', heads=heads, products=products, empty_product=empty_product, totals=totals)
+    return render_template('receipt/receipt.html', heads=heads, products=products, empty_product=empty_product, totals=totals, total=total)

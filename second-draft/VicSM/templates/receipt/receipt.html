@@ -29,8 +29,10 @@
         {% for head in heads %}
             {% if head == "codigo" %}
             <td><input style="width: 100px" name="codigo" id="codigo" value="{{ empty_product[head] }}"></td>
-            {% elif head == "total" %}
+            {% elif head == "cantidad" %}
             <td><input type="submit" value="Submit"></td>
+            {% elif head == "total" %}
+            <td>{{ total }}</td>
             {% else %}
             <td>{{ empty_product[head] }}</td>
             {% endif %}
