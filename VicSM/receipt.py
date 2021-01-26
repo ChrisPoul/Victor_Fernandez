@@ -25,6 +25,16 @@ totals = {}
 
 @bp.route('/receipt', methods=('GET', 'POST'))
 def receipt():
+    def missing_cero(num):
+        num = str(num)
+        num_parts = num.split(".")
+
+        try:
+            return len(num_parts[1]) == 1
+        except IndexError:
+            return False
+
+
     empty_product = {}
     global totals
     global products
@@ -34,12 +44,11 @@ def receipt():
 
 
     if request.method == "POST":
-        codigo = request.form["codigo"]
         try:
             for code in products:
                 cantidad = request.form[code]
                 try:
-                    cantidad = int(cantidad)
+                    cantidad = float(cantidad)
                 except ValueError:
                     cantidad = 0
 
@@ -49,6 +58,7 @@ def receipt():
         except KeyError:
             pass
 
+        codigo = request.form["codigo"]
         product = get_product(codigo)
         if product is not None:
             products[codigo] = product
@@ -61,4 +71,4 @@ def receipt():
         totals = {}
             
 
-    return render_template('receipt/receipt.html', heads=heads, products=products, empty_product=empty_product, totals=totals, total=total)
+    return render_template('receipt/receipt.html', heads=heads, products=products, empty_product=empty_product, totals=totals, total=total, missing_cero=missing_cero)
