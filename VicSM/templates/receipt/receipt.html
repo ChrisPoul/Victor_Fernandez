@@ -18,7 +18,7 @@
         {% elif head == "imagen" %}
         <td><image width="100px" height="100px" src="{{ url_for('static', filename='images/{}'.format(products[code][head])) }}"></image></td>
         {% elif head == "total" %}
-            <td>{{ totals[code] }}</td>
+            <td>${{ totals[code] }}</td>
         {% else %}
         <td>{{ products[code][head] }}</td>
         {% endif %}
@@ -32,7 +32,7 @@
             {% elif head == "cantidad" %}
             <td><input type="submit" value="Submit"></td>
             {% elif head == "total" %}
-            <td>{{ total }}</td>
+            <td>${{ total }}</td>
             {% else %}
             <td>{{ empty_product[head] }}</td>
             {% endif %}
