@@ -1,14 +1,15 @@
 from flask import (
     Blueprint, g, render_template, request
 )
-from VicSM.inventory import get_product
+from VicSM.inventory import get_product, format_price
 
 bp = Blueprint('receipt', __name__)
 
-heads = [
-    "codigo", "nombre", "descripcion", "marca", 
-    "imagen", "precio_venta", "cantidad", "total"
-    ]
+heads = {
+    "codigo": "Código", "nombre": "Nombre", "descripcion": "Descripción", "marca": "Marca", 
+    "imagen": "Imagen", "precio_venta": "Precio Venta", "cantidad": "Cantidad",
+    "total": "Total"
+}
 
 
 def get_total(totals):
@@ -16,27 +17,19 @@ def get_total(totals):
     for key in totals:
         total += totals[key]
 
-    return round(total, 2)
+    return round(total, 2)   
 
 
 products = {}
 totals = {}
+cantidades = {}
 
 
 @bp.route('/receipt', methods=('GET', 'POST'))
 def receipt():
-    def missing_cero(num):
-        num = str(num)
-        num_parts = num.split(".")
-
-        try:
-            return len(num_parts[1]) == 1
-        except IndexError:
-            return False
-
-
     empty_product = {}
     global totals
+    global cantidades
     global products
 
     for head in heads:
@@ -46,14 +39,14 @@ def receipt():
     if request.method == "POST":
         try:
             for code in products:
-                cantidad = request.form[code]
+                cantidades[code] = request.form[code]
                 try:
-                    cantidad = float(cantidad)
+                    cantidades[code] = int(cantidades[code])
                 except ValueError:
-                    cantidad = 0
+                    cantidades[code] = 0
 
                 product = products[code]
-                totals[code] = round(cantidad * product["precio_venta"], 2)
+                totals[code] = round(cantidades[code] * float(product["precio_venta"]), 2)
                     
         except KeyError:
             pass
@@ -68,7 +61,10 @@ def receipt():
     elif request.method == "GET":
         total = 0
         products = {}
+        cantidades = {}
         totals = {}
             
 
-    return render_template('receipt/receipt.html', heads=heads, products=products, empty_product=empty_product, totals=totals, total=total, missing_cero=missing_cero)
+    return render_template('receipt/receipt.html', heads=heads, 
+        products=products, empty_product=empty_product, totals=totals, total=total,
+        cantidades= cantidades, format_price=format_price)

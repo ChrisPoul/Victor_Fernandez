@@ -7,18 +7,28 @@
 {% block content %}
 <table style="width:100%">
     {% for head in heads %}
-    <th>{{ head.capitalize() }}</th>
+    <th>{{ heads[head] }}</th>
     {% endfor %}
     <form method="post">
     {% for code in products %}
     <tr>
         {% for head in heads %}
         {% if head == "cantidad" %}
-            <td><input style="width: 50px" name="{{ code }}" id="{{ code }}"></td>
+            {% if not cantidades[code] %}
+            <td><input style="width: 50px" name="{{ code }}" id="{{ code }}," value="0"></td>
+            {% else %}
+            <td><input style="width: 50px" name="{{ code }}" id="{{ code }}," value="{{ cantidades[code] }}"></td>
+            {% endif %}
         {% elif head == "imagen" %}
-        <td><image width="100px" height="100px" src="{{ url_for('static', filename='images/{}'.format(products[code][head])) }}"></image></td>
+            <td><image class="my_image" src="{{ url_for('static', filename='images/{}'.format(products[code][head])) }}"></image></td>
         {% elif head == "total" %}
-            <td>${{ totals[code] }}{% if missing_cero(totals[code]) %}0{% endif %}</td>
+            {% if not totals[code] %}
+            <td>$0.00</td>
+            {% else %}
+            <td>{{ format_price(totals[code]) }}</td>
+            {% endif %}
+        {% elif head == "precio_venta" %}
+            <td>{{ format_price(products[code][head]) }}</td>
         {% else %}
         <td>{{ products[code][head] }}</td>
         {% endif %}
@@ -32,7 +42,11 @@
             {% elif head == "cantidad" %}
             <td><input type="submit" value="Submit"></td>
             {% elif head == "total" %}
-            <td>${{ total }}{% if missing_cero(total) %}0{% endif %}</td>
+                {% if not total %}
+                <td>$0.00</td>
+                {% else %}
+                <td>{{ format_price(total) }}</td>
+                {% endif %}
             {% else %}
             <td>{{ empty_product[head] }}</td>
             {% endif %}
