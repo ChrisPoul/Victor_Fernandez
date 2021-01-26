@@ -13,9 +13,11 @@
             <tr>
                 {% for head in heads %}
                     {% if head == "imagen" %}
-                    <td><image width="150px" height="150px" src="{{ url_for('static', filename='images/{}'.format(product[head])) }}"></image></td>
+                        <td><image class="my_image" src="{{ url_for('static', filename='images/{}'.format(product[head])) }}"></image></td>
+                    {% elif head == "precio_venta" or head == "mi_precio" %}
+                        <td>{{ format_price(product[head]) }}</td>
                     {% else %}
-                    <td>{{ product[head] }}</td>
+                        <td>{{ product[head] }}</td>
                     {% endif %}
                 {% endfor %}
                 <td><a href="{{ url_for('inventory.update_product', codigo=product['codigo']) }}">Update</a></td>

@@ -9,7 +9,21 @@ bp = Blueprint('inventory', __name__, url_prefix='/inventory')
 heads = [
     "grupo", "serie", "codigo", "nombre", "descripcion", "marca", 
     "imagen", "mi_precio", "precio_venta", "inventario"
-    ]
+]
+
+
+def format_price(num):
+        num = str(num)
+        if "." not in num:
+            num += ".00"
+        else:
+            num_parts = num.split(".")
+            if len(num_parts[1]) == 1:
+                num += "0"
+
+        num = "$" + num
+
+        return num
 
 
 @bp.route('/', methods=('POST', 'GET'))
@@ -35,9 +49,17 @@ def inventory():
                     f' FROM product p WHERE {head} = ?',(form_values[head],)
                 ).fetchall()
 
-                return render_template('inventory/inventory.html', products=products, heads=inv_heads)
+                if not products:
+                    return render_template('inventory/pre_selection.html', heads=heads)
+                
+                else:
+                    return render_template('inventory/inventory.html', 
+                        products=products, heads=inv_heads, format_price=format_price
+                    )
 
-        return render_template('inventory/inventory.html', products=products, heads=inv_heads)
+        return render_template('inventory/inventory.html',
+            products=products, heads=inv_heads, format_price=format_price
+        )
 
     return render_template('inventory/pre_selection.html', heads=heads)
 
