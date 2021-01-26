@@ -12,17 +12,34 @@ heads = [
     ]
 
 
-@bp.route('/')
+@bp.route('/', methods=('POST', 'GET'))
 def inventory():
     db = get_db()
-    inv_heads = heads[2:]
-    products = db.execute(
-        'SELECT p.codigo, grupo, serie, nombre, descripcion,'
-        ' marca, imagen, mi_precio, precio_venta, inventario'
-        ' FROM product p'
-    ).fetchall()
+    
+    if request.method == 'POST':
+        inv_heads = heads[2:]
+        form_values = {}
+        products = db.execute(
+            'SELECT p.codigo, grupo, serie, nombre, descripcion,'
+            ' marca, imagen, mi_precio, precio_venta, inventario'
+            ' FROM product p'
+        ).fetchall()
 
-    return render_template('inventory/inventory.html', products=products, heads=inv_heads)
+        for head in heads:
+            if request.form[head] != "":
+                form_values[head] = request.form[head]
+
+                products = db.execute(
+                    'SELECT p.codigo, grupo, serie, nombre, descripcion,'
+                    ' marca, imagen, mi_precio, precio_venta, inventario'
+                    f' FROM product p WHERE {head} = ?',(form_values[head],)
+                ).fetchall()
+
+                return render_template('inventory/inventory.html', products=products, heads=inv_heads)
+
+        return render_template('inventory/inventory.html', products=products, heads=inv_heads)
+
+    return render_template('inventory/pre_selection.html', heads=heads)
 
 
 def save_image(current_app, image_file):
