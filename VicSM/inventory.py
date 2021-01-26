@@ -12,18 +12,51 @@ heads = [
 ]
 
 
+def add_commas_price(price):
+    price_parts = price.split(".")
+    num_int = price_parts[0]
+
+    comma_track = 1
+    int_with_commas = ""
+    for i, num in enumerate(num_int[::-1]):
+        int_with_commas += num
+        if comma_track == 3 and i != len(num_int)-1:
+            int_with_commas += ","
+            comma_track = 0
+
+        comma_track += 1
+
+    price_with_commas = f"{int_with_commas[::-1]}.{price_parts[1]}"
+
+    return price_with_commas
+
+
 def format_price(num):
-        num = str(num)
-        if "." not in num:
-            num += ".00"
-        else:
-            num_parts = num.split(".")
-            if len(num_parts[1]) == 1:
-                num += "0"
+    num = str(num)
+    if "." not in num:
+        num += ".00"
+    
+    num_parts = num.split(".")
+    num_int = num_parts[0]
+    num_dec = num_parts[1]
 
-        num = "$" + num
+    if len(num_dec) == 1:
+        num_dec += "0"
 
-        return num
+    comma_track = 1
+    int_with_commas = ""
+    for i, num in enumerate(num_int[::-1]):
+        int_with_commas += num
+        if comma_track == 3 and i != len(num_int)-1:
+            int_with_commas += ","
+            comma_track = 0
+
+        comma_track += 1
+
+    num_int = int_with_commas[::-1]
+    num = f"${num_int}.{num_dec}"
+
+    return num
 
 
 @bp.route('/', methods=('POST', 'GET'))
