@@ -96,6 +96,12 @@ def get_product(codigo):
     return product
 
 
+def remove_image(current_app, image_name):
+    images_path = os.path.join(current_app.root_path, "static/images")
+    image_path = os.path.join(images_path, image_name)
+    os.remove(image_path)
+
+
 @bp.route('/<string:codigo>/update_product', methods=('GET', 'POST'))
 def update_product(codigo):
     product = get_product(codigo)
@@ -125,6 +131,7 @@ def update_product(codigo):
             if not imagen_file:
                 imagen = product["imagen"]
             else:
+                remove_image(current_app, product["imagen"])
                 save_image(current_app, imagen_file)
 
             db = get_db()
@@ -144,6 +151,8 @@ def update_product(codigo):
 @bp.route('/<string:codigo>/remove_product', methods=('POST',))
 def remove_product(codigo):
     db = get_db()
+    product = get_product(codigo)
+    remove_image(current_app, product["imagen"])
     db.execute('DELETE FROM product WHERE codigo = ?', (codigo,))
     db.commit()
 
