@@ -1,13 +1,13 @@
 from flask import (
     Blueprint, g, render_template, request
 )
-from VicSM.inventory import get_product, format_price
+from VicSM.inventory import get_product, format_price, add_iva
 
 bp = Blueprint('receipt', __name__)
 
 heads = {
     "codigo": "Código", "nombre": "Nombre", "descripcion": "Descripción", "marca": "Marca", 
-    "imagen": "Imagen", "precio_venta": "Precio Venta", "cantidad": "Cantidad",
+    "imagen": "Imagen", "precio_venta": "Precio Venta", "mas_iva": "Mas Iva", "cantidad": "Cantidad",
     "total": "Total"
 }
 
@@ -67,4 +67,4 @@ def receipt():
 
     return render_template('receipt/receipt.html', heads=heads, 
         products=products, empty_product=empty_product, totals=totals, total=total,
-        cantidades= cantidades, format_price=format_price)
+        cantidades= cantidades, format_price=format_price, add_iva=add_iva)

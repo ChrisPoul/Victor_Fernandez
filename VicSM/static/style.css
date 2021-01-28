@@ -27,11 +27,11 @@ input.danger { color: #cc2f2e; }
 input[type=submit] { align-self: start; min-width: 10em; }
 table td, table td * {
     vertical-align: top;
-    padding : 4px;
+    padding : 5px;
 }
 table th, table td * {
     vertical-align: top;
-    padding : 4px;
+    padding : 5px;
 }
 .my_image {
     height: 150px;
