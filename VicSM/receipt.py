@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, g, render_template, request
+    Blueprint, render_template, request
 )
 from VicSM.inventory import get_product, format_price, add_iva
 
@@ -68,3 +68,9 @@ def receipt():
     return render_template('receipt/receipt.html', heads=heads, 
         products=products, empty_product=empty_product, totals=totals, total=total,
         cantidades= cantidades, format_price=format_price, add_iva=add_iva)
+
+
+@bp.route('/receipts', methods=('GET', 'POST'))
+def receipts():
+
+    return render_template('client/receipts.html')

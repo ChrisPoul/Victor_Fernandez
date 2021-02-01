@@ -27,6 +27,9 @@ def create_app(test_config=None):
     from . import receipt
     app.register_blueprint(receipt.bp)
 
+    from . import client
+    app.register_blueprint(client.bp)
+
     @app.route('/test')
     def test():
 

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>{% block title %}Clients{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<table style="width: 100%">
+{% for head in heads %}
+    <th>{{ head.capitalize() }}</th>    
+{% endfor %}
+{% for client in clients %}
+    <tr>
+    {% for head in heads %}
+        <td>{{ client[head] }}</td>
+    {% endfor %}
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

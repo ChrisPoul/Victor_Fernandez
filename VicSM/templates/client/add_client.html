@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>{% block title %}Add Client{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% for head in heads %}
+            {% if head == "id" or head == "fecha" %}
+            {% else %}
+            <label for="{{ head }}">{{ head.capitalize() }}</label>
+            <input name="{{ head }}" id="{{ head }}" required>
+            {% endif %}
+        {% endfor %}
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}
