@@ -1,61 +1,11 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<title>Receipt</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style_receipt.css') }}"
 
-{% block header %}
-    <h1>{% block title %}Receipt{% endblock %}</h1>
-{% endblock %}
-
-{% block content %}
-<table style="width:100%">
-    {% for head in heads %}
-    <th>{{ heads[head] }}</th>
-    {% endfor %}
-    <form method="post">
-    {% for code in products %}
-    <tr>
-        {% for head in heads %}
-        {% if head == "cantidad" %}
-            {% if not cantidades[code] %}
-            <td><input style="width: 50px" name="{{ code }}" id="{{ code }}," value="0"></td>
-            {% else %}
-            <td><input style="width: 50px" name="{{ code }}" id="{{ code }}," value="{{ cantidades[code] }}"></td>
-            {% endif %}
-        {% elif head == "imagen" %}
-            <td>
-            <image class="my_image" src="{{ url_for('static', filename='images/{}'.format(products[code][head])) }}"></image>
-            </td>
-        {% elif head == "total" %}
-            {% if not totals[code] %}
-            <td>$0.00</td>
-            {% else %}
-            <td>{{ add_iva(totals[code]) }}</td>
-            {% endif %}
-        {% elif head == "precio_venta" %}
-            <td>{{ format_price(products[code][head]) }}</td>
-        {% elif head == "mas_iva" %}
-            <td>{{ add_iva(products[code]["precio_venta"]) }}</td>
-        {% else %}
-        <td>{{ products[code][head] }}</td>
-        {% endif %}
-        {% endfor %}
-    </tr>
-    {% endfor %}
-    <tr>
-        {% for head in heads %}
-            {% if head == "codigo" %}
-            <td><input style="width: 100px" name="codigo" id="codigo" value="{{ empty_product[head] }}"></td>
-            {% elif head == "cantidad" %}
-            <td><input type="submit" value="Submit"></td>
-            {% elif head == "total" %}
-                {% if not total %}
-                <td>$0.00</td>
-                {% else %}
-                <td>{{ add_iva(total) }}</td>
-                {% endif %}
-            {% else %}
-            <td>{{ empty_product[head] }}</td>
-            {% endif %}
-        {% endfor %}
-    </tr>
-    </form>
-</table>
-{% endblock %}
+<div>
+    {% include "receipt/receipt_client.html" %}
+</div>
+<hr>
+<div>
+    {% include "receipt/receipt_products.html" %}
+</div>

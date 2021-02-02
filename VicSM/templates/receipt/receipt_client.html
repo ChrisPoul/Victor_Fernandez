@@ -1,0 +1,23 @@
+
+<table>
+    {% for head in client_heads %}
+    <th>{{ client_heads[head] }}</th>
+    {% endfor %}
+    <tr>
+        {% for head in client_heads %}
+        {% if not client %}
+        <form method="post">
+            {% if head == "nombre" %}
+            <td><input name="client_id" id="client_id"></td>
+            {% elif head == "cotizacion" %}
+            <td><input type="submit" value="Submit"></td>
+            {% else %}
+            <td></td>
+            {% endif %}
+        </form>
+        {% else %}
+        <td class="centered">{{ client[head] }}</td> 
+        {% endif %}
+        {% endfor %}
+    </tr>
+</table>
