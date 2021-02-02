@@ -150,7 +150,6 @@ def update_product(codigo):
     product = get_product(codigo)
     update_heads = [head for head in heads if head != "codigo"]
 
-
     if request.method == 'POST':
         grupo = request.form["grupo"]
         serie = request.form["serie"]

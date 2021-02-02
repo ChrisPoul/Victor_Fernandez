@@ -7,11 +7,8 @@
 {% block content %}
     <form method="post">
         {% for head in heads %}
-            {% if head == "id" or head == "fecha" %}
-            {% else %}
-            <label for="{{ head }}">{{ head.capitalize() }}</label>
-            <input name="{{ head }}" id="{{ head }}" required>
-            {% endif %}
+        <label for="{{ head }}">{{ head.capitalize() }}</label>
+        <input name="{{ head }}" id="{{ head }}" required>
         {% endfor %}
         <input type="submit" value="Submit">
     </form>
