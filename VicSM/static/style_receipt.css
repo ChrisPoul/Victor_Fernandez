@@ -1,0 +1,21 @@
+html { font-family: sans-serif; background: #eee; padding: 1rem; }
+body { max-width: 1748px; max-height:1240px; margin: 0 auto; background: white; }
+table { 
+    width: 100%;
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 1px solid black;
+    padding: 4px;
+}
+td {
+    text-align: left;
+    vertical-align: top;
+}
+.centered {
+    text-align: center;
+}
+.my_image {
+    height: 100px;
+    width: 100px;
+}
