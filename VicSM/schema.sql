@@ -20,8 +20,16 @@ CREATE TABLE client (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     tel TEXT NOT NULL,
     fecha TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    moneda TEXT NOT NULL,
+    cambio INT NOT NULL,
     proyecto TEXT NOT NULL,
     descripcion TEXT NOT NULL,
     cotizacion TEXT NOT NULL
+);
+
+CREATE TABLE receipts (
+    id INT AUTOINCREMENT PRIMARY KEY,
+    client_id INT,
+    product_codigo TEXT,
+    FOREIGN KEY (client_id) REFERENCES client (id),
+    FOREIGN KEY (product_codigo) REFERENCES product (codigo)
 );
