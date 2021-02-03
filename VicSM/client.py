@@ -6,7 +6,7 @@ from VicSM.db import get_db
 bp = Blueprint('client', __name__, url_prefix='/client')
 
 client_heads = {'nombre': 'Nombre', 'direccion': 'Dirección', 'tel': 'Tel.', 
-    'fecha': 'Fecha', 'moneda': 'Cambio', 'proyecto': 'Nombre Proyecto',
+    'fecha': 'Fecha', 'moneda': 'Cambio', 'proyecto': 'Proyecto',
     'descripcion': 'Descripción', 'cotizacion': 'Cotización'
     }
 
