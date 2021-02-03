@@ -6,8 +6,8 @@ from VicSM.db import get_db
 bp = Blueprint('client', __name__, url_prefix='/client')
 
 client_heads = {'nombre': 'Nombre', 'direccion': 'Dirección', 'tel': 'Tel.', 
-    'fecha': 'Fecha', 'moneda': 'Cambio', 'proyecto': 'Proyecto',
-    'descripcion': 'Descripción', 'cotizacion': 'Cotización'
+    'fecha': 'Fecha', 'cambio': 'Tipo de Cambio', 'proyecto': 'Proyecto',
+    'descripcion': 'Descripción del Proyecto', 'cotizacion': 'Cotización'
     }
 
 
@@ -23,13 +23,16 @@ def clients():
 
 @bp.route('/add_client', methods=('GET', 'POST'))
 def add_client():
-    add_heads = [head for head in client_heads if head != "id" and head != "fecha"]
+    add_heads = {}
+    for head in client_heads:
+        if head != "id" and head != "fecha":
+            add_heads[head] = client_heads[head]
 
     if request.method == "POST":
         nombre = request.form["nombre"]
         direccion = request.form["direccion"]
         tel = request.form["tel"]
-        moneda = request.form["moneda"]
+        cambio = request.form["cambio"]
         proyecto = request.form["proyecto"]
         descripcion = request.form["descripcion"]
         cotizacion = request.form["cotizacion"]
@@ -45,9 +48,9 @@ def add_client():
             db = get_db()
             db.execute(
                 'INSERT INTO client (nombre, direccion, tel,'
-                ' moneda, proyecto, descripcion, cotizacion)'
+                ' cambio, proyecto, descripcion, cotizacion)'
                 ' VALUES (?, ?, ?, ?, ?, ?, ?)', (nombre, direccion,
-                tel, moneda, proyecto, descripcion, cotizacion)
+                tel, cambio, proyecto, descripcion, cotizacion)
             )
             db.commit()
 
@@ -74,7 +77,7 @@ def profile(client_id):
         nombre = request.form["nombre"]
         direccion = request.form["direccion"]
         tel = request.form["tel"]
-        moneda = request.form["moneda"]
+        cambio = request.form["cambio"]
         proyecto = request.form["proyecto"]
         descripcion = request.form["descripcion"]
         cotizacion = request.form["cotizacion"]
@@ -82,8 +85,8 @@ def profile(client_id):
         db = get_db()
         db.execute(
             'UPDATE client SET nombre = ?, direccion = ?, tel = ?,'
-            ' moneda = ?, proyecto = ?, descripcion = ?, cotizacion = ?'
-            ' WHERE id = ?', (nombre, direccion, tel, moneda, proyecto,
+            ' cambio = ?, proyecto = ?, descripcion = ?, cotizacion = ?'
+            ' WHERE id = ?', (nombre, direccion, tel, cambio, proyecto,
             descripcion, cotizacion, client_id)
         )
         db.commit()

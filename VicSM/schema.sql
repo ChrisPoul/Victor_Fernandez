@@ -9,7 +9,7 @@ CREATE TABLE product (
     descripcion TEXT NOT NULL,
     marca TEXT NOT NULL,
     imagen TEXT NOT NULL,
-    mi_precio INT NOT NULL,
+    mi_precio INTEGER NOT NULL,
     precio_venta INTEGER NOT NULL,
     inventario INTEGER NOT NULL
 );
@@ -20,15 +20,15 @@ CREATE TABLE client (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     tel TEXT NOT NULL,
     fecha TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    cambio INT NOT NULL,
+    cambio INTEGER NOT NULL,
     proyecto TEXT NOT NULL,
     descripcion TEXT NOT NULL,
     cotizacion TEXT NOT NULL
 );
 
 CREATE TABLE receipts (
-    id INT AUTOINCREMENT PRIMARY KEY,
-    client_id INT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    client_id INTEGER,
     product_codigo TEXT,
     FOREIGN KEY (client_id) REFERENCES client (id),
     FOREIGN KEY (product_codigo) REFERENCES product (codigo)
