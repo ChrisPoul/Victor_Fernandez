@@ -1,5 +1,5 @@
 
-<table>
+<table class="product">
     {% for head in product_heads %}
     <th>{{ product_heads[head] }}</th>
     {% endfor %}
@@ -11,7 +11,7 @@
             <td style="font-size: smaller;">{{ products[code][head] }}</td>
         {% elif head == "cantidad" %}
             {% if not cantidades[code] %}
-            <td><input class="my_input" name="{{ code }}" id="{{ code }}," value="0"></td>
+            <td class="centered"><input style="width: 40px;" class="my_input" name="{{ code }}" id="{{ code }}," value="0"></td>
             {% else %}
             <td><input class="my_input" name="{{ code }}" id="{{ code }}," value="{{ cantidades[code] }}"></td>
             {% endif %}
@@ -38,7 +38,7 @@
     <tr>
         {% for head in product_heads %}
             {% if head == "codigo" %}
-            <td class="centered"><input class="my_input" name="codigo" id="codigo" value="{{ empty_product[head] }}"></td>
+            <td class="centered"><input style="width: 65px;" class="centered" name="codigo" id="codigo" value="{{ empty_product[head] }}"></td>
             {% elif head == "cantidad" %}
             <td class="centered"><input class="my_input" type="submit" value="Submit"></td>
             {% elif head == "total" %}

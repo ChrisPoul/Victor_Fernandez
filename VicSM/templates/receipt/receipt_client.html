@@ -1,38 +1,39 @@
 
-<table>
+
+<table class="client">
     <tr>
         <td rowspan="3">
             <image style="padding-top: 5px;" src="{{ url_for('static', filename='images/aasm.png') }}">
         </td>
         <td rowspan="2">
             <h3>{{ client_heads['cotizacion'] }}:</h3>
-            {{ client['cotizacion'] }}
+            <p class="centered">{{ client['cotizacion'] }}</p>
         </td>
         <td colspan="2">
             <h3>{{ client_heads['fecha'] }}:</h3>
-            {{ client['fecha'] }}
+            <p class="centered">{{ client['fecha'] }}</p>
         </td>
     </tr>
     <tr>
         <td colspan="2">
             <h3>PROYECTO:</h3>
-            {{ client['proyecto'] }}
+            <p class="centered">{{ client['proyecto'] }}</p>
         </td>
     </tr>
     <tr>
         <td colspan="3">
             <h3>Proyecto:</h3>
-            {{ client['proyecto'] }}
+            <p class="centered">{{ client['proyecto'] }}</p>
         </td>
     </tr>
     <tr>
         <td>
             <h3>Nombre del Cliente ó Razón Social:</h3>
-            {{ client['nombre'] }}
+            <p class="centered">{{ client['nombre'] }}</p>
         </td>
         <td>
             <h3>Tel/Fax:</h3>
-            {{ client['tel'] }}
+            <p class="centered">{{ client['tel'] }}</p>
         </td>
         <td>
             <h3>Hoja:</h3>
@@ -40,7 +41,7 @@
         </td>
         <td>
             <h3>Tipo de Cambio:</h3>
-            {{ client['moneda'] }}
+            <p class="centered">{{ client['moneda'] }}</p>
         </td>
     </tr>
     <tr>
