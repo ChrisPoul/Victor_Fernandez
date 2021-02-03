@@ -1,21 +1,48 @@
-html { font-family: sans-serif; background: #eee; padding: 1rem; }
-body { max-width: 1748px; max-height:1240px; margin: 0 auto; background: white; }
+html { 
+    font-family: "Arial Narrow", sans-serif;
+    background: #eee; padding: 1rem; 
+}
+body { max-width: 1748px; margin: 0 auto; background: white; font-size: 0.65cm; }
+h3 { 
+    font-size: small; 
+    font-weight: 500;
+    margin: 0;
+}
 table { 
     width: 100%;
     border-collapse: collapse;
 }
 table, th, td {
     border: 1px solid black;
-    padding: 4px;
+    padding-top: 1px;
+    padding-left: 4px;
+    padding-right: 4px;
 }
 td {
     text-align: left;
-    vertical-align: top;
+    vertical-align: top;    
+}
+p {
+    margin: 0;
+    margin-bottom: 1px;
 }
 .centered {
     text-align: center;
 }
+.client {
+    font-weight: 800;
+    text-align: center;
+    font-size: 21px;
+}
+.product {
+    font-size: 0.4cm;
+    font-weight: 500;
+}
 .my_image {
     height: 100px;
     width: 100px;
+}
+.my_input {
+    text-align: center;
+    width: 98%;
 }
