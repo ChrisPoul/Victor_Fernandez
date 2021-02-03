@@ -7,11 +7,13 @@
     {% for code in products %}
     <tr>
         {% for head in product_heads %}
-        {% if head == "cantidad" %}
+        {% if head == "codigo" %}
+            <td style="font-size: smaller;">{{ products[code][head] }}</td>
+        {% elif head == "cantidad" %}
             {% if not cantidades[code] %}
-            <td><input style="width: 50px" name="{{ code }}" id="{{ code }}," value="0"></td>
+            <td><input class="my_input" name="{{ code }}" id="{{ code }}," value="0"></td>
             {% else %}
-            <td><input style="width: 50px" name="{{ code }}" id="{{ code }}," value="{{ cantidades[code] }}"></td>
+            <td><input class="my_input" name="{{ code }}" id="{{ code }}," value="{{ cantidades[code] }}"></td>
             {% endif %}
         {% elif head == "imagen" %}
             <td>
@@ -36,14 +38,14 @@
     <tr>
         {% for head in product_heads %}
             {% if head == "codigo" %}
-            <td><input style="width: 94%" name="codigo" id="codigo" value="{{ empty_product[head] }}"></td>
+            <td class="centered"><input class="my_input" name="codigo" id="codigo" value="{{ empty_product[head] }}"></td>
             {% elif head == "cantidad" %}
-            <td><input style="width: 99%" type="submit" value="Submit"></td>
+            <td class="centered"><input class="my_input" type="submit" value="Submit"></td>
             {% elif head == "total" %}
                 {% if not total %}
-                <td>$0.00</td>
+                <td class="centered">$0.00</td>
                 {% else %}
-                <td>{{ add_iva(total) }}</td>
+                <td class="centered">{{ add_iva(total) }}</td>
                 {% endif %}
             {% else %}
             <td>{{ empty_product[head] }}</td>

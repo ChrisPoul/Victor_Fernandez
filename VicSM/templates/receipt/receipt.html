@@ -3,7 +3,14 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style_receipt.css') }}"
 
 <div>
+    {% if not client %}
+    <form method="post">
+        <input name="client_id" id="client_id">
+        <input type="submit" value="submit">
+    </form>
+    {% else %}
     {% include "receipt/receipt_client.html" %}
+    {% endif %}
 </div>
 <hr>
 <div>
