@@ -12,6 +12,12 @@ product_heads = {
     "total": "Total"
     }
 
+middle_heads = {
+    "nombre": "Nombre del Cliente ó Razón Social", "tel": "Tel/Fax", 
+    "hoja": "Hoja", "cambio": "Tipo de Cambio"
+    }
+last_heads = ["direccion", "nombre", "descripcion"]
+
 
 def get_total(totals):
     total = 0
@@ -22,6 +28,7 @@ def get_total(totals):
 
 
 client = None
+grupo = None
 products = {}
 totals = {}
 cantidades = {}
@@ -31,6 +38,7 @@ cantidades = {}
 def receipt():
     empty_product = {}
     global client
+    global grupo
     global totals
     global cantidades
     global products
@@ -48,7 +56,11 @@ def receipt():
                 client_id = 0
 
             client = get_client(client_id)
+        except KeyError:
+            pass
 
+        try:
+            grupo = request.form['grupo']
         except KeyError:
             pass
 
@@ -80,15 +92,16 @@ def receipt():
     elif request.method == "GET":
         total = 0
         client = None
+        grupo = None
         products = {}
         cantidades = {}
         totals = {}
             
-
     return render_template(
         'receipt/receipt.html', product_heads=product_heads, client_heads=client_heads,
         products=products, empty_product=empty_product, totals=totals, total=total,
-        cantidades=cantidades, format_price=format_price, add_iva=add_iva, client=client
+        cantidades=cantidades, format_price=format_price, add_iva=add_iva, client=client,
+        last_heads=last_heads, middle_heads=middle_heads, grupo=grupo
         )
 
 
