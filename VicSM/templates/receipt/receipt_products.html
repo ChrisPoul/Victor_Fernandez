@@ -1,5 +1,5 @@
 
-<table class="product">
+<table class="product search_bar">
     {% for head in product_heads %}
     <th>{{ product_heads[head] }}</th>
     {% endfor %}
@@ -11,7 +11,7 @@
             <td style="font-size: smaller;">{{ products[code][head] }}</td>
         {% elif head == "cantidad" %}
             {% if not cantidades[code] %}
-            <td class="centered"><input style="width: 40px;" class="my_input" name="{{ code }}" id="{{ code }}," value="0"></td>
+            <td><input class="my_input" name="{{ code }}" id="{{ code }}," value="0"></td>
             {% else %}
             <td><input class="my_input" name="{{ code }}" id="{{ code }}," value="{{ cantidades[code] }}"></td>
             {% endif %}
@@ -38,17 +38,24 @@
     <tr>
         {% for head in product_heads %}
             {% if head == "codigo" %}
-            <td class="centered"><input style="width: 65px;" class="centered" name="codigo" id="codigo" value="{{ empty_product[head] }}"></td>
+            <td colspan="5" class="centered search_bar"><input class="my_second_input" name="codigo" id="codigo" value="{{ empty_product[head] }}"></td>
+            {% elif head == "mas_iva" %}
+            <td colspan="2" class="centered search_bar"><input class="my_second_input" type="submit" value="Submit"></td>
             {% elif head == "cantidad" %}
-            <td class="centered"><input class="my_input" type="submit" value="Submit"></td>
+            <td style="border-right: 0;">
+                USD:<br>
+                MXN:
+            </td>
             {% elif head == "total" %}
                 {% if not total %}
-                <td class="centered">$0.00</td>
+                <td style="border-left: 0;" class="centered">$0.00</td>
                 {% else %}
-                <td class="centered">{{ add_iva(total) }}</td>
+                <td style="text-align: right; border-left: 0;">
+                    {{ add_iva(total) }}
+                    {{ add_iva(total * client["cambio"]) }}
+                </td>
                 {% endif %}
             {% else %}
-            <td>{{ empty_product[head] }}</td>
             {% endif %}
         {% endfor %}
     </tr>

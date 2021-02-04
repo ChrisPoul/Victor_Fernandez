@@ -2,17 +2,20 @@
 <title>Receipt</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style_receipt.css') }}">
 
-<div>
+<div style="margin-bottom: 5px;">
     {% if not client %}
     <form method="post">
-        <input name="client_id" id="client_id">
-        <input type="submit" value="submit">
+        <table class="search_bar">
+            <tr>
+                <td class="search_bar"><input class="my_second_input" name="client_id" id="client_id"></td>
+                <td class="search_bar"><input class="my_second_input" type="submit" value="submit"></td>
+            </tr>
+        </table>
     </form>
     {% else %}
     {% include "receipt/receipt_client.html" %}
     {% endif %}
 </div>
-<hr>
 <div>
     {% include "receipt/receipt_products.html" %}
 </div>

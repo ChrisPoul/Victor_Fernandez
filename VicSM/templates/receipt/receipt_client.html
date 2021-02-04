@@ -3,7 +3,7 @@
 <table class="client">
     <tr>
         <td rowspan="3">
-            <image style="padding-top: 5px;" src="{{ url_for('static', filename='images/aasm.png') }}">
+            <a href="{{ url_for('inventory.inventory') }}"><image style="padding-top: 5px;" src="{{ url_for('static', filename='images/aasm.png') }}"></image></a>
         </td>
         <td rowspan="2">
             <h3>{{ client_heads['cotizacion'] }}:</h3>
@@ -22,44 +22,37 @@
     </tr>
     <tr>
         <td colspan="3">
-            <h3>Proyecto:</h3>
-            <p class="centered">{{ client['proyecto'] }}</p>
+            <h3>Sistema:</h3>
+            {% if not grupo %}
+            <form method="post">
+                <p class="centered"><input name="grupo" id="grupo"></p>
+                <input type="submit" value="Submit">
+            </form>
+            {% else %}
+            <p class="centered">{{ grupo }}</p>
+            {% endif %}
         </td>
     </tr>
     <tr>
+        {% for head in middle_heads %}
         <td>
-            <h3>Nombre del Cliente ó Razón Social:</h3>
-            <p class="centered">{{ client['nombre'] }}</p>
+            <h3>{{ middle_heads[head] }}:</h3>
+            <p class="centered">
+                {% if head == "cambio" %}
+                {{ format_price(client[head]) }}
+                {% else %}
+                {{ client[head] }}
+                {% endif %}
+            </p>
         </td>
-        <td>
-            <h3>Tel/Fax:</h3>
-            <p class="centered">{{ client['tel'] }}</p>
-        </td>
-        <td>
-            <h3>Hoja:</h3>
-            
-        </td>
-        <td>
-            <h3>Tipo de Cambio:</h3>
-            <p class="centered">{{ client['moneda'] }}</p>
-        </td>
+        {% endfor %}
     </tr>
-    <tr>
-        <td colspan="4">
-            <h3>Dirección:</h3>
-            <p class="centered">{{ client['direccion'] }}</p>
-        </td>
-    </tr>
+    {% for head in last_heads %}
     <tr>
         <td colspan="4">
-            <h3>Atención a:</h3>
-            <p class="centered">{{ client['nombre'] }}</p>
+            <h3>{{ client_heads[head] }}:</h3>
+            <p class="centered">{{ client[head] }}</p>
         </td>
     </tr>
-    <tr>
-        <td colspan="4">
-            <h3>{{ client_heads['descripcion'] }}:</h3>
-            <p class="centered">{{ client['descripcion'] }}</p>
-        </td>
-    </tr>
+    {% endfor %}
 </table>
