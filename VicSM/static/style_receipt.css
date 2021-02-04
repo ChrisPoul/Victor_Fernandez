@@ -26,6 +26,9 @@ p {
     margin: 0;
     margin-bottom: 1px;
 }
+.search_bar {
+    border: 0;
+}
 .centered {
     text-align: center;
 }
@@ -44,5 +47,11 @@ p {
 }
 .my_input {
     text-align: center;
-    width: 98%;
+    width: 95%;
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0;
+}
+.my_second_input {
+    width: 99%;
 }
