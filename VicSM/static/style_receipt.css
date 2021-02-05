@@ -26,6 +26,10 @@ p {
     margin: 0;
     margin-bottom: 1px;
 }
+a {
+    text-decoration: none;
+    color: black;
+}
 .search_bar {
     border: 0;
 }
@@ -42,8 +46,8 @@ p {
     font-weight: 500;
 }
 .my_image {
-    height: 100px;
-    width: 100px;
+    height: 80px;
+    width: 80px;
 }
 .my_input {
     text-align: center;

@@ -7,7 +7,7 @@
 {% block content %}
     <form method="post", enctype="multipart/form-data">
         {% for head in heads %}
-        <label for="{{ head }}">{{ head.capitalize() }}</label>
+        <label for="{{ head }}">{{ heads[head] }}</label>
         {% if head == "descripcion" %}
             <textarea name="{{ head }}" id="{{ head }}"></textarea>
         {% elif head == "imagen" %}

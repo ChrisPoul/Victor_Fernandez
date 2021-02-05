@@ -28,8 +28,10 @@ CREATE TABLE client (
 
 CREATE TABLE receipts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    client_id INTEGER,
-    product_codigo TEXT,
-    FOREIGN KEY (client_id) REFERENCES client (id),
-    FOREIGN KEY (product_codigo) REFERENCES product (codigo)
+    client_id FOREIGN KEY (client_id) REFERENCES client (id),
+    grupo TEXT NOT NULL,
+    totals List,
+    total INTEGER NOT NULL,
+    cantidades LIST,
+    products LIST
 );

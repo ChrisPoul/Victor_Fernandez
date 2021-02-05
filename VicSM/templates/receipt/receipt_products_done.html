@@ -3,14 +3,13 @@
     {% for head in product_heads %}
     <th>{{ product_heads[head] }}</th>
     {% endfor %}
-    <form method="post">
     {% for code in products %}
     <tr>
         {% for head in product_heads %}
         {% if head == "codigo" %}
             <td style="font-size: smaller;">{{ products[code][head] }}</td>
         {% elif head == "cantidad" %}
-            <td><input style="max-width: 70px" class="my_input" name="{{ code }}" id="{{ code }}," value="{{ cantidades[code] }}"></td>
+            <td class="centered">{{ cantidades[code] }}</td>
         {% elif head == "imagen" %}
             <td>
             <image class="my_image" src="{{ url_for('static', filename='images/{}'.format(products[code][head])) }}"></image>
@@ -32,25 +31,20 @@
     </tr>
     {% endfor %}
     <tr>
-        <td colspan="5" class="centered search_bar">
-            <input class="my_second_input" name="codigo" id="codigo">
-        </td>
-        <td colspan="2" class="centered search_bar">
-            <input class="my_second_input" type="submit" value="Submit">
+        <td colspan="7" class="centered">
+        
         </td>
         <td style="border-right: 0;">
             USD:<br>
             MXN:
         </td>
+        {% if not total %}
+        <td style="border-left: 0;" class="centered">$0.00</td>
+        {% else %}
         <td style="text-align: right; border-left: 0;">
-            {% if not total or not cambio %}
-                {{ format_price(0) }}
-                {{ format_price(0) }}
-            {% else %}
-                {{ add_iva(total) }}
-                {{ add_iva(total * cambio) }}
-            {% endif %}
+            {{ add_iva(total) }}
+            {{ add_iva(total * client["cambio"]) }}
         </td>
+        {% endif %}
     </tr>
-    </form>
 </table>

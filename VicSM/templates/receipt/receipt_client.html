@@ -21,13 +21,11 @@
         </td>
     </tr>
     <tr>
+        <form method="post">
         <td colspan="3">
             <h3>Sistema:</h3>
             {% if not grupo %}
-            <form method="post">
-                <p class="centered"><input name="grupo" id="grupo"></p>
-                <input type="submit" value="Submit">
-            </form>
+            <textarea class="my_second_input" name="grupo" id="grupo"></textarea>
             {% else %}
             <p class="centered">{{ grupo }}</p>
             {% endif %}
@@ -39,13 +37,19 @@
             <h3>{{ middle_heads[head] }}:</h3>
             <p class="centered">
                 {% if head == "cambio" %}
-                {{ format_price(client[head]) }}
+                    {% if not grupo %}
+                    <input name="cambio" id="cambio" value="{{ cambio }}">
+                    <input type="submit" value="Submit">
+                    {% else %}
+                    {{ format_price(cambio) }}
+                    {% endif %}
                 {% else %}
                 {{ client[head] }}
                 {% endif %}
             </p>
         </td>
         {% endfor %}
+        </form>
     </tr>
     {% for head in last_heads %}
     <tr>

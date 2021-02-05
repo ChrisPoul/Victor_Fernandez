@@ -6,10 +6,11 @@ import os
 
 bp = Blueprint('inventory', __name__, url_prefix='/inventory')
 
-heads = [
-    "grupo", "serie", "codigo", "nombre", "descripcion", "marca", 
-    "imagen", "mi_precio", "precio_venta", "inventario"
-]
+heads = {
+    "grupo": "Grupo", "serie": "Serie", "codigo": "Código", "nombre": "Nombre", 
+    "descripcion": "Descripción", "marca": "Marca", "imagen": "Imagen", 
+    "mi_precio": "Mi Precio", "precio_venta": "Precio Venta", "inventario" : "Inventario"
+    }
 
 
 def format_price(num):
@@ -52,7 +53,6 @@ def inventory():
     db = get_db()
     
     if request.method == 'POST':
-        inv_heads = heads[2:]
         form_values = {}
         products = db.execute(
             'SELECT p.codigo, grupo, serie, nombre, descripcion,'
@@ -75,11 +75,11 @@ def inventory():
                 
                 else:
                     return render_template('inventory/inventory.html', 
-                        products=products, heads=inv_heads, format_price=format_price
+                        products=products, heads=heads, format_price=format_price
                     )
 
         return render_template('inventory/inventory.html',
-            products=products, heads=inv_heads, format_price=format_price
+            products=products, heads=heads, format_price=format_price
         )
 
     return render_template('inventory/pre_selection.html', heads=heads)
@@ -148,7 +148,6 @@ def remove_image(current_app, image_name):
 @bp.route('/<string:codigo>/update_product', methods=('GET', 'POST'))
 def update_product(codigo):
     product = get_product(codigo)
-    update_heads = [head for head in heads if head != "codigo"]
 
     if request.method == 'POST':
         grupo = request.form["grupo"]
@@ -187,7 +186,7 @@ def update_product(codigo):
 
             return redirect(url_for('inventory.inventory'))
 
-    return render_template('inventory/update_product.html', product=product, heads=update_heads)
+    return render_template('inventory/update_product.html', product=product, heads=heads)
 
 
 @bp.route('/<string:codigo>/remove_product', methods=('POST',))

@@ -1,11 +1,12 @@
 from flask import (
     Blueprint, request, render_template, flash, redirect, url_for
 )
-from VicSM.db import get_db
+from VicSM.db import get_db, get_receipts
 
 bp = Blueprint('client', __name__, url_prefix='/client')
 
-client_heads = {'nombre': 'Nombre', 'direccion': 'Dirección', 'tel': 'Tel.', 
+client_heads = {
+    'id': "Id.", 'nombre': 'Nombre', 'direccion': 'Dirección', 'tel': 'Tel.', 
     'fecha': 'Fecha', 'cambio': 'Tipo de Cambio', 'proyecto': 'Proyecto',
     'descripcion': 'Descripción del Proyecto', 'cotizacion': 'Cotización'
     }
@@ -59,11 +60,15 @@ def add_client():
     return render_template('client/add_client.html', heads=add_heads)
 
 
-def get_client(client_id):
+def get_client(search_term):
     db = get_db()
-    client = db.execute(
-        'SELECT * FROM client WHERE id = ?', (client_id,)
-    ).fetchone()
+    for head in client_heads:
+        client = db.execute(
+            f'SELECT * FROM client WHERE {head} = ?', (search_term,)
+        ).fetchone()
+
+        if client is not None:
+            return client
 
     return client
 
@@ -71,7 +76,10 @@ def get_client(client_id):
 @bp.route('/<int:client_id>/profile', methods=('GET', 'POST'))
 def profile(client_id):
     client = get_client (client_id)
-    update_heads = [head for head in client_heads if head != "id"]
+    update_heads = {}
+    for head in client_heads:
+        if head != "id":
+            update_heads[head] = client_heads[head]
 
     if request.method == "POST":
         nombre = request.form["nombre"]
@@ -93,7 +101,12 @@ def profile(client_id):
 
         return redirect(url_for('client.clients'))
 
-    return render_template('client/profile.html', client=client, heads=update_heads)
+    receipts = get_receipts()
+
+    return render_template(
+        'client/profile.html', client=client, heads=update_heads,
+        receipts=receipts
+        )
 
 
 @bp.route('/<int:client_id>/remove_client', methods=('POST',))

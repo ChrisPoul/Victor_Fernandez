@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<title>Receipt</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+{% for receipt in receipts %}
+<h1>{{ receipts[receipt] }}</h1>
+{% endfor %}

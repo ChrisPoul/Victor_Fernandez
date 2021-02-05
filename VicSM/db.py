@@ -1,6 +1,7 @@
 import sqlite3
-
+import json
 import click
+import os
 from flask import current_app, g
 from flask.cli import with_appcontext
 
@@ -41,3 +42,19 @@ def init_db_command():
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+
+
+def get_receipts():
+    receipts_path = os.path.join(current_app.instance_path, "receipts.json")
+    with open(receipts_path) as receipts_file:
+        receipts = json.load(receipts_file)
+
+    return receipts
+
+
+def save_receipts(receipts):
+    json_receipts = json.dumps(receipts)
+    receipts_path = os.path.join(current_app.instance_path, "receipts.json")
+
+    with open(receipts_path, "w+") as receipts_file:
+        receipts_file.write(json_receipts)
