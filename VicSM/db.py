@@ -35,6 +35,10 @@ def init_db():
     receipts = {}
     save_receipts(receipts)
 
+    images_path = os.path.join(current_app.root_path, "static/images")
+    all_images = os.path.join(images_path, "*")
+    os.system(f'rm {all_images}')
+
 
 @click.command('init-db')
 @with_appcontext
