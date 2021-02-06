@@ -1,0 +1,12 @@
+setup.py
+VicAASM.egg-info/PKG-INFO
+VicAASM.egg-info/SOURCES.txt
+VicAASM.egg-info/dependency_links.txt
+VicAASM.egg-info/not-zip-safe
+VicAASM.egg-info/requires.txt
+VicAASM.egg-info/top_level.txt
+VicSM/__init__.py
+VicSM/client.py
+VicSM/db.py
+VicSM/inventory.py
+VicSM/receipt.py
