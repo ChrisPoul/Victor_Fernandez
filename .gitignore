@@ -4,4 +4,4 @@ __pycache__/
 .pytest_chache/
 
 instance/
-VicSM/static/images/
+images/*
