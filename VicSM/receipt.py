@@ -254,10 +254,12 @@ def edit_receipt(client_id, receipt_id):
     )
 
 
-def save_my_image(current_app, image_file):
+def save_my_image(image_file):
     images_path = os.path.join(current_app.root_path, "static/my_images")
     image_name = image_file.filename
     image_path = os.path.join(images_path, image_name)
+    all_images = os.path.join(images_path, "*")
+    os.system(f"rm {all_images}")
     image_file.save(image_path)
 
     references_path = os.path.join(images_path, 'references.json')
@@ -271,7 +273,7 @@ def save_my_image(current_app, image_file):
 def receipt_config():
     if request.method == 'POST':
         my_image_file = request.files["imagen"]
-        save_my_image(current_app, my_image_file)
+        save_my_image(my_image_file)
 
         return redirect(url_for('receipt.receipt'))
 
