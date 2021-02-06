@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS client;
-DROP TABLE IF EXISTS receipt;
 
 CREATE TABLE product (
     grupo TEXT NOT NULL,
