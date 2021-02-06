@@ -22,7 +22,7 @@
     <tr>
         <td colspan="3">
             <h3>Sistema:</h3>
-            <input class="my_second_input" name="grupo" id="grupo" value="{{ grupo }}">
+            <p class="centered">{{ grupo }}</p>
         </td>
     </tr>
     <tr>
@@ -31,7 +31,7 @@
             <h3>{{ middle_heads[head] }}:</h3>
             <p class="centered">
                 {% if head == "cambio" %}
-                <input name="cambio" id="cambio" value="{{ cambio }}">
+                {{ cambio }}
                 {% else %}
                 {{ client[head] }}
                 {% endif %}

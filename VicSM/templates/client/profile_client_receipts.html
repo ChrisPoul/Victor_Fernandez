@@ -1,7 +1,17 @@
-<!DOCTYPE html>
-<title>Receipt</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-{% for receipt in receipts %}
-<h1>{{ receipts[receipt] }}</h1>
-{% endfor %}
+<form method="post">
+    <table class="search_bar">
+        <tr>
+            <td class="search_bar"><input class="my_second_input" name="search_term" id="search_term"></td>
+            <td class="search_bar"><input class="my_second_input" type="submit" value="submit"></td>
+        </tr>
+    </table>
+</form>
+<table>
+    {% for receipt_id in receipts %}
+    <th>{{ head }}</th>
+    <tr>
+        <td>{{ receipts[head] }}</td>
+    </tr>
+    {% endfor %}
+</table>

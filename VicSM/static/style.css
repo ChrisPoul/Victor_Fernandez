@@ -25,6 +25,9 @@ textarea {height: auto}
 .content textarea { min-height: 12em; resize: vertical; }
 input.danger { color: #cc2f2e; }
 input[type=submit] { align-self: start; min-width: 10em; }
+table {
+  width: 100%;
+}
 table td, table td * {
     vertical-align: top;
     padding : 5px;
@@ -73,3 +76,9 @@ table th, table td * {
     border: 1px solid #ccc;
     border-top: none;
   }
+  .search_bar {
+    border: 0;
+}
+.my_second_input {
+  width: 99%;
+}

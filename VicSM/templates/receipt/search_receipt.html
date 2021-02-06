@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>{% block title %}Search Receipt{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <label for="search_term">Search term</label>
+    <input name="search_term" id="search_term">
+    <input type="submit" value="Submit">
+</form>
+<a href="">New Receipt</a>
+{% endblock %}

@@ -73,39 +73,61 @@ def get_client(search_term):
     return client
 
 
+def search_receipt_id(client_id, search_term):
+    receipts = get_receipts()
+    client_receipts = receipts[str(client_id)]
+    
+    try:
+        dummy_var = client_receipts[search_term]
+        return True
+    except KeyError:
+        return False
+
+
 @bp.route('/<int:client_id>/profile', methods=('GET', 'POST'))
 def profile(client_id):
-    client = get_client (client_id)
+    client = get_client(client_id)
+    receipts = get_receipts()
+    client_receipts = receipts[str(client_id)]
     update_heads = {}
     for head in client_heads:
         if head != "id":
             update_heads[head] = client_heads[head]
 
     if request.method == "POST":
-        nombre = request.form["nombre"]
-        direccion = request.form["direccion"]
-        tel = request.form["tel"]
-        cambio = request.form["cambio"]
-        proyecto = request.form["proyecto"]
-        descripcion = request.form["descripcion"]
-        cotizacion = request.form["cotizacion"]
+        try:
+            search_term = request.form["search_term"]
+            if search_receipt_id(client_id, search_term):
+                return redirect(
+                    url_for('receipt.edit_receipt', client_id=client_id, receipt_id=search_term)
+                    )
+        except KeyError:
+            pass
 
-        db = get_db()
-        db.execute(
-            'UPDATE client SET nombre = ?, direccion = ?, tel = ?,'
-            ' cambio = ?, proyecto = ?, descripcion = ?, cotizacion = ?'
-            ' WHERE id = ?', (nombre, direccion, tel, cambio, proyecto,
-            descripcion, cotizacion, client_id)
-        )
-        db.commit()
+        try:
+            nombre = request.form["nombre"]
+            direccion = request.form["direccion"]
+            tel = request.form["tel"]
+            cambio = request.form["cambio"]
+            proyecto = request.form["proyecto"]
+            descripcion = request.form["descripcion"]
+            cotizacion = request.form["cotizacion"]
 
-        return redirect(url_for('client.clients'))
+            db = get_db()
+            db.execute(
+                'UPDATE client SET nombre = ?, direccion = ?, tel = ?,'
+                ' cambio = ?, proyecto = ?, descripcion = ?, cotizacion = ?'
+                ' WHERE id = ?', (nombre, direccion, tel, cambio, proyecto,
+                descripcion, cotizacion, client_id)
+            )
+            db.commit()
 
-    receipts = get_receipts()
+            return redirect(url_for('client.clients'))
+        except KeyError:
+            pass
 
     return render_template(
-        'client/profile.html', client=client, heads=update_heads,
-        receipts=receipts
+        'client/profile.html', client=client, heads=update_heads, receipts=client_receipts
         )
 
 

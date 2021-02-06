@@ -31,6 +31,10 @@ def init_db():
         script = file.read().decode('utf8')
         db.executescript(script)
 
+    receipts = get_receipts()
+    receipts = {}
+    save_receipts(receipts)
+
 
 @click.command('init-db')
 @with_appcontext

@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS client;
+DROP TABLE IF EXISTS receipt;
 
 CREATE TABLE product (
     grupo TEXT NOT NULL,
@@ -26,12 +27,9 @@ CREATE TABLE client (
     cotizacion TEXT NOT NULL
 );
 
-CREATE TABLE receipts (
+CREATE TABLE receipt (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    client_id FOREIGN KEY (client_id) REFERENCES client (id),
     grupo TEXT NOT NULL,
-    totals List,
-    total INTEGER NOT NULL,
-    cantidades LIST,
-    products LIST
+    client_id INTEGER NOT NULL,
+    FOREIGN KEY (client_id) REFERENCES client (id)
 );

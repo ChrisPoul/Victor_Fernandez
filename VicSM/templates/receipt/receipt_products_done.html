@@ -21,9 +21,9 @@
             <td>{{ add_iva(totals[code]) }}</td>
             {% endif %}
         {% elif head == "precio_venta" %}
-            <td>{{ format_price(products[code][head]) }}</td>
+            <td>{{ add_iva(products[code][head]) }}</td>
         {% elif head == "mas_iva" %}
-            <td>{{ add_iva(products[code]["precio_venta"]) }}</td>
+            <td>{{ add_iva(products[code]["precio_venta"] * 1.16) }}</td>
         {% else %}
         <td>{{ products[code][head] }}</td>
         {% endif %}
@@ -42,8 +42,8 @@
         <td style="border-left: 0;" class="centered">$0.00</td>
         {% else %}
         <td style="text-align: right; border-left: 0;">
-            {{ add_iva(total) }}
-            {{ add_iva(total * client["cambio"]) }}
+            {{ add_iva(total * 1.16) }}
+            {{ add_iva(total * client["cambio"] * 1.16) }}
         </td>
         {% endif %}
     </tr>
