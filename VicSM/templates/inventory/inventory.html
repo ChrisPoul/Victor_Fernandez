@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block header %}
-    <h1>{% block title %}Inventory{% endblock %}</h1>
+    <h1>{% block title %}Inventario{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -13,14 +13,21 @@
             <tr>
                 {% for head in heads %}
                 {% if head == "imagen" %}
-                    <td><image class="my_image" src="{{ url_for('static', filename='images/{}'.format(product[head])) }}"></image></td>
+                    <td>
+                        <image class="my_image" src="{{ url_for('static', filename='images/{}'.format(product[head])) }}">
+                        </image>
+                    </td>
                 {% elif head == "precio_venta" or head == "mi_precio" %}
                     <td>{{ format_price(product[head]) }}</td>
                 {% else %}
                     <td>{{ product[head] }}</td>
                 {% endif %}
                 {% endfor %}
-                <td><a href="{{ url_for('inventory.update_product', codigo=product['codigo']) }}">Update</a></td>
+                <td>
+                    <a href="{{ url_for('inventory.update_product', codigo=product['codigo']) }}">
+                        Editar
+                    </a>
+                </td>
             </tr>
         {% endfor %}
     </table>

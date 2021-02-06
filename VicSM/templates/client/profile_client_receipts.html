@@ -2,16 +2,32 @@
 <form method="post">
     <table class="search_bar">
         <tr>
-            <td class="search_bar"><input class="my_second_input" name="search_term" id="search_term"></td>
-            <td class="search_bar"><input class="my_second_input" type="submit" value="submit"></td>
+            <td>
+                <input class="my_second_input" name="search_term" id="search_term">
+            </td>
+            <td>
+                <input class="my_second_input" type="submit" value="submit">
+            </td>
         </tr>
     </table>
 </form>
-<table>
+<table class="receipt_table">
+    {% for head in receipt_heads %}
+    <th class="receipt_table">
+        {{ receipt_heads[head] }}
+    </th>
+    {% endfor %}
     {% for receipt_id in receipts %}
-    <th>{{ head }}</th>
+    {% if receipt_id != "numero_de_recibos" %}
     <tr>
-        <td>{{ receipts[head] }}</td>
+    {% for head in receipt_heads %}
+        {% if head == "id" %}
+        <td class="receipt_table">{{ receipt_id }}</td>
+        {% else %}
+        <td class="receipt_table">{{ receipts[receipt_id][head] }}</td>
+        {% endif %}
+    {% endfor %}
     </tr>
+    {% endif %}
     {% endfor %}
 </table>

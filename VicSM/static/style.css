@@ -36,6 +36,13 @@ table th, table td * {
     vertical-align: top;
     padding : 5px;
 }
+.receipt_table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding-top: 1px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
 .my_image {
     height: 150px;
     width: 150px;
@@ -77,8 +84,10 @@ table th, table td * {
     border-top: none;
   }
   .search_bar {
-    border: 0;
+    margin: 0;
+    padding: 0;
 }
 .my_second_input {
   width: 99%;
+  margin: 0;
 }

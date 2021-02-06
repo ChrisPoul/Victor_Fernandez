@@ -1,7 +1,14 @@
+{% extends "base.html" %}
 
-<div>
-    {% include "client/profile_client_info.html" %}
-</div>
+{% block header %}
+    <h1>{% block title %}{{ client["nombre"] }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
 <div>
     {% include "client/profile_client_receipts.html" %}
 </div>
+<div>
+    {% include "client/profile_client_info.html" %}
+</div>
+{% endblock %}

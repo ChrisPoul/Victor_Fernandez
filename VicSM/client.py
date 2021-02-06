@@ -10,6 +10,10 @@ client_heads = {
     'fecha': 'Fecha', 'cambio': 'Tipo de Cambio', 'proyecto': 'Proyecto',
     'descripcion': 'Descripción del Proyecto', 'cotizacion': 'Cotización'
     }
+receipt_heads = {
+    "id": "Id.", "grupo": "Grupo", "cambio": "Tipo de Cambio",
+    "cantidades": "Cantidades", "totals": "Totales", "total": "Total"
+}
 
 
 @bp.route('/clients')
@@ -127,7 +131,8 @@ def profile(client_id):
             pass
 
     return render_template(
-        'client/profile.html', client=client, heads=update_heads, receipts=client_receipts
+        'client/profile.html', client=client, heads=update_heads, receipts=client_receipts,
+        receipt_heads=receipt_heads
         )
 
 

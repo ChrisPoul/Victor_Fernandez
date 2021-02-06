@@ -1,10 +1,4 @@
-{% extends "base.html" %}
 
-{% block header %}
-    <h1>{% block title %}{{ client["nombre"] }}{% endblock %}</h1>
-{% endblock %}
-
-{% block content %}
 <form method="post">
     {% for head in heads %}
     <label for="{{ head }}">{{ heads[head] }}</label>
@@ -14,10 +8,9 @@
         <input name="{{ head }}" id="{{ head }}" value="{{ client[head] }}">
     {% endif %}
     {% endfor %}
-    <input type="submit" value="Submit">
+    <input type="submit" value="Aceptar">
 </form>
 <hr>
 <form action="{{ url_for('client.remove_client', client_id=client['id']) }}" method="post">
-    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+    <input class="danger" type="submit" value="Eliminar" onclick="return confirm('Are you sure?');">
 </form>
-{% endblock %}

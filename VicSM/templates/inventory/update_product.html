@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 
 {% block header %}
-    <h1>{% block title %}Update Product{% endblock %}</h1>
+    <h1>{% block title %}Editar Producto{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
 <form method="post" enctype="multipart/form-data">
     {% for head in heads %}
-    <label for="{{ head }}">{{ heads[head] }}</label>
+    <label for="{{ head }}">
+        {{ heads[head] }}
+    </label>
     {% if head == "descripcion" %}
         <textarea name="{{ head }}" id="{{ head }}">{{ product[head] }}</textarea>
     {% elif head == "imagen" %}
@@ -16,7 +18,7 @@
         <input name="{{ head }}" id="{{ head }}" value="{{ product[head] }}" required>
     {% endif %}
     {% endfor %}
-    <input type="submit" value="Submit">
+    <input type="submit" value="Aceptar">
 </form>
 <hr>
 <form action="{{ url_for('inventory.remove_product', codigo=product['codigo']) }}" method="post">

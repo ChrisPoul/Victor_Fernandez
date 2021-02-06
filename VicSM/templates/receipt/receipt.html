@@ -7,8 +7,12 @@
     <form method="post">
         <table class="search_bar">
             <tr>
-                <td class="search_bar"><input class="my_second_input" name="search_term" id="search_term"></td>
-                <td class="search_bar"><input class="my_second_input" type="submit" value="submit"></td>
+                <td class="search_bar">
+                    <input class="my_second_input" name="search_term" id="search_term">
+                </td>
+                <td class="search_bar">
+                    <input class="my_second_input" type="submit" value="submit">
+                </td>
             </tr>
         </table>
     </form>
@@ -22,5 +26,7 @@
 </div>
 </form>
 <button>
-    <a href="{{ url_for('receipt.receipt_done', client_id=client['id'], receipt_id=receipt_id) }}">Done</a>
+    <a href="{{ url_for('receipt.receipt_done', client_id=client['id'], receipt_id=receipt_id) }}">
+        Listo
+    </a>
 </button>

@@ -10,7 +10,9 @@
         {% if head == "codigo" %}
             <td style="font-size: smaller;">{{ products[code][head] }}</td>
         {% elif head == "cantidad" %}
-            <td><input style="max-width: 70px" class="my_input" name="{{ code }}" id="{{ code }}," value="{{ cantidades[code] }}"></td>
+            <td>
+            <input style="max-width: 70px" class="my_input" name="{{ code }}" id="{{ code }}," value="{{ cantidades[code] }}">
+            </td>
         {% elif head == "descripcion" %}
             <td>{{ products[code][head] }}</td>
         {% elif head == "imagen" %}
@@ -40,7 +42,7 @@
             <input class="my_second_input" name="codigo" id="codigo">
         </td>
         <td colspan="2" class="centered search_bar">
-            <input class="my_second_input" type="submit" value="Submit">
+            <input class="my_second_input" type="submit" value="Aceptar">
         </td>
         <td style="border-right: 0;">
             USD:<br>

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block header %}
-    <h1>{% block title %}Clients{% endblock %}</h1>
+    <h1>{% block title %}Clientes{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,9 @@
     {% for head in heads %}
         <td>{{ client[head] }}</td>
     {% endfor %}
-        <td><a href="{{ url_for('client.profile', client_id=client['id']) }}">Update</a></td>
+        <td>
+            <a href="{{ url_for('client.profile', client_id=client['id']) }}">Perfil</a>
+        </td>
     </tr>
 {% endfor %}
 </table>

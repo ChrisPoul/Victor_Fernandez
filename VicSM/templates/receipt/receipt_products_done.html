@@ -12,7 +12,8 @@
             <td class="centered">{{ cantidades[code] }}</td>
         {% elif head == "imagen" %}
             <td>
-            <image class="my_image" src="{{ url_for('static', filename='images/{}'.format(products[code][head])) }}"></image>
+            <image class="my_image" src="{{ url_for('static', filename='images/{}'.format(products[code][head])) }}">
+            </image>
             </td>
         {% elif head == "total" %}
             {% if not totals[code] %}
