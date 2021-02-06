@@ -27,9 +27,3 @@ CREATE TABLE client (
     cotizacion TEXT NOT NULL
 );
 
-CREATE TABLE receipt (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    grupo TEXT NOT NULL,
-    client_id INTEGER NOT NULL,
-    FOREIGN KEY (client_id) REFERENCES client (id)
-);

@@ -1,5 +1,8 @@
+import os
+import json
 from flask import (
-    Blueprint, render_template, request, redirect, url_for
+    Blueprint, render_template, request, redirect, url_for,
+    current_app
 )
 from VicSM.inventory import get_product, format_price, add_iva
 from VicSM.client import get_client, client_heads
@@ -34,6 +37,15 @@ def get_receipt(client_id, receipt_id):
     return client_receipts[str(receipt_id)]
 
 
+def get_aasm_image():
+    my_images_path = os.path.join(current_app.root_path, "static/my_images")
+    references_path = os.path.join(my_images_path, 'references.json')
+    with open(references_path) as aasm_reference_file:
+        aasm_reference = json.load(aasm_reference_file)
+    aasm_image = aasm_reference["aasm"]
+
+    return aasm_image
+
 client = {"id": 0}
 grupo = None
 cambio = None
@@ -53,6 +65,7 @@ def receipt():
     global cantidades
     global products
     receipt_id = 0
+    aasm_image = get_aasm_image()
 
     if request.method == "GET":
         client = {"id": 0}
@@ -115,12 +128,14 @@ def receipt():
         'receipt/receipt.html', product_heads=product_heads, client_heads=client_heads,
         products=products, totals=totals, total=total, cantidades=cantidades, grupo=grupo,
         format_price=format_price, add_iva=add_iva, client=client, middle_heads=middle_heads,
-        last_heads=last_heads, cambio=cambio, receipt_id=receipt_id
+        last_heads=last_heads, cambio=cambio, receipt_id=receipt_id, aasm_image=aasm_image
     )
 
 
 @bp.route('/<int:client_id>/<int:receipt_id>/receipt_done')
 def receipt_done(client_id, receipt_id):
+    aasm_image = get_aasm_image()
+    
     if request.method == "GET":
         receipts = get_receipts()
         client_id = str(client_id)
@@ -146,7 +161,7 @@ def receipt_done(client_id, receipt_id):
         'receipt/receipt_done.html', product_heads=product_heads, client_heads=client_heads,
         products=products, totals=totals, total=total, cantidades=cantidades, grupo=grupo,
         format_price=format_price, add_iva=add_iva, client=client, middle_heads=middle_heads,
-        last_heads=last_heads, cambio=cambio
+        last_heads=last_heads, cambio=cambio, aasm_image=aasm_image
         )
 
 
@@ -177,6 +192,7 @@ def edit_receipt(client_id, receipt_id):
     global cantidades
     global products
 
+    aasm_image = get_aasm_image()
     receipt = get_receipt(client_id, receipt_id)
     client = get_client(client_id)
     grupo = receipt["grupo"]
@@ -234,5 +250,30 @@ def edit_receipt(client_id, receipt_id):
         'receipt/receipt.html', product_heads=product_heads, client_heads=client_heads,
         products=products, totals=totals, total=total, cantidades=cantidades, grupo=grupo,
         format_price=format_price, add_iva=add_iva, client=client, middle_heads=middle_heads,
-        last_heads=last_heads, cambio=cambio, receipt_id=receipt_id
+        last_heads=last_heads, cambio=cambio, receipt_id=receipt_id, aasm_image=aasm_image
     )
+
+
+def save_my_image(current_app, image_file):
+    images_path = os.path.join(current_app.root_path, "static/my_images")
+    image_name = image_file.filename
+    image_path = os.path.join(images_path, image_name)
+    image_file.save(image_path)
+
+    references_path = os.path.join(images_path, 'references.json')
+    json_references = json.dumps({"aasm": image_name})
+    with open(references_path, "w") as references_file:
+        references_file.write(json_references)
+
+
+
+@bp.route('/receipt_config', methods=('GET', 'POST'))
+def receipt_config():
+    if request.method == 'POST':
+        my_image_file = request.files["imagen"]
+        save_my_image(current_app, my_image_file)
+
+        return redirect(url_for('receipt.receipt'))
+
+    return render_template('receipt/receipt_config.html')
+    
