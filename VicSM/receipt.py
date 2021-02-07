@@ -72,11 +72,14 @@ def receipt(client_id):
     aasm_image = get_aasm_image()
     if not client:
         client = get_client(client_id)
+    
+    if client:
+        cambio = client["cambio"]
 
     if request.method == "GET":
         products = {}
         grupo = None
-        cambio = None
+        client = None
         cantidades = {}
         totals = {}
         total = 0

@@ -3,7 +3,6 @@
     {% for head in product_heads %}
     <th>{{ product_heads[head] }}</th>
     {% endfor %}
-    <form method="post">
     {% for code in products %}
     <tr>
         {% for head in product_heads %}
@@ -58,5 +57,4 @@
             {% endif %}
         </td>
     </tr>
-    </form>
 </table>

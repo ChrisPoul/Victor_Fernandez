@@ -8,8 +8,10 @@
 <form method="post">
     <input type="submit" value="Aceptar">
     {% for head in heads %}
-    <label for="{{ head }}">{{ heads[head] }}</label>
-    <input name="{{ head }}" id="{{ head }}">
+    {% if head != "descripcion" and head != "imagen" %}
+        <label for="{{ head }}">{{ heads[head] }}</label>
+        <input name="{{ head }}" id="{{ head }}">
+    {% endif %}
     {% endfor %}
 </form>
 {% endblock %}

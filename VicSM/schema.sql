@@ -6,7 +6,7 @@ CREATE TABLE product (
     serie TEXT NOT NULL,
     codigo TEXT PRIMARY KEY,
     nombre TEXT UNIQUE NOT NULL,
-    descripcion TEXT NOT NULL,
+    descripcion LONGTEXT NOT NULL,
     marca TEXT NOT NULL,
     imagen TEXT NOT NULL,
     mi_precio INTEGER NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE client (
     tel TEXT NOT NULL,
     cambio INTEGER NOT NULL,
     proyecto TEXT NOT NULL,
-    descripcion TEXT NOT NULL,
+    descripcion LONGTEXT NOT NULL,
     cotizacion TEXT NOT NULL
 );
 
