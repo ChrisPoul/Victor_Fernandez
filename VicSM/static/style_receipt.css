@@ -39,7 +39,7 @@ a {
 .client {
     font-weight: 800;
     text-align: center;
-    font-size: 21px;
+    font-size: 19px;
 }
 .product {
     font-size: 0.4cm;
@@ -48,6 +48,10 @@ a {
 .my_image {
     height: 80px;
     width: 80px;
+}
+.receipt_image {
+    max-width: 12cm;
+    padding-top: 5px;
 }
 .my_input {
     text-align: center;

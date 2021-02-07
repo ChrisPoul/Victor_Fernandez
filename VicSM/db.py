@@ -2,6 +2,7 @@ import sqlite3
 import json
 import click
 import os
+import glob
 from flask import current_app, g
 from flask.cli import with_appcontext
 
@@ -36,8 +37,10 @@ def init_db():
     save_receipts(receipts)
 
     images_path = os.path.join(current_app.root_path, "static/images")
-    all_images = os.path.join(images_path, "*")
-    os.system(f'rm {all_images}')
+    all_images_path = os.path.join(images_path, "*")
+    all_images = glob.glob(all_images_path)
+    for image in all_images:
+        os.remove(image)
 
 
 @click.command('init-db')
@@ -66,3 +69,34 @@ def save_receipts(receipts):
 
     with open(receipts_path, "w+") as receipts_file:
         receipts_file.write(json_receipts)
+
+days = {
+    "0": "Lunes", "1": "Martes",
+    "2": "Miercoles", "3": "Jueves",
+    "4": "Viernes", "5": "Sábado",
+    "6": "Domingo"
+}
+months = {
+    "01": "Enero", "02": "Febrero",
+    "03": "Marzo", "04": "Abril",
+    "05": "Mayo", "06": "Junio",
+    "07": "Julio", "08": "Agosto",
+    "09": "Septiembre", "10": "Octubre",
+    "11": "Noviembre", "12": "Diciembre"
+}
+
+
+def format_date(date):
+    str_date = date.strftime("%d/%m/%Y")
+    date_parts = str_date.split("/")
+
+    week_day = date.weekday()
+    day = days[str(week_day)]
+    day_num = date_parts[0]
+    
+    month = date_parts[1]
+    month = months[month]
+    year = date_parts[2]
+
+    return f"{day} {day_num} de {month} del {year}"
+

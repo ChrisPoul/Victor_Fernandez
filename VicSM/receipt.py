@@ -1,4 +1,6 @@
 import os
+import datetime
+import glob
 import json
 from flask import (
     Blueprint, render_template, request, redirect, url_for,
@@ -6,7 +8,7 @@ from flask import (
 )
 from VicSM.inventory import get_product, format_price, add_iva
 from VicSM.client import get_client, client_heads
-from VicSM.db import get_db, get_receipts, save_receipts
+from VicSM.db import get_db, get_receipts, save_receipts, format_date
 
 bp = Blueprint('receipt', __name__)
 
@@ -17,7 +19,7 @@ product_heads = {
     }
 middle_heads = {
     "nombre": "Nombre del Cliente ó Razón Social", "tel": "Tel/Fax", 
-    "hoja": "Hoja", "cambio": "Tipo de Cambio"
+    "cambio": "Tipo de Cambio"
     }
 last_heads = ["direccion", "nombre", "descripcion"]
 
@@ -53,6 +55,7 @@ products = {}
 totals = {}
 total = 0
 cantidades = {}
+fecha = format_date(datetime.date.today())
 
 
 @bp.route('/receipt', methods=('GET', 'POST'))
@@ -64,12 +67,19 @@ def receipt():
     global total
     global cantidades
     global products
+    global fecha
     receipt_id = 0
     aasm_image = get_aasm_image()
 
     if request.method == "GET":
         client = {"id": 0}
         products = {}
+        grupo = None
+        cambio = None
+        cantidades = {}
+        totals = {}
+        total = 0
+        fecha = format_date(datetime.date.today())
 
     elif request.method == "POST":
         try:
@@ -128,7 +138,8 @@ def receipt():
         'receipt/receipt.html', product_heads=product_heads, client_heads=client_heads,
         products=products, totals=totals, total=total, cantidades=cantidades, grupo=grupo,
         format_price=format_price, add_iva=add_iva, client=client, middle_heads=middle_heads,
-        last_heads=last_heads, cambio=cambio, receipt_id=receipt_id, aasm_image=aasm_image
+        last_heads=last_heads, cambio=cambio, receipt_id=receipt_id, aasm_image=aasm_image,
+        fecha=fecha
     )
 
 
@@ -147,7 +158,8 @@ def receipt_done(client_id, receipt_id):
         receipt = {
             "totals": totals, "total": total,
             "cantidades": cantidades, 
-            "grupo": grupo, "cambio": cambio
+            "grupo": grupo, "cambio": cambio,
+            "fecha": fecha
             }
         if receipt_id == 0:
             receipt_id = client_receipts["numero_de_recibos"] + 1
@@ -161,7 +173,7 @@ def receipt_done(client_id, receipt_id):
         'receipt/receipt_done.html', product_heads=product_heads, client_heads=client_heads,
         products=products, totals=totals, total=total, cantidades=cantidades, grupo=grupo,
         format_price=format_price, add_iva=add_iva, client=client, middle_heads=middle_heads,
-        last_heads=last_heads, cambio=cambio, aasm_image=aasm_image
+        last_heads=last_heads, cambio=cambio, aasm_image=aasm_image, fecha=fecha
         )
 
 
@@ -172,12 +184,14 @@ def reset_receipt():
     global totals
     global total
     global cantidades
+    global fecha
 
     grupo = None
     cambio = None
     cantidades = {}
     totals = {}
     total = 0
+    fecha = format_date(datetime.date.today())
 
     return redirect(url_for('receipt.receipt'))
 
@@ -199,6 +213,7 @@ def edit_receipt(client_id, receipt_id):
     cambio= receipt["cambio"]
     totals = receipt["totals"]
     total = receipt["total"]
+    fecha = datetime.date.today().strftime("%d/%m/%Y")
     cantidades = receipt["cantidades"]
     for code in cantidades:
         products[code] = get_product(code)
@@ -250,7 +265,8 @@ def edit_receipt(client_id, receipt_id):
         'receipt/receipt.html', product_heads=product_heads, client_heads=client_heads,
         products=products, totals=totals, total=total, cantidades=cantidades, grupo=grupo,
         format_price=format_price, add_iva=add_iva, client=client, middle_heads=middle_heads,
-        last_heads=last_heads, cambio=cambio, receipt_id=receipt_id, aasm_image=aasm_image
+        last_heads=last_heads, cambio=cambio, receipt_id=receipt_id, aasm_image=aasm_image,
+        fecha=fecha
     )
 
 
@@ -258,8 +274,10 @@ def save_my_image(image_file):
     images_path = os.path.join(current_app.root_path, "static/my_images")
     image_name = image_file.filename
     image_path = os.path.join(images_path, image_name)
-    all_images = os.path.join(images_path, "*")
-    os.system(f"rm {all_images}")
+    all_images_path = os.path.join(images_path, "*")
+    all_images = glob.glob(all_images_path)
+    for image in all_images:
+        os.remove(image)
     image_file.save(image_path)
 
     references_path = os.path.join(images_path, 'references.json')

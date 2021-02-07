@@ -3,17 +3,18 @@
     <tr>
         <td rowspan="3">
             <a href="{{ url_for('client.clients') }}">
-                <image style="padding-top: 5px;" src="{{ url_for('static', filename='my_images/{}'.format(aasm_image)) }}">
+                <image class="receipt_image" src="{{ url_for('static', filename='my_images/{}'.format(aasm_image)) }}">
                 </image>
             </a>
         </td>
         <td rowspan="2">
             <h3>{{ client_heads['cotizacion'] }}:</h3>
-            <p class="centered">{{ client['cotizacion'] }}</p>
+            <br>
+            <p style="color: red" class="centered">{{ client['cotizacion'] }}</p>
         </td>
         <td colspan="2">
-            <h3>{{ client_heads['fecha'] }}:</h3>
-            <p class="centered">{{ client['fecha'].strftime("%d/%m/%Y") }}</p>
+            <h3>Fecha:</h3>
+            <p style="font-size: medium;" class="centered">{{ fecha }}</p>
         </td>
     </tr>
     <tr>
@@ -32,7 +33,7 @@
         {% for head in middle_heads %}
         <td>
             <h3>{{ middle_heads[head] }}:</h3>
-            <p class="centered">
+            <p style="min-width: 4cm;" class="centered">
                 {% if head == "cambio" %}
                 {{ cambio }}
                 {% else %}

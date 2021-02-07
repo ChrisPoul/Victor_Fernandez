@@ -7,12 +7,13 @@ bp = Blueprint('client', __name__, url_prefix='/client')
 
 client_heads = {
     'id': "Id.", 'nombre': 'Nombre', 'direccion': 'Dirección', 'tel': 'Tel.', 
-    'fecha': 'Fecha', 'cambio': 'Tipo de Cambio', 'proyecto': 'Proyecto',
-    'descripcion': 'Descripción del Proyecto', 'cotizacion': 'Cotización'
+    'cambio': 'Tipo de Cambio', 'descripcion': 'Descripción del Proyecto',
+    'proyecto': 'Proyecto', 'cotizacion': 'Cotización'
     }
 receipt_heads = {
     "id": "Id.", "grupo": "Grupo", "cambio": "Tipo de Cambio",
-    "cantidades": "Cantidades", "totals": "Totales", "total": "Total"
+    "cantidades": "Cantidades", "totals": "Totales", "total": "Total",
+    "fecha": "Fecha"
 }
 
 
