@@ -16,11 +16,13 @@
             </image>
             </td>
         {% elif head == "total" %}
-            {% if not totals[code] %}
-            <td>$0.00</td>
-            {% else %}
-            <td>{{ add_iva(totals[code]) }}</td>
-            {% endif %}
+            <td class="centered">
+                {% if not totals[code] %}
+                $0.00
+                {% else %}
+                {{ add_iva(totals[code]) }}
+                {% endif %}
+            </td>
         {% elif head == "precio_venta" %}
             <td>{{ add_iva(products[code][head]) }}</td>
         {% elif head == "mas_iva" %}

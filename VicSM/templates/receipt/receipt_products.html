@@ -23,9 +23,9 @@
         {% elif head == "total" %}
             <td class="centered">
                 {% if not totals[code] %}
-                    $0.00
+                $0.00
                 {% else %}
-                    {{ add_iva(totals[code]) }}
+                {{ add_iva(totals[code]) }}
                 {% endif %}
             </td>
         {% elif head == "precio_venta" %}
@@ -50,6 +50,7 @@
             MXN:
         </td>
         <td style="text-align: right; border-left: 0;">
+            <a href="{{ url_for('receipt.delete_products', client_id=client['id'], receipt_id=receipt_id) }}">
             {% if not total or not cambio %}
                 {{ format_price(0) }}
                 {{ format_price(0) }}
@@ -57,6 +58,7 @@
                 {{ add_iva(total * 1.16) }}
                 {{ add_iva(total * cambio * 1.16) }}
             {% endif %}
+            </a>
         </td>
     </tr>
 </table>

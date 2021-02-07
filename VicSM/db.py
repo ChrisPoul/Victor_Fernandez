@@ -63,12 +63,36 @@ def get_receipts():
     return receipts
 
 
+def get_receipt(client_id, receipt_id):
+    receipts = get_receipts()
+    client_receipts = receipts[str(client_id)]
+
+    return client_receipts[str(receipt_id)]
+
+
 def save_receipts(receipts):
     json_receipts = json.dumps(receipts)
     receipts_path = os.path.join(current_app.instance_path, "receipts.json")
 
     with open(receipts_path, "w+") as receipts_file:
         receipts_file.write(json_receipts)
+
+
+def save_receipt(client_id, receipt_id, receipt):
+    receipts = get_receipts()
+    try:
+        client_receipts = receipts[client_id]
+    except KeyError:
+        client_receipts = {"numero_de_recibos": 0}
+    
+    if receipt_id == 0:
+        receipt_id = client_receipts["numero_de_recibos"] + 1
+        client_receipts["numero_de_recibos"] += 1
+
+    client_receipts[str(receipt_id)] = receipt
+    receipts[client_id] = client_receipts
+    save_receipts(receipts)
+
 
 days = {
     "0": "Lunes", "1": "Martes",
