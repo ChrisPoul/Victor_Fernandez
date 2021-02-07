@@ -53,6 +53,12 @@ a {
     max-width: 12cm;
     padding-top: 5px;
 }
+.cotizacion {
+    color: red;
+}
+.middle_heads {
+    min-width: 4cm;
+}
 .my_input {
     text-align: center;
     width: 95%;

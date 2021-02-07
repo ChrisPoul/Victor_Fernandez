@@ -2,7 +2,7 @@
 <table class="client">
     <tr>
         <td rowspan="3">
-            <a href="{{ url_for('client.clients') }}">
+            <a href="{{ url_for('client.profile', client_id=client['id']) }}">
                 <image class="receipt_image" src="{{ url_for('static', filename='my_images/{}'.format(aasm_image)) }}">
                 </image>
             </a>
@@ -10,7 +10,7 @@
         <td rowspan="2">
             <h3>{{ client_heads['cotizacion'] }}:</h3>
             <br>
-            <p style="color: red" class="centered">{{ client['cotizacion'] }}</p>
+            <p class="centered cotizacion">{{ client['cotizacion'] }}</p>
         </td>
         <td colspan="2">
             <h3>Fecha:</h3>

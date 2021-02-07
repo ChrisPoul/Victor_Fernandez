@@ -93,7 +93,10 @@ def search_receipt_id(client_id, search_term):
 def profile(client_id):
     client = get_client(client_id)
     receipts = get_receipts()
-    client_receipts = receipts[str(client_id)]
+    try:
+        client_receipts = receipts[str(client_id)]
+    except KeyError:
+        client_receipts = {}
     update_heads = {}
     for head in client_heads:
         if head != "id":

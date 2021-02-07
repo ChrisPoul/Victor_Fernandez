@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 
 {% block header %}
-    <h1>{% block title %}{{ client["nombre"] }}{% endblock %}</h1>
+    <h1>
+        {% block title %}
+        <a class="header_link" href="{{ url_for('receipt.receipt', client_id=client['id']) }}">
+            {{ client["nombre"] }}
+        </a>
+        {% endblock %}
+    </h1>
 {% endblock %}
 
 {% block content %}

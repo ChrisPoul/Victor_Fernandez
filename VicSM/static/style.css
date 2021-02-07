@@ -48,6 +48,9 @@ table th, table td * {
   text-decoration: none;
   color: black;
 }
+.header_link {
+  text-decoration: none;
+}
 .my_image {
     height: 150px;
     width: 150px;

@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style_receipt.css') }}">
 
 <div style="margin-bottom: 5px;">
-    {% if client["id"] == 0 %}
+    {% if not client %}
     <form method="post">
         <table class="search_bar">
             <tr>
@@ -25,8 +25,10 @@
     {% include "receipt/receipt_products.html" %}
 </div>
 </form>
+{% if client %}
 <button>
     <a href="{{ url_for('receipt.receipt_done', client_id=client['id'], receipt_id=receipt_id) }}">
         Listo
     </a>
 </button>
+{% endif %}

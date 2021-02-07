@@ -48,7 +48,7 @@ def get_aasm_image():
 
     return aasm_image
 
-client = {"id": 0}
+client = None
 grupo = None
 cambio = None
 products = {}
@@ -58,8 +58,8 @@ cantidades = {}
 fecha = format_date(datetime.date.today())
 
 
-@bp.route('/receipt', methods=('GET', 'POST'))
-def receipt():
+@bp.route('/<int:client_id>/receipt', methods=('GET', 'POST'))
+def receipt(client_id):
     global client
     global grupo
     global cambio
@@ -70,9 +70,10 @@ def receipt():
     global fecha
     receipt_id = 0
     aasm_image = get_aasm_image()
+    if not client:
+        client = get_client(client_id)
 
     if request.method == "GET":
-        client = {"id": 0}
         products = {}
         grupo = None
         cambio = None
@@ -85,17 +86,15 @@ def receipt():
         try:
             search_term = request.form['search_term']
             client = get_client(search_term)
-            if not client:
-                client = {"id": 0}
-            else:
+            if client:
                 cambio = client["cambio"]
         except KeyError:
-            client = client
+            pass
 
         try:
             grupo = request.form['grupo']
         except KeyError:
-            grupo = grupo
+            pass
 
         try:
             cambio = request.form['cambio']
@@ -104,7 +103,7 @@ def receipt():
             except ValueError:
                 cambio = client['cambio']
         except KeyError:
-            cambio = cambio
+            pass
 
         for code in products:
             try:
@@ -146,6 +145,7 @@ def receipt():
 @bp.route('/<int:client_id>/<int:receipt_id>/receipt_done')
 def receipt_done(client_id, receipt_id):
     aasm_image = get_aasm_image()
+    client = get_client(client_id)
     
     if request.method == "GET":
         receipts = get_receipts()
@@ -179,6 +179,7 @@ def receipt_done(client_id, receipt_id):
 
 @bp.route('/reset_receipt')
 def reset_receipt():
+    global client
     global grupo
     global cambio
     global totals
@@ -186,6 +187,7 @@ def reset_receipt():
     global cantidades
     global fecha
 
+    client = None
     grupo = None
     cambio = None
     cantidades = {}
@@ -198,7 +200,6 @@ def reset_receipt():
 
 @bp.route('/<int:receipt_id>/<int:client_id>/receipt', methods=('GET', 'POST'))
 def edit_receipt(client_id, receipt_id):
-    global client
     global grupo
     global cambio
     global totals
@@ -213,7 +214,7 @@ def edit_receipt(client_id, receipt_id):
     cambio= receipt["cambio"]
     totals = receipt["totals"]
     total = receipt["total"]
-    fecha = datetime.date.today().strftime("%d/%m/%Y")
+    fecha = format_date(datetime.date.today())
     cantidades = receipt["cantidades"]
     for code in cantidades:
         products[code] = get_product(code)
