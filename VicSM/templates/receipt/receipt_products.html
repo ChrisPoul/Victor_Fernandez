@@ -7,7 +7,9 @@
     <tr>
         {% for head in product_heads %}
         {% if head == "codigo" %}
-            <td style="font-size: smaller;">{{ products[code][head] }}</td>
+            <td style="font-size: smaller;">
+                {{ products[code][head] }}
+            </td>
         {% elif head == "cantidad" %}
             <td>
             <input style="max-width: 70px" class="my_input" name="{{ code }}" id="{{ code }}," value="{{ cantidades[code] }}">

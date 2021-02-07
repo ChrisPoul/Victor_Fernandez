@@ -70,8 +70,7 @@ def receipt(client_id):
     global fecha
     receipt_id = 0
     aasm_image = get_aasm_image()
-    if not client:
-        client = get_client(client_id)
+    client = get_client(client_id)
     
     if client:
         cambio = client["cambio"]
@@ -79,7 +78,8 @@ def receipt(client_id):
     if request.method == "GET":
         products = {}
         grupo = None
-        client = None
+        if client_id == 0:
+            client = None
         cantidades = {}
         totals = {}
         total = 0
