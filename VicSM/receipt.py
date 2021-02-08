@@ -220,6 +220,29 @@ def edit_receipt(client_id, receipt_id):
     )
 
 
+@bp.route('/<int:client_id>/<int:receipt_id>/receipt_done')
+def receipt_done(client_id, receipt_id):
+    aasm_image = get_aasm_image()
+    client = get_client(client_id)
+    client_id = str(client_id)
+
+    receipt = {
+        "totals": totals, "total": total,
+        "cantidades": cantidades, 
+        "grupo": grupo, "cambio": cambio,
+        "fecha": fecha
+        }
+        
+    save_receipt(client_id,receipt_id, receipt)
+
+    return render_template(
+        'receipt/receipt_done.html', product_heads=product_heads, client_heads=client_heads,
+        products=products, totals=totals, total=total, cantidades=cantidades, grupo=grupo,
+        format_price=format_price, add_iva=add_iva, client=client, middle_heads=middle_heads,
+        last_heads=last_heads, cambio=cambio, aasm_image=aasm_image, fecha=fecha
+        )
+
+
 @bp.route('/reset_receipt')
 def reset_receipt():
     global client
@@ -260,29 +283,6 @@ def delete_products(client_id, receipt_id):
         return redirect(url_for(
             'receipt.edit_receipt', client_id=client_id, receipt_id=receipt_id
             ))
-
-
-@bp.route('/<int:client_id>/<int:receipt_id>/receipt_done')
-def receipt_done(client_id, receipt_id):
-    aasm_image = get_aasm_image()
-    client = get_client(client_id)
-    client_id = str(client_id)
-
-    receipt = {
-        "totals": totals, "total": total,
-        "cantidades": cantidades, 
-        "grupo": grupo, "cambio": cambio,
-        "fecha": fecha
-        }
-        
-    save_receipt(client_id,receipt_id, receipt)
-
-    return render_template(
-        'receipt/receipt_done.html', product_heads=product_heads, client_heads=client_heads,
-        products=products, totals=totals, total=total, cantidades=cantidades, grupo=grupo,
-        format_price=format_price, add_iva=add_iva, client=client, middle_heads=middle_heads,
-        last_heads=last_heads, cambio=cambio, aasm_image=aasm_image, fecha=fecha
-        )
 
 
 def save_my_image(image_file):

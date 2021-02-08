@@ -47,6 +47,11 @@ def add_iva(num):
     return format_price(num)
 
 
+pre_heads = {}
+for head in heads:
+    if head != "descripcion" and head != "imagen":
+        pre_heads[head] = heads[head]
+
 
 @bp.route('/', methods=('POST', 'GET'))
 def inventory():
@@ -60,10 +65,9 @@ def inventory():
             ' FROM product p'
         ).fetchall()
 
-        for head in heads:
+        for head in pre_heads:
             if request.form[head] != "":
                 form_values[head] = request.form[head]
-
                 products = db.execute(
                     'SELECT p.codigo, grupo, serie, nombre, descripcion,'
                     ' marca, imagen, mi_precio, precio_venta, inventario'
@@ -72,7 +76,6 @@ def inventory():
 
                 if not products:
                     return render_template('inventory/pre_selection.html', heads=heads)
-                
                 else:
                     return render_template('inventory/inventory.html', 
                         products=products, heads=heads, format_price=format_price

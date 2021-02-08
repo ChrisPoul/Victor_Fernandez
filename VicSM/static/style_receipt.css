@@ -46,10 +46,16 @@ a {
     font-weight: 500;
 }
 .my_image {
-    height: 80px;
-    width: 80px;
+    padding-top: 2px;
+    max-height: 80px;
+    max-width: 80px;
+}
+.my_code {
+    font-size: 0.26cm;
+    text-align: center;
 }
 .receipt_image {
+    vertical-align: middle;
     max-width: 12cm;
     padding-top: 5px;
 }
@@ -68,4 +74,7 @@ a {
 }
 .my_second_input {
     width: 99%;
+}
+.justified {
+    text-align: justify;
 }
