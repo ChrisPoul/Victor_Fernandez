@@ -16,6 +16,10 @@
                 {% if head == "imagen" %}
                     <image class="my_image" src="{{ url_for('static', filename='images/{}'.format(product[head])) }}">
                     </image>
+                {% elif head == "codigo" %}
+                <a class="default_link" href="{{ url_for('inventory.update_product', codigo=product['codigo']) }}">
+                    {{ product[head] }}
+                </a>
                 {% elif head == "precio_venta" or head == "mi_precio" %}
                     {{ format_price(product[head]) }}
                 {% elif head == "descripcion" %}
@@ -25,11 +29,6 @@
                 {% endif %}
                 </td>
                 {% endfor %}
-                <td>
-                    <a href="{{ url_for('inventory.update_product', codigo=product['codigo']) }}">
-                        Editar
-                    </a>
-                </td>
             </tr>
         {% endfor %}
     </table>

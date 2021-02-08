@@ -35,7 +35,7 @@
             <h3>{{ middle_heads[head] }}:</h3>
             <p class="centered middle_heads">
                 {% if head == "cambio" %}
-                {{ cambio }}
+                {{ format_price(cambio) }}
                 {% else %}
                 {{ client[head] }}
                 {% endif %}

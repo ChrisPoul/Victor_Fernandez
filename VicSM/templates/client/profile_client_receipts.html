@@ -1,11 +1,12 @@
 
+<h3>Buscar Recibo:</h3>
 <form method="post">
     <table class="search_bar">
         <tr>
-            <td>
+            <td class="search_bar">
                 <input class="my_second_input" name="search_term" id="search_term">
             </td>
-            <td>
+            <td class="search_bar_button">
                 <input class="my_second_input" type="submit" value="Buscar">
             </td>
         </tr>
@@ -21,21 +22,23 @@
     {% if receipt_id != "numero_de_recibos" %}
     <tr>
     {% for head in receipt_heads %}
+        <td class="receipt_table">
         {% if head == "id" %}
-        <td class="receipt_table">
-            <a class="my_link" href="{{ url_for('receipt.edit_receipt', client_id=client['id'], receipt_id=receipt_id) }}">
-                {{ receipt_id }}
-            </a>
-        </td>
+        <a class="default_link" href="{{ url_for('receipt.edit_receipt', client_id=client['id'], receipt_id=receipt_id) }}">
+            {{ receipt_id }}
+        </a>
         {% elif head == "cantidades" %}
-        <td class="receipt_table">
             {% for code in receipts[receipt_id][head] %}
-            {{ code }}:{{ receipts[receipt_id][head][code] }},
+            {{ code }}:{{ receipts[receipt_id][head][code] }} ; 
             {% endfor %}
-        </td>
+        {% elif head == "cambio" %}
+            {{ format_price(receipts[receipt_id][head]) }}
+        {% elif head == "total" %}
+            {{ add_iva(receipts[receipt_id][head]) }}
         {% else %}
-        <td class="receipt_table">{{ receipts[receipt_id][head] }}</td>
+            {{ receipts[receipt_id][head] }}
         {% endif %}
+        </td>
     {% endfor %}
     </tr>
     {% endif %}

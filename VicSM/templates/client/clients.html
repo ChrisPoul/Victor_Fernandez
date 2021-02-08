@@ -5,28 +5,34 @@
 {% endblock %}
 
 {% block content %}
+<h3>Buscar Cliente:</h3>
 <form method="post">
     <table class="search_bar">
-        <td>
+        <td class="search_bar">
             <input class="my_second_input" name="search_term" id="search_term">
         </td>
-        <td>
+        <td class="search_bar_button">
             <input class="my_second_input" type="submit" value="Buscar">
         </td>
     </table>
 </form>
 <table style="width: 100%">
 {% for head in heads %}
-    <th>{{ heads[head] }}</th>    
+    <th style="text-align: left;">{{ heads[head] }}</th>    
 {% endfor %}
 {% for client in clients %}
     <tr>
     {% for head in heads %}
-        <td>{{ client[head] }}</td>
+    <td>
+    {% if head == "nombre" %}
+        <a class="default_link" href="{{ url_for('client.profile', client_id=client['id']) }}">
+            {{ client[head] }}
+        </a>
+    {% else %}
+        {{ client[head] }}
+    {% endif %}
+    </td>
     {% endfor %}
-        <td>
-            <a href="{{ url_for('client.profile', client_id=client['id']) }}">Perfil</a>
-        </td>
     </tr>
 {% endfor %}
 </table>

@@ -2,6 +2,7 @@ from flask import (
     Blueprint, request, render_template, flash, redirect, url_for
 )
 from VicSM.db import get_db, get_receipts
+from VicSM.inventory import format_price, add_iva
 
 bp = Blueprint('client', __name__, url_prefix='/client')
 
@@ -30,6 +31,12 @@ def get_client(search_term):
     return client
 
 
+clients_heads = {}
+for head in client_heads:
+    if head != "descripcion" and head != "cambio":
+        clients_heads[head] = client_heads[head]
+
+
 @bp.route('/clients', methods=('GET', 'POST'))
 def clients():
     if request.method == 'POST':
@@ -44,7 +51,7 @@ def clients():
         'SELECT * FROM client'
     ).fetchall()
 
-    return render_template('client/clients.html', clients=clients, heads=client_heads)
+    return render_template('client/clients.html', clients=clients, heads=clients_heads)
 
 
 add_heads = {}
@@ -144,7 +151,7 @@ def profile(client_id):
 
     return render_template(
         'client/profile.html', client=client, heads=update_heads, receipts=client_receipts,
-        receipt_heads=receipt_heads
+        receipt_heads=receipt_heads, format_price=format_price, add_iva=add_iva
         )
 
 

@@ -1,12 +1,26 @@
-html { font-family: sans-serif; background: #eee; padding: 1rem; }
-body { max-width: 1268px; margin: 0 auto; background: white; }
+html { font-family: sans-serif; background: rgb(220, 235, 238); padding: 1rem; }
+body { max-width: 1268px; margin: 0 auto; background: rgb(238, 245, 247); }
 h1 { font-family: serif; color: #377ba8; margin: 1rem 0; }
-a { color: #377ba8; }
+a { color: #d8dbdd; }
+header {
+  background-color: rgb(84, 120, 197);
+  display: flex; width: 100%; max-height: 1.2cm;
+}
+header h1 { 
+  color: #ffffff;
+  font-size: x-large;
+  padding-left: 10px;
+}
 hr { border: none; border-top: 1px solid lightgray; }
-nav { background: lightgray; display: flex; align-items: center; padding: 0 0.5rem; }
-nav h1 { flex: auto; margin: 0; }
+nav { 
+  background: #123bad; display: flex; 
+  align-items: center; padding: 0 0.5rem; 
+  height: 2cm; padding-bottom: 0;
+}
+nav h1 { font-family: 'Pragati Narrow', sans-serif; flex: auto; margin: 0; }
 nav h1 a { text-decoration: none; padding: 0.25rem 0.5rem; }
 nav ul  { display: flex; list-style: none; margin: 0; padding: 0; }
+nav li {font-family: 'Pragati Narrow', sans-serif;}
 nav ul li a, nav ul li span, header .action { display: block; padding: 0.5rem; }
 textarea {height: auto}
 .content { padding: 0 1rem 1rem; }
@@ -39,10 +53,13 @@ table th, table td * {
 .receipt_table {
   border: 1px solid black;
   border-collapse: collapse;
-  padding-top: 1px;
+  padding-top: 6px;
   padding-left: 4px;
   padding-right: 4px;
   text-align: center;
+}
+.default_link {
+  color: #377ba8;
 }
 .my_link {
   text-decoration: none;
@@ -62,6 +79,11 @@ table th, table td * {
 .my_second_input {
   width: 99%;
   margin: 0;
+}
+.search_bar_button {
+  width: 5%;
+  margin: 0;
+  padding: 0;
 }
 .my_p {
   text-align: justify;

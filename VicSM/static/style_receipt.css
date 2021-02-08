@@ -1,8 +1,8 @@
 html { 
-    font-family: "Arial Narrow", sans-serif;
+    font-family: 'Archivo Narrow', sans-serif;
     background: #eee; padding: 1rem; 
 }
-body { max-width: 1748px; margin: 0 auto; background: white; font-size: 0.65cm; }
+body { max-width: 21.7cm; margin: 0 auto; background: white; font-size: 0.65cm; }
 h3 { 
     font-size: small; 
     font-weight: 500;
