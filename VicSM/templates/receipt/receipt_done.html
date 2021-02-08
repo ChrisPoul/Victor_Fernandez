@@ -2,7 +2,7 @@
 <title>Receipt</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style_receipt.css') }}">
 
-<div style="margin-bottom: 5px;">
+<div style="margin-bottom: 3px;">
     {% include "receipt/receipt_client_done.html" %}
 </div>
 <a href="{{ url_for('receipt.reset_receipt') }}">

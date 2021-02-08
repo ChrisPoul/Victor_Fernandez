@@ -32,7 +32,7 @@
         {% elif head == "mas_iva" %}
             <td>{{ add_iva(products[code]["precio_venta"] * 1.16) }}</td>
         {% else %}
-        <td>{{ products[code][head] }}</td>
+        <td class="centered">{{ products[code][head] }}</td>
         {% endif %}
         {% endfor %}
     </tr>
