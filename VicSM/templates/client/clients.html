@@ -5,9 +5,19 @@
 {% endblock %}
 
 {% block content %}
+<form method="post">
+    <table class="search_bar">
+        <td>
+            <input class="my_second_input" name="search_term" id="search_term">
+        </td>
+        <td>
+            <input class="my_second_input" type="submit" value="Buscar">
+        </td>
+    </table>
+</form>
 <table style="width: 100%">
 {% for head in heads %}
-    <th>{{ head.capitalize() }}</th>    
+    <th>{{ heads[head] }}</th>    
 {% endfor %}
 {% for client in clients %}
     <tr>

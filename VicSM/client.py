@@ -12,13 +12,34 @@ client_heads = {
     }
 receipt_heads = {
     "id": "Id.", "grupo": "Grupo", "cambio": "Tipo de Cambio",
-    "cantidades": "Cantidades", "totals": "Totales", "total": "Total",
+    "cantidades": "Cantidades", "total": "Total",
     "fecha": "Fecha"
 }
 
 
-@bp.route('/clients')
+def get_client(search_term):
+    db = get_db()
+    for head in client_heads:
+        client = db.execute(
+            f'SELECT * FROM client WHERE {head} = ?', (search_term,)
+        ).fetchone()
+
+        if client is not None:
+            return client
+
+    return client
+
+
+@bp.route('/clients', methods=('GET', 'POST'))
 def clients():
+    if request.method == 'POST':
+        search_term = request.form['search_term']
+        client = get_client(search_term)
+
+        if client:
+            return redirect(url_for('client.profile', client_id=client['id']))
+
+
     db = get_db()
     clients = db.execute(
         'SELECT * FROM client'
@@ -63,19 +84,6 @@ def add_client():
             return redirect(url_for('client.clients'))
 
     return render_template('client/add_client.html', heads=add_heads)
-
-
-def get_client(search_term):
-    db = get_db()
-    for head in client_heads:
-        client = db.execute(
-            f'SELECT * FROM client WHERE {head} = ?', (search_term,)
-        ).fetchone()
-
-        if client is not None:
-            return client
-
-    return client
 
 
 def search_receipt_id(client_id, search_term):

@@ -6,7 +6,7 @@
                 <input class="my_second_input" name="search_term" id="search_term">
             </td>
             <td>
-                <input class="my_second_input" type="submit" value="submit">
+                <input class="my_second_input" type="submit" value="Buscar">
             </td>
         </tr>
     </table>
@@ -26,6 +26,12 @@
             <a class="my_link" href="{{ url_for('receipt.edit_receipt', client_id=client['id'], receipt_id=receipt_id) }}">
                 {{ receipt_id }}
             </a>
+        </td>
+        {% elif head == "cantidades" %}
+        <td class="receipt_table">
+            {% for code in receipts[receipt_id][head] %}
+            {{ code }}:{{ receipts[receipt_id][head][code] }},
+            {% endfor %}
         </td>
         {% else %}
         <td class="receipt_table">{{ receipts[receipt_id][head] }}</td>
