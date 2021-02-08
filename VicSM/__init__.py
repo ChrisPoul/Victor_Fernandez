@@ -30,9 +30,4 @@ def create_app(test_config=None):
     from . import client
     app.register_blueprint(client.bp)
 
-    @app.route('/test')
-    def test():
-
-        return render_template('test.html')
-
     return app

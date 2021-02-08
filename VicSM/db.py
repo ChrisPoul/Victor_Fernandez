@@ -71,7 +71,7 @@ def get_receipt(client_id, receipt_id):
 
 
 def save_receipts(receipts):
-    json_receipts = json.dumps(receipts)
+    json_receipts = json.dumps(receipts, indent=4)
     receipts_path = os.path.join(current_app.instance_path, "receipts.json")
 
     with open(receipts_path, "w+") as receipts_file:

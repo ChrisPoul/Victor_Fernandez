@@ -26,9 +26,7 @@
 </div>
 </form>
 {% if client %}
-<button>
-    <a href="{{ url_for('receipt.receipt_done', client_id=client['id'], receipt_id=receipt_id) }}">
-        Listo
-    </a>
-</button>
+<form action="{{ url_for('receipt.receipt_done', client_id=client['id'], receipt_id=receipt_id) }}">
+    <input type="submit" value="Listo">
+</form>
 {% endif %}

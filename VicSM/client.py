@@ -39,7 +39,6 @@ def clients():
         if client:
             return redirect(url_for('client.profile', client_id=client['id']))
 
-
     db = get_db()
     clients = db.execute(
         'SELECT * FROM client'
@@ -48,13 +47,14 @@ def clients():
     return render_template('client/clients.html', clients=clients, heads=client_heads)
 
 
+add_heads = {}
+for head in client_heads:
+    if head != "id" and head != "fecha":
+        add_heads[head] = client_heads[head]
+        
+
 @bp.route('/add_client', methods=('GET', 'POST'))
 def add_client():
-    add_heads = {}
-    for head in client_heads:
-        if head != "id" and head != "fecha":
-            add_heads[head] = client_heads[head]
-
     if request.method == "POST":
         nombre = request.form["nombre"]
         direccion = request.form["direccion"]
