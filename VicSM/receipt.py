@@ -261,7 +261,7 @@ def reset_receipt():
     total = 0
     fecha = format_date(datetime.date.today())
 
-    return redirect(url_for('receipt.receipt', client_id=0))
+    return redirect(url_for('receipt.new_receipt', client_id=0))
 
 
 @bp.route('/<int:client_id>/<int:receipt_id>/delete_products')

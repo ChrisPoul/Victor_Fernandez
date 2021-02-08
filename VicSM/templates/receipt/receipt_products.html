@@ -15,7 +15,7 @@
             <input style="max-width: 70px" class="my_input" name="{{ code }}" id="{{ code }}," value="{{ cantidades[code] }}">
             </td>
         {% elif head == "descripcion" %}
-            <td>{{ products[code][head] }}</td>
+            <td class="justified">{{ products[code][head] }}</td>
         {% elif head == "imagen" %}
             <td>
             <image class="my_image" src="{{ url_for('static', filename='images/{}'.format(products[code][head])) }}"></image>
@@ -33,7 +33,7 @@
         {% elif head == "mas_iva" %}
             <td class="centered">{{ add_iva(products[code]["precio_venta"] * 1.16) }}</td>
         {% else %}
-            <td>{{ products[code][head] }}</td>
+            <td class="centered">{{ products[code][head] }}</td>
         {% endif %}
         {% endfor %}
     </tr>

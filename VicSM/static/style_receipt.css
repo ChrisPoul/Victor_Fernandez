@@ -2,7 +2,10 @@ html {
     font-family: 'Archivo Narrow', sans-serif;
     background: #eee; padding: 1rem; 
 }
-body { max-width: 21.7cm; margin: 0 auto; background: white; font-size: 0.65cm; }
+body { max-width: 21.6cm; margin: 0 auto; background: white; font-size: 0.65cm; }
+@page {
+    size: 8.5in 11in;
+}
 h3 { 
     font-size: small; 
     font-weight: 500;
@@ -18,10 +21,14 @@ table, th, td {
     padding-left: 4px;
     padding-right: 4px;
 }
+tr {
+    page-break-inside: avoid;
+}
 td {
     text-align: left;
     vertical-align: top;
 }
+table tfoot{display: table-footer-group;}
 p {
     margin: 0;
     margin-bottom: 1px;
@@ -29,6 +36,10 @@ p {
 a {
     text-decoration: none;
     color: black;
+}
+.no_borders {
+    border: none !important;
+    padding: 4px;
 }
 .search_bar {
     border: 0;
