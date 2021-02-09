@@ -5,6 +5,7 @@ html {
 body { max-width: 21.6cm; margin: 0 auto; background: white; font-size: 0.65cm; }
 @page {
     size: 8.5in 11in;
+    margin: 0;
 }
 h3 { 
     font-size: small; 
