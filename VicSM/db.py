@@ -81,7 +81,7 @@ def save_receipts(receipts):
 def save_receipt(client_id, receipt_id, receipt):
     receipts = get_receipts()
     try:
-        client_receipts = receipts[client_id]
+        client_receipts = receipts[str(client_id)]
     except KeyError:
         client_receipts = {"numero_de_recibos": 0}
     

@@ -149,6 +149,7 @@ def edit_receipt(client_id, receipt_id):
     global total
     global cantidades
     global products
+    total
 
     aasm_image = get_aasm_image()
     receipt = get_receipt(client_id, receipt_id)
@@ -158,7 +159,7 @@ def edit_receipt(client_id, receipt_id):
     cambio= receipt["cambio"]
     
     try:
-        cantidades["DUMMY_CODE"]
+        cantidades["FRESH_RECEIPT"]
         cantidades = {}
         receipt["cantidades"] = cantidades
         save_receipt(client_id,receipt_id, receipt)
@@ -271,7 +272,7 @@ def delete_products(client_id, receipt_id):
     global cantidades
     global products
 
-    cantidades = {'DUMMY_CODE': 0}
+    cantidades = {'FRESH_RECEIPT': 0}
     products = {}
     totals = {}
     total = 0
