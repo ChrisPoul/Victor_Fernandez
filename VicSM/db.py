@@ -33,9 +33,9 @@ def init_db():
         script = file.read().decode('utf8')
         db.executescript(script)
 
+    receipts = get_receipts()
     receipts = {}
     save_receipts(receipts)
-    recent = {}
 
     images_path = os.path.join(current_app.root_path, "static/images")
     all_images_path = os.path.join(images_path, "*")
@@ -93,8 +93,9 @@ def get_receipt(client_id, receipt_id):
 
 def save_receipts(receipts):
     receipts_path = os.path.join(current_app.instance_path, "receipts.json")
+
     with open(receipts_path, "w+") as receipts_file:
-        json_receipts = json.dumps(receipts, indent=2)
+        json_receipts = json.dumps(receipts, indent=4)
         receipts_file.write(json_receipts)
 
 
@@ -113,22 +114,6 @@ def save_receipt(client_id, receipt_id, receipt):
     client_receipts[str(receipt_id)] = receipt
     receipts[client_id] = client_receipts
     save_receipts(receipts)
-
-
-def get_recent():
-    recent_path = os.path.join(current_app.instance_path, "recent.json")
-    with open(recent_path) as recent_file:
-        recent = json.load(recent_file)
-
-    return recent
-
-
-def save_recent(recent):
-    recent_path = os.path.join(current_app.instance_path, "recent.json")
-    with open(recent_path, "w+") as recent_file:
-        json_recent = json.dumps(recent, indent=2)
-        recent_file.write(json_recent)
-
 
 
 days = {
