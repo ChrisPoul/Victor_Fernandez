@@ -12,7 +12,7 @@ header {
 header h1 { 
   color: #ffffff;
   font-size: x-large;
-  padding-left: 10px;
+  padding-left: 15px;
 }
 hr { border: none; border-top: 1px solid lightgray; }
 nav { 
@@ -83,10 +83,15 @@ table th, table td * {
   width: 99%;
   margin: 0;
 }
+.search_bar_td {
+  width: 99%;
+  margin: 0;
+  padding: 0;
+}
 .search_bar_button {
   width: 5%;
   margin: 0;
-  padding: 0;
+  margin-left: 7px;
 }
 .my_p {
   text-align: justify;
