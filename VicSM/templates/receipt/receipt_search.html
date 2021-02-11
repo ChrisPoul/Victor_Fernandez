@@ -1,18 +1,19 @@
 {% extends "base.html" %}
 
 {% block header %}
-<h1>{% block title %}Search for client{% endblock %}</h1>
+<h1>{% block title %}Recibo Nuevo{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
+<h3>Escribe El Nombre o el ID del Cleinte:</h3>
 <form method="post">
     <table class="search_bar">
         <tr>
-            <td class="search_bar">
+            <td class="search_bar_td">
                 <input class="my_second_input" name="search_term" id="search_term">
             </td>
-            <td class="search_bar">
-                <input class="my_second_input" type="submit" value="submit">
+            <td class="search_bar_td">
+                <input class="search_bar_button" type="submit" value="Aceptar">
             </td>
         </tr>
     </table>
