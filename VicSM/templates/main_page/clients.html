@@ -1,5 +1,7 @@
 
-H
-F
-S
-S
+<h2>Cleintes</h2>
+
+{% for client in clients %}
+{{ client["nombre"] }} : {{ client["proyecto"] }}
+<br>
+{% endfor %}

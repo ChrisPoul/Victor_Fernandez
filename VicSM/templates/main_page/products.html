@@ -1,5 +1,7 @@
 
-H
-F
-F
-S
+<h2>Productos</h2>
+
+{% for codigo in products %}
+{{ codigo }} : {{ products[codigo].nombre }}
+<br>
+{% endfor %}

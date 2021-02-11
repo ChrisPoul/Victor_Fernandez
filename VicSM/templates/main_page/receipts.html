@@ -1,3 +1,7 @@
 
-JSLI
-DIOLS
+<h2>Recibos Recientes</h2>
+
+{% for client_id in receipts %}
+{{ client_id }} : {{ receipts[client_id].grupo }}
+<br>
+{% endfor %}
