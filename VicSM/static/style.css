@@ -7,7 +7,7 @@ section { margin: 8px; }
 a { color: #d8dbdd; }
 header {
   background-color: rgb(84, 120, 197);
-  display: flex; width: 100%; max-height: 1.2cm;
+  display: flex; width: 100%; max-height: 1.5cm;
 }
 header h1 { 
   color: #ffffff;

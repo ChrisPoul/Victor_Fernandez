@@ -51,7 +51,7 @@
         </td>
         <td style="text-align: right; border-left: 0;">
             {% if client %}
-            <a href="{{ url_for('receipt.delete_products', client_id=client['id'], receipt_id=receipt_id) }}">
+            <a href="{{ url_for('receipt.reset_receipt', client_id=client['id'], receipt_id=receipt_id) }}">
             {% else %}
             <a href="">
             {% endif %}

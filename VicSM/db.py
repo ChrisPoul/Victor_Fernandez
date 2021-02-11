@@ -3,6 +3,7 @@ import json
 import click
 import os
 import glob
+import datetime
 from flask import current_app, g
 from flask.cli import with_appcontext
 
@@ -63,11 +64,31 @@ def get_receipts():
     return receipts
 
 
-def get_receipt(client_id, receipt_id):
+def get_client_receipts(client_id):
     receipts = get_receipts()
-    client_receipts = receipts[str(client_id)]
+    client_id = str(client_id)
+    client_receipts = receipts[client_id]
 
-    return client_receipts[str(receipt_id)]
+    return client_receipts
+
+
+def get_receipt(client_id, receipt_id):
+    client_id = str(client_id)
+    receipt_id = str(receipt_id)
+    try:
+        client_receipts = get_client_receipts(client_id)
+        receipt = client_receipts[receipt_id]
+    except KeyError:
+        receipt = {
+        "grupo": None,
+        "cambio": None,
+        "totals": {},
+        "total": 0,
+        "cantidades": {},
+        "fecha": format_date(datetime.date.today())
+        }
+
+    return receipt
 
 
 def save_receipts(receipts):
@@ -80,8 +101,9 @@ def save_receipts(receipts):
 
 def save_receipt(client_id, receipt_id, receipt):
     receipts = get_receipts()
+    client_id = str(client_id)
     try:
-        client_receipts = receipts[str(client_id)]
+        client_receipts = receipts[client_id]
     except KeyError:
         client_receipts = {"numero_de_recibos": 0}
     

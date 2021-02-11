@@ -10,7 +10,7 @@ from VicSM.inventory import get_product, format_price, add_iva
 from VicSM.client import get_client, client_heads
 from VicSM.db import (
     get_db, get_receipts, save_receipts, format_date, get_receipt,
-    save_receipt
+    save_receipt, get_client_receipts
 )
 
 bp = Blueprint('receipt', __name__)
@@ -45,129 +45,56 @@ def get_aasm_image():
     return aasm_image
 
 
-client = None
-grupo = None
-cambio = None
-products = {}
-totals = {}
-total = 0
-cantidades = {}
-fecha = format_date(datetime.date.today())
+def get_receipt_products(receipt):
+        products = {}
+        cantidades = receipt["cantidades"]
+        for code in cantidades: products[code] = get_product(code)
+
+        return products
 
 
 @bp.route('/<int:client_id>/new_receipt', methods=('GET', 'POST'))
 def new_receipt(client_id):
-    global client
-    global grupo
-    global cambio
-    global totals
-    global total
-    global cantidades
-    global products
-    global fecha
+    client = get_client(client_id)
 
-    receipt_id = 0
-    aasm_image = get_aasm_image()
-    if client_id != 0: client = get_client(client_id)
-    if client: cambio = client["cambio"]
-
-    if request.method == "GET":
-        products = {}
-        grupo = None
-        if client_id == 0:
-            client = None
-        cantidades = {}
-        totals = {}
-        total = 0
-        fecha = format_date(datetime.date.today())
-
-    elif request.method == "POST":
+    if request.method == "POST":
         try:
             search_term = request.form['search_term']
             client = get_client(search_term)
-            if client:
-                cambio = client["cambio"]
         except KeyError:
             pass
 
-        try:
-            grupo = request.form['grupo']
-        except KeyError:
-            pass
+    if client:
+        client_id = client["id"]
+        receipt = get_receipt(client_id, 0)
+        save_receipt(client_id, 0, receipt)
+        client_receipts = get_client_receipts(client_id)
+        receipt_id = client_receipts["numero_de_recibos"]
 
-        try:
-            cambio = request.form['cambio']
-            try:
-                cambio = float(cambio)
-            except ValueError:
-                cambio = client['cambio']
-        except KeyError:
-            pass
-
-        for code in products:
-            try:
-                cantidades[code] = request.form[code]
-                try:
-                    cantidades[code] = int(cantidades[code])
-                except ValueError:
-                    cantidades[code] = 0
-                product = products[code]
-                totals[code] = round(cantidades[code] * float(product["precio_venta"]), 2)
-            except KeyError:
-                pass
-
-        try:
-            codigo = request.form["codigo"]
-        except KeyError:
-            codigo = ""
-
-        total = get_total(totals)
-        product = get_product(codigo)
-        if product is not None:
-            products[codigo] = product
-
-        for code in products:
-            try:
-                dummy_var = cantidades[code]
-            except KeyError:
-                cantidades[code] = 0
-            
-    return render_template(
-        'receipt/receipt.html', product_heads=product_heads, client_heads=client_heads,
-        products=products, totals=totals, total=total, cantidades=cantidades, grupo=grupo,
-        format_price=format_price, add_iva=add_iva, client=client, middle_heads=middle_heads,
-        last_heads=last_heads, cambio=cambio, receipt_id=receipt_id, aasm_image=aasm_image,
-        fecha=fecha
-    )
+        return redirect(
+            url_for(
+                'receipt.edit_receipt', client_id=client["id"], 
+                receipt_id=receipt_id
+            )
+        )
+    
+    return render_template('receipt/receipt_search.html')
 
 
 @bp.route('/<int:receipt_id>/<int:client_id>/edit_receipt', methods=('GET', 'POST'))
 def edit_receipt(client_id, receipt_id):
-    global grupo
-    global cambio
-    global totals
-    global total
-    global cantidades
-    global products
-    total
-
     aasm_image = get_aasm_image()
-    receipt = get_receipt(client_id, receipt_id)
     client = get_client(client_id)
-    fecha = format_date(datetime.date.today())
+    receipt = get_receipt(client_id, receipt_id)
+    products = get_receipt_products(receipt)
+
+    cantidades = receipt["cantidades"]
     grupo = receipt["grupo"]
     cambio= receipt["cambio"]
-    
-    try:
-        cantidades["FRESH_RECEIPT"]
-        cantidades = {}
-        receipt["cantidades"] = cantidades
-        save_receipt(client_id,receipt_id, receipt)
-    except KeyError:
-        totals = receipt["totals"]
-        total = receipt["total"]
-        cantidades = receipt["cantidades"]
-        for code in cantidades: products[code] = get_product(code)
+    if not cambio: cambio = client["cambio"]
+    totals = receipt["totals"]
+    total = receipt["total"]
+    fecha = format_date(datetime.date.today())
 
     if request.method == "POST":
         try:
@@ -205,19 +132,28 @@ def edit_receipt(client_id, receipt_id):
         product = get_product(codigo)
         if product is not None:
             products[codigo] = product
+            cantidades[codigo] = 0
 
         for code in products:
             try:
                 dummy_var = cantidades[code]
             except KeyError:
                 cantidades[code] = 0
+
+        receipt["cantidades"] = cantidades
+        receipt["grupo"] = grupo
+        receipt["cambio"] = cambio
+        receipt["totals"] = totals
+        receipt["total"] = total
+        receipt["fecha"] = fecha
+        save_receipt(client_id, receipt_id, receipt)
             
     return render_template(
         'receipt/receipt.html', product_heads=product_heads, client_heads=client_heads,
         products=products, totals=totals, total=total, cantidades=cantidades, grupo=grupo,
         format_price=format_price, add_iva=add_iva, client=client, middle_heads=middle_heads,
         last_heads=last_heads, cambio=cambio, receipt_id=receipt_id, aasm_image=aasm_image,
-        fecha=fecha
+        fecha=fecha, receipt=receipt
     )
 
 
@@ -225,65 +161,32 @@ def edit_receipt(client_id, receipt_id):
 def receipt_done(client_id, receipt_id):
     aasm_image = get_aasm_image()
     client = get_client(client_id)
-    client_id = str(client_id)
+    receipt = get_receipt(client_id, receipt_id)
+    products = get_receipt_products(receipt)
 
-    receipt = {
-        "totals": totals, "total": total,
-        "cantidades": cantidades, 
-        "grupo": grupo, "cambio": cambio,
-        "fecha": fecha
-        }
-        
-    save_receipt(client_id,receipt_id, receipt)
+    totals = receipt["totals"]
+    total = receipt["total"]
+    cantidades = receipt["cantidades"]
+    grupo = receipt["grupo"]
+    cambio = receipt["cambio"]
+    fecha = receipt["fecha"]
 
     return render_template(
         'receipt/receipt_done.html', product_heads=product_heads, client_heads=client_heads,
         products=products, totals=totals, total=total, cantidades=cantidades, grupo=grupo,
         format_price=format_price, add_iva=add_iva, client=client, middle_heads=middle_heads,
         last_heads=last_heads, cambio=cambio, aasm_image=aasm_image, fecha=fecha
-        )
+    )
 
 
-@bp.route('/reset_receipt')
-def reset_receipt():
-    global client
-    global grupo
-    global cambio
-    global totals
-    global total
-    global cantidades
-    global fecha
+@bp.route('/<int:client_id>/<int:receipt_id>/reset_receipt')
+def reset_receipt(client_id, receipt_id):
+    receipt = get_receipt(client_id, 0)
+    save_receipt(client_id, receipt_id, receipt)
 
-    client = None
-    grupo = None
-    cambio = None
-    cantidades = {}
-    totals = {}
-    total = 0
-    fecha = format_date(datetime.date.today())
-
-    return redirect(url_for('receipt.new_receipt', client_id=0))
-
-
-@bp.route('/<int:client_id>/<int:receipt_id>/delete_products')
-def delete_products(client_id, receipt_id):
-    global totals
-    global total
-    global cantidades
-    global products
-
-    cantidades = {'FRESH_RECEIPT': 0}
-    products = {}
-    totals = {}
-    total = 0
-
-    if receipt_id == 0:
-        return redirect(url_for('receipt.new_receipt', client_id=client_id))
-    else:
-
-        return redirect(url_for(
-            'receipt.edit_receipt', client_id=client_id, receipt_id=receipt_id
-            ))
+    return redirect(
+        url_for('receipt.edit_receipt', client_id=client_id, receipt_id= receipt_id)
+    )
 
 
 def save_my_image(image_file):
@@ -301,7 +204,6 @@ def save_my_image(image_file):
     json_references = json.dumps({"aasm": image_name})
     with open(references_path, "w") as references_file:
         references_file.write(json_references)
-
 
 
 @bp.route('/receipt_config', methods=('GET', 'POST'))
