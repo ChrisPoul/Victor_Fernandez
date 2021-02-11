@@ -5,31 +5,45 @@
 {% endblock %}
 
 {% block content %}
-    <table style="width:100%">
+<h3>Buscar productos con:</h3>
+<form method="post">
+<table class="search_bar">
+    <tr>
+        <td class="search_bar_td">
+            <input class="my_second_input" name="search_term" id="search_term">
+        </td>
+        <td class="search_bar_td">
+            <input class="search_bar_button" type="submit" value="Buscar">
+        </td>
+    </tr>
+</table>
+</form>
+<hr>
+<table style="width:100%">
+    {% for head in heads %}
+        <th>{{ heads[head] }}</th>
+    {% endfor %}
+    {% for product in products %}
+    <tr>
         {% for head in heads %}
-            <th>{{ heads[head] }}</th>
+        <td>
+        {% if head == "imagen" %}
+            <image class="my_image" src="{{ url_for('static', filename='images/{}'.format(product[head])) }}">
+            </image>
+        {% elif head == "codigo" %}
+        <a class="default_link" href="{{ url_for('inventory.update_product', codigo=product['codigo']) }}">
+            {{ product[head] }}
+        </a>
+        {% elif head == "precio_venta" or head == "mi_precio" %}
+            {{ format_price(product[head]) }}
+        {% elif head == "descripcion" %}
+            <p class="my_p">{{ product[head] }}</p>
+        {% else %}
+            {{ product[head] }}
+        {% endif %}
+        </td>
         {% endfor %}
-        {% for product in products %}
-            <tr>
-                {% for head in heads %}
-                <td>
-                {% if head == "imagen" %}
-                    <image class="my_image" src="{{ url_for('static', filename='images/{}'.format(product[head])) }}">
-                    </image>
-                {% elif head == "codigo" %}
-                <a class="default_link" href="{{ url_for('inventory.update_product', codigo=product['codigo']) }}">
-                    {{ product[head] }}
-                </a>
-                {% elif head == "precio_venta" or head == "mi_precio" %}
-                    {{ format_price(product[head]) }}
-                {% elif head == "descripcion" %}
-                    <p class="my_p">{{ product[head] }}</p>
-                {% else %}
-                    {{ product[head] }}
-                {% endif %}
-                </td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </table>
+    </tr>
+    {% endfor %}
+</table>
 {% endblock %}

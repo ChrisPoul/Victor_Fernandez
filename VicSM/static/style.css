@@ -1,7 +1,7 @@
 html { 
-  font-family: sans-serif; background: rgb(220, 235, 238); 
+  font-family: sans-serif; background: rgba(90, 137, 150, 0.151); 
   margin: 0; }
-body { max-width: 100%; margin: 0; background: rgb(238, 245, 247); }
+body { max-width: 100%; margin: 0; background: rgba(90, 137, 150, 0.151); }
 h1 { font-family: serif; color: #377ba8; margin: 1rem 0; }
 section { margin: 8px; }
 a { color: #d8dbdd; }
@@ -97,4 +97,13 @@ table th, table td * {
   text-align: justify;
   margin: 0;
   padding: 0;
+}
+.main_page {
+  text-align: left;
+  vertical-align: middle;
+  padding: 10px;
+  border-collapse:separate;
+  border:solid black 1px;
+  border-radius:6px;
+  -moz-border-radius:6px;
 }

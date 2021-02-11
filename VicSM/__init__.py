@@ -21,6 +21,9 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
+    from . import main_page
+    app.register_blueprint(main_page.bp)
+
     from . import inventory
     app.register_blueprint(inventory.bp)
 

@@ -2,14 +2,15 @@
 <title>{% block title %}{% endblock %}- VicSM</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <nav>
+    <h1><a href="{{ url_for('main_page.main_page') }}">AASM</a></h1>
     <ul>
         <li><a href="{{ url_for('inventory.inventory') }}">Inventario</a></li>
         <li><a href="{{ url_for('inventory.add_product') }}">Add Product</a></li>
         <li><a href="{{ url_for('client.clients') }}">Clientes</a></li>
         <li><a href="{{ url_for('client.add_client') }}">Add Client</a></li>
+        <li><a href="{{ url_for('receipt.new_receipt', client_id=0) }}">Nuevo Recibo</a></li>
         <li><a href="{{ url_for('receipt.receipt_config') }}">Configuración Recibo</a></li>
     </ul>
-    <h1 style="text-align: right;"><a href="{{ url_for('receipt.new_receipt', client_id=0) }}">Nuevo Recibo</a></h1>
 </nav>
 <header>
     {% block header %}{% endblock %}

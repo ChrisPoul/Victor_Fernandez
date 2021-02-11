@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block header %}
+<h1>{% block title %}Pagina Principal{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<table class="main_page_table">
+    <tr>
+        <td class="main_page">
+            {% include "main_page/receipts.html" %}
+        </td>
+        <td class="main_page" rowspan="2">
+            {% include "main_page/products.html" %}
+        </td>
+    </tr>
+    <tr>
+        <td class="main_page">
+            {% include "main_page/clients.html" %}
+        </td>
+    </tr>
+</table>
+{% endblock %}

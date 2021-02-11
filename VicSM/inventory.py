@@ -4,13 +4,17 @@ from flask import (
 from VicSM.db import get_db
 import os
 
-bp = Blueprint('inventory', __name__, url_prefix='/inventory')
+bp = Blueprint('inventory', __name__)
 
 heads = {
     "grupo": "Grupo", "serie": "Serie", "codigo": "Código", "nombre": "Nombre", 
     "descripcion": "Descripción", "marca": "Marca", "imagen": "Imagen", 
     "mi_precio": "Mi Precio", "precio_venta": "Precio Venta", "inventario" : "Inventario"
     }
+search_heads = {}
+for head in heads:
+    if head != "descripcion" and head != "imagen":
+        search_heads[head] = heads[head]
 
 
 def format_price(num):
@@ -47,45 +51,46 @@ def add_iva(num):
     return format_price(num)
 
 
-pre_heads = {}
-for head in heads:
-    if head != "descripcion" and head != "imagen":
-        pre_heads[head] = heads[head]
-
-
-@bp.route('/', methods=('POST', 'GET'))
-def inventory():
+def get_products(search_term):
     db = get_db()
-    
-    if request.method == 'POST':
-        form_values = {}
+    products = None
+    for head in search_heads:
+            products = db.execute(
+                f'SELECT * FROM product WHERE {head} = ?',(search_term,)
+            ).fetchall()
+
+            if products:
+                return products
+
+    if not products:
         products = db.execute(
-            'SELECT p.codigo, grupo, serie, nombre, descripcion,'
-            ' marca, imagen, mi_precio, precio_venta, inventario'
-            ' FROM product p'
+            'SELECT * FROM product'
         ).fetchall()
 
-        for head in pre_heads:
-            if request.form[head] != "":
-                form_values[head] = request.form[head]
-                products = db.execute(
-                    'SELECT p.codigo, grupo, serie, nombre, descripcion,'
-                    ' marca, imagen, mi_precio, precio_venta, inventario'
-                    f' FROM product p WHERE {head} = ?',(form_values[head],)
-                ).fetchall()
+    return products
 
-                if not products:
-                    return render_template('inventory/pre_selection.html', heads=heads)
-                else:
-                    return render_template('inventory/inventory.html', 
-                        products=products, heads=heads, format_price=format_price
-                    )
 
-        return render_template('inventory/inventory.html',
-            products=products, heads=heads, format_price=format_price
-        )
+def get_product(codigo):
+    db = get_db()
+    product = db.execute(
+        'SELECT * FROM product WHERE codigo = ?', (codigo,)
+    ).fetchone()
 
-    return render_template('inventory/pre_selection.html', heads=heads)
+    return product
+
+
+@bp.route('/inventory', methods=('POST', 'GET'))
+def inventory():
+    db = get_db()
+    search_term = "0"
+    if request.method == 'POST':
+        search_term = request.form["search_term"]
+    
+    products = get_products(search_term)
+
+    return render_template('inventory/inventory.html',
+        products=products, heads=heads, format_price=format_price
+    )
 
 
 def save_image(current_app, image_file):
@@ -122,15 +127,6 @@ def add_product():
         return redirect(url_for('inventory.inventory'))
 
     return render_template('inventory/add_product.html', heads=heads)
-
-
-def get_product(codigo):
-    db = get_db()
-    product = db.execute(
-        'SELECT * FROM product WHERE codigo = ?', (codigo,)
-    ).fetchone()
-
-    return product
 
 
 def remove_image(current_app, image_name):
