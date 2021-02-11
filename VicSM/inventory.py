@@ -109,26 +109,17 @@ def add_product():
         precio_venta = request.form["precio_venta"]
         inventario = request.form["inventario"]
 
-        error = None
+        db = get_db()
+        db.execute(
+            'INSERT INTO product (grupo, serie, codigo, nombre, descripcion,'
+            ' marca, imagen, mi_precio, precio_venta, inventario)'
+            ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (grupo, serie, codigo, nombre,
+            descripcion, marca, imagen, mi_precio, precio_venta, inventario)
+        )
+        db.commit()
+        save_image(current_app, imagen_file)
 
-        if not codigo or not nombre:
-            error = "Falta llenar cosas"
-
-        if error is not None:
-            flash(error)
-        else:
-            db = get_db()
-            db.execute(
-                'INSERT INTO product (grupo, serie, codigo, nombre, descripcion,'
-                ' marca, imagen, mi_precio, precio_venta, inventario)'
-                ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (grupo, serie, codigo, nombre,
-                descripcion, marca, imagen, mi_precio, precio_venta, inventario)
-            )
-            db.commit()
-
-            save_image(current_app, imagen_file)
-
-            return redirect(url_for('inventory.inventory'))
+        return redirect(url_for('inventory.inventory'))
 
     return render_template('inventory/add_product.html', heads=heads)
 
