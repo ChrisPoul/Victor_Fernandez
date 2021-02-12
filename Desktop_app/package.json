@@ -1,0 +1,18 @@
+{
+  "name": "desktop_vicsm",
+  "version": "1.0.0",
+  "description": "Aplicacion en desktop",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Christopher",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^11.2.3"
+  },
+  "dependencies": {
+    "python-shell": "^2.0.3"
+  }
+}
