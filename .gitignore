@@ -6,3 +6,5 @@ __pycache__/
 instance/
 images/
 my_images/
+node_modules/
+out/
