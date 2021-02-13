@@ -10,9 +10,11 @@
   "author": "Christopher",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^11.2.3"
+    "electron": "^11.2.3",
+    "electron-builder": "^22.9.1"
   },
   "dependencies": {
+    "electron-pdf-window": "^1.0.12",
     "python-shell": "^2.0.3"
   }
 }
