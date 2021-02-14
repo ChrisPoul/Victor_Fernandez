@@ -3,6 +3,17 @@ const fs = require('fs')
 const path = require('path')
 const os = require('os')
 
+let {PythonShell} = require('python-shell');
+
+var options = {
+    scriptPath : __dirname,
+    args: []
+};
+
+var pyshell = new PythonShell('run_app.py', options)
+pyshell.on('message', function(message) {
+    console.log(message);
+});
 
 function print_window(window) {
     // Use default printing options
@@ -22,7 +33,7 @@ function createWindow() {
     window = new BrowserWindow();
     setTimeout(() => { 
          window.loadURL('http://127.0.0.1:5000/'); 
-        }, 150);
+        }, 200);
 };
 
 const { Menu, MenuItem } = require('electron')
@@ -46,4 +57,5 @@ app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
     app.quit()
+    pyshell.kill()
 })
