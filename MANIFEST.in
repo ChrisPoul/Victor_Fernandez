@@ -1,5 +1,4 @@
 include VicSM/schema.sql
-graft instance
 graft VicSM/static
 graft VicSM/templates
 global-exclude *.pyc

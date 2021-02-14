@@ -1,7 +1,7 @@
 html { 
-  font-family: sans-serif; background: rgba(90, 137, 150, 0.151); 
+  font-family: sans-serif; background: white; 
   margin: 0; }
-body { max-width: 100%; margin: 0; background: rgba(90, 137, 150, 0.151); }
+body { max-width: 100%; margin: 0; background: white; }
 h1 { font-family: serif; color: #377ba8; margin: 1rem 0; }
 section { margin: 8px; }
 a { color: #d8dbdd; }
