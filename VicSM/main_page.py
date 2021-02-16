@@ -22,7 +22,7 @@ def main_page():
         client_name = client["nombre"]
         recent_receipts[client_name] = recent_receipt
 
-    codigos_frecuentes = ["SHELLY_1", "SHELLY_DIMMER2", "SHELLY_1PM"]
+    codigos_frecuentes = []
     products = {}
     for codigo in codigos_frecuentes:
         product = get_product(codigo)
