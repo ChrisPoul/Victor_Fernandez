@@ -26,6 +26,14 @@ def close_db(e=None):
         db.close()
 
 
+def get_all_images(app):
+    images_path = os.path.join(app.root_path, "static/images")
+    all_images_path = os.path.join(images_path, "*")
+    all_images = glob.glob(all_images_path)
+
+    return all_images
+    
+
 def init_db():
     db = get_db()
 
@@ -36,9 +44,7 @@ def init_db():
     receipts = {}
     save_receipts(receipts)
 
-    images_path = os.path.join(current_app.root_path, "static/images")
-    all_images_path = os.path.join(images_path, "*")
-    all_images = glob.glob(all_images_path)
+    all_images = get_all_images(current_app)
     for image in all_images:
         os.remove(image)
 
@@ -113,6 +119,18 @@ def save_receipt(client_id, receipt_id, receipt):
     client_receipts[str(receipt_id)] = receipt
     receipts[client_id] = client_receipts
     save_receipts(receipts)
+
+
+def save_image(image_file):
+    images_path = os.path.join(current_app.root_path, "static/images")
+    image_path = os.path.join(images_path, image_file.filename)
+    image_file.save(image_path)
+
+
+def remove_image(image_name):
+    images_path = os.path.join(current_app.root_path, "static/images")
+    image_path = os.path.join(images_path, image_name)
+    os.remove(image_path)
 
 
 days = {

@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, g, render_template, request, flash, redirect, url_for, current_app
 )
-from VicSM.db import get_db
+from VicSM.db import get_db, save_image, remove_image
 import os
 
 bp = Blueprint('inventory', __name__)
@@ -81,7 +81,6 @@ def get_product(codigo):
 
 @bp.route('/inventory', methods=('POST', 'GET'))
 def inventory():
-    db = get_db()
     search_term = "0"
     if request.method == 'POST':
         search_term = request.form["search_term"]
@@ -91,12 +90,6 @@ def inventory():
     return render_template('inventory/inventory.html',
         products=products, heads=heads, format_price=format_price
     )
-
-
-def save_image(current_app, image_file):
-    images_path = os.path.join(current_app.root_path, "static/images")
-    image_path = os.path.join(images_path, image_file.filename)
-    image_file.save(image_path)
 
 
 @bp.route('/add_product', methods=('GET', 'POST'))
@@ -122,17 +115,11 @@ def add_product():
             descripcion, marca, imagen, mi_precio, precio_venta, inventario)
         )
         db.commit()
-        save_image(current_app, imagen_file)
+        save_image(imagen_file)
 
         return redirect(url_for('inventory.inventory'))
 
     return render_template('inventory/add_product.html', heads=heads)
-
-
-def remove_image(current_app, image_name):
-    images_path = os.path.join(current_app.root_path, "static/images")
-    image_path = os.path.join(images_path, image_name)
-    os.remove(image_path)
 
 
 @bp.route('/<string:codigo>/update_product', methods=('GET', 'POST'))
@@ -162,8 +149,8 @@ def update_product(codigo):
             if not imagen_file:
                 imagen = product["imagen"]
             else:
-                remove_image(current_app, product["imagen"])
-                save_image(current_app, imagen_file)
+                remove_image(product["imagen"])
+                save_image(imagen_file)
 
             db = get_db()
             db.execute(
@@ -183,7 +170,7 @@ def update_product(codigo):
 def remove_product(codigo):
     db = get_db()
     product = get_product(codigo)
-    remove_image(current_app, product["imagen"])
+    remove_image(product["imagen"])
     db.execute('DELETE FROM product WHERE codigo = ?', (codigo,))
     db.commit()
 
