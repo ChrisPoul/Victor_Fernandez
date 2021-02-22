@@ -8,22 +8,22 @@ from flask import (
 )
 from VicSM.inventory import get_product, format_price, add_iva
 from VicSM.client import get_client, client_heads
-from VicSM.db import (
-    get_db, get_receipts, save_receipts, format_date, get_receipt,
-    save_receipt, get_client_receipts
+from VicSM.models import (
+    format_date, get_receipt, save_receipt,
+    get_client_receipts, Client
 )
 
 bp = Blueprint('receipt', __name__)
 
 product_heads = {
-    "codigo": "Código", "nombre": "Nombre", "descripcion": "Descripción", "marca": "Marca", 
-    "imagen": "Imagen", "precio_venta": "Precio Venta", "mas_iva": "Mas Iva", "cantidad": "Cnt.",
-    "total": "Total"
-    }
+    "codigo": "Código", "nombre": "Nombre", "descripcion": "Descripción",
+    "marca": "Marca", "imagen": "Imagen", "precio_venta": "Precio Venta",
+    "mas_iva": "Mas Iva", "cantidad": "Cnt.", "total": "Total"
+}
 middle_heads = {
-    "nombre": "Nombre del Cliente ó Razón Social", "tel": "Tel/Fax", 
+    "nombre": "Nombre del Cliente ó Razón Social", "tel": "Tel/Fax",
     "cambio": "Tipo de Cambio"
-    }
+}
 last_heads = ["direccion", "nombre", "descripcion"]
 
 
@@ -46,16 +46,17 @@ def get_aasm_image():
 
 
 def get_receipt_products(receipt):
-        products = {}
-        cantidades = receipt["cantidades"]
-        for code in cantidades: products[code] = get_product(code)
+    products = {}
+    cantidades = receipt["cantidades"]
+    for code in cantidades:
+        products[code] = get_product(code)
 
-        return products
+    return products
 
 
 @bp.route('/<int:client_id>/new_receipt', methods=('GET', 'POST'))
 def new_receipt(client_id):
-    client = get_client(client_id)
+    client = Client.query.get(client_id)
 
     if request.method == "POST":
         try:
@@ -65,7 +66,7 @@ def new_receipt(client_id):
             pass
 
     if client:
-        client_id = client["id"]
+        client_id = client.id
         receipt = get_receipt(client_id, 0)
         save_receipt(client_id, 0, receipt)
         client_receipts = get_client_receipts(client_id)
@@ -73,11 +74,11 @@ def new_receipt(client_id):
 
         return redirect(
             url_for(
-                'receipt.edit_receipt', client_id=client["id"], 
+                'receipt.edit_receipt', client_id=client_id,
                 receipt_id=receipt_id
             )
         )
-    
+
     return render_template('receipt/receipt_search.html')
 
 
@@ -90,8 +91,9 @@ def edit_receipt(client_id, receipt_id):
 
     cantidades = receipt["cantidades"]
     grupo = receipt["grupo"]
-    cambio= receipt["cambio"]
-    if not cambio: cambio = client["cambio"]
+    cambio = receipt["cambio"]
+    if not cambio:
+        cambio = client.cambio
     totals = receipt["totals"]
     total = receipt["total"]
     fecha = format_date(datetime.date.today())
@@ -107,7 +109,7 @@ def edit_receipt(client_id, receipt_id):
             try:
                 cambio = float(cambio)
             except ValueError:
-                cambio = client['cambio']
+                cambio = client.cambio
         except KeyError:
             pass
 
@@ -119,7 +121,8 @@ def edit_receipt(client_id, receipt_id):
                 except ValueError:
                     cantidades[code] = 0
                 product = products[code]
-                totals[code] = round(cantidades[code] * float(product["precio_venta"]), 2)
+                totals[code] = round(cantidades[code] *
+                                     float(product.precio_venta), 2)
             except KeyError:
                 pass
 
@@ -136,7 +139,7 @@ def edit_receipt(client_id, receipt_id):
 
         for code in products:
             try:
-                dummy_var = cantidades[code]
+                cantidades[code]
             except KeyError:
                 cantidades[code] = 0
 
@@ -147,13 +150,15 @@ def edit_receipt(client_id, receipt_id):
         receipt["total"] = total
         receipt["fecha"] = fecha
         save_receipt(client_id, receipt_id, receipt)
-            
+
     return render_template(
-        'receipt/receipt.html', product_heads=product_heads, client_heads=client_heads,
-        products=products, totals=totals, total=total, cantidades=cantidades, grupo=grupo,
-        format_price=format_price, add_iva=add_iva, client=client, middle_heads=middle_heads,
-        last_heads=last_heads, cambio=cambio, receipt_id=receipt_id, aasm_image=aasm_image,
-        fecha=fecha, receipt=receipt
+        'receipt/receipt.html', product_heads=product_heads,
+        client_heads=client_heads, products=products, totals=totals,
+        total=total, cantidades=cantidades, grupo=grupo,
+        format_price=format_price, add_iva=add_iva, client=client,
+        middle_heads=middle_heads, last_heads=last_heads, cambio=cambio,
+        receipt_id=receipt_id, aasm_image=aasm_image, fecha=fecha,
+        receipt=receipt
     )
 
 
@@ -172,10 +177,12 @@ def receipt_done(client_id, receipt_id):
     fecha = receipt["fecha"]
 
     return render_template(
-        'receipt/receipt_done.html', product_heads=product_heads, client_heads=client_heads,
-        products=products, totals=totals, total=total, cantidades=cantidades, grupo=grupo,
-        format_price=format_price, add_iva=add_iva, client=client, middle_heads=middle_heads,
-        last_heads=last_heads, cambio=cambio, aasm_image=aasm_image, fecha=fecha
+        'receipt/receipt_done.html', product_heads=product_heads,
+        client_heads=client_heads, products=products, totals=totals,
+        total=total, cantidades=cantidades, grupo=grupo,
+        format_price=format_price, add_iva=add_iva, client=client,
+        middle_heads=middle_heads, last_heads=last_heads, cambio=cambio,
+        aasm_image=aasm_image, fecha=fecha
     )
 
 
@@ -185,7 +192,8 @@ def reset_receipt(client_id, receipt_id):
     save_receipt(client_id, receipt_id, receipt)
 
     return redirect(
-        url_for('receipt.edit_receipt', client_id=client_id, receipt_id= receipt_id)
+        url_for('receipt.edit_receipt',
+                client_id=client_id, receipt_id=receipt_id)
     )
 
 
@@ -215,4 +223,3 @@ def receipt_config():
         return redirect(url_for('receipt.receipt'))
 
     return render_template('receipt/receipt_config.html')
-    

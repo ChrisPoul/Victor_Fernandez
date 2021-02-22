@@ -1,7 +1,7 @@
 from flask import (
-    Blueprint, request, render_template
+    Blueprint, render_template
 )
-from VicSM.db import get_receipts
+from VicSM.models import get_receipts
 from VicSM.client import get_client
 from VicSM.inventory import get_product
 
@@ -28,8 +28,7 @@ def main_page():
         product = get_product(codigo)
         products[codigo] = product
 
-
     return render_template(
         'main_page/main_page.html', receipts=recent_receipts, clients=clients,
         products=products
-        )
+    )

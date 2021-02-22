@@ -1,16 +1,17 @@
 from flask import (
-    Blueprint, request, render_template, flash, redirect, url_for
+    Blueprint, request, render_template, redirect, url_for
 )
-from VicSM.db import get_db, get_receipts
+from VicSM.models import get_receipts, save_item, Client
 from VicSM.inventory import format_price, add_iva
+from VicSM import db
 
 bp = Blueprint('client', __name__, url_prefix='/client')
 
 client_heads = {
-    'id': "Id.", 'nombre': 'Nombre', 'direccion': 'Dirección', 'tel': 'Tel.', 
+    'id': "Id.", 'nombre': 'Nombre', 'direccion': 'Dirección', 'tel': 'Tel.',
     'cambio': 'Tipo de Cambio', 'descripcion': 'Descripción del Proyecto',
     'proyecto': 'Proyecto', 'cotizacion': 'Cotización'
-    }
+}
 receipt_heads = {
     "id": "Id.", "grupo": "Grupo", "cambio": "Tipo de Cambio",
     "cantidades": "Cantidades", "total": "Total",
@@ -19,14 +20,18 @@ receipt_heads = {
 
 
 def get_client(search_term):
-    db = get_db()
-    for head in client_heads:
-        client = db.execute(
-            f'SELECT * FROM client WHERE {head} = ?', (search_term,)
-        ).fetchone()
+    try:
+        client_id = int(search_term)
+        client = Client.query.get(client_id)
+    except ValueError:
+        client = None
 
-        if client is not None:
-            return client
+    if not client:
+        client = Client.query.filter_by(nombre=search_term).first()
+    if not client:
+        client = Client.query.filter_by(tel=search_term).first()
+    if not client:
+        client = Client.query.filter_by(proyecto=search_term).first()
 
     return client
 
@@ -44,51 +49,36 @@ def clients():
         client = get_client(search_term)
 
         if client:
-            return redirect(url_for('client.profile', client_id=client['id']))
+            return redirect(url_for('client.profile', client_id=client.id))
 
-    db = get_db()
-    clients = db.execute(
-        'SELECT * FROM client'
-    ).fetchall()
+    clients = Client.query.all()
 
-    return render_template('client/clients.html', clients=clients, heads=clients_heads)
+    return render_template(
+        'client/clients.html', clients=clients, heads=clients_heads
+    )
 
 
 add_heads = {}
 for head in client_heads:
     if head != "id" and head != "fecha":
         add_heads[head] = client_heads[head]
-        
+
 
 @bp.route('/add_client', methods=('GET', 'POST'))
 def add_client():
     if request.method == "POST":
-        nombre = request.form["nombre"]
-        direccion = request.form["direccion"]
-        tel = request.form["tel"]
-        cambio = request.form["cambio"]
-        proyecto = request.form["proyecto"]
-        descripcion = request.form["descripcion"]
-        cotizacion = request.form["cotizacion"]
+        client = Client(
+            nombre=request.form["nombre"],
+            direccion=request.form["direccion"],
+            tel=request.form["tel"],
+            cambio=request.form["cambio"],
+            proyecto=request.form["proyecto"],
+            descripcion=request.form["descripcion"],
+            cotizacion=request.form["cotizacion"]
+        )
+        save_item(client)
 
-        error = None
-
-        if not nombre or not proyecto:
-            error = "Nombre and Proyecto needed"
-
-        if error is not None:
-            flash(error)
-        else:
-            db = get_db()
-            db.execute(
-                'INSERT INTO client (nombre, direccion, tel,'
-                ' cambio, proyecto, descripcion, cotizacion)'
-                ' VALUES (?, ?, ?, ?, ?, ?, ?)', (nombre, direccion,
-                tel, cambio, proyecto, descripcion, cotizacion)
-            )
-            db.commit()
-
-            return redirect(url_for('client.clients'))
+        return redirect(url_for('client.clients'))
 
     return render_template('client/add_client.html', heads=add_heads)
 
@@ -96,9 +86,9 @@ def add_client():
 def search_receipt_id(client_id, search_term):
     receipts = get_receipts()
     client_receipts = receipts[str(client_id)]
-    
+
     try:
-        dummy_var = client_receipts[search_term]
+        client_receipts[search_term]
         return True
     except KeyError:
         return False
@@ -122,45 +112,38 @@ def profile(client_id):
             search_term = request.form["search_term"]
             if search_receipt_id(client_id, search_term):
                 return redirect(
-                    url_for('receipt.edit_receipt', client_id=client_id, receipt_id=search_term)
-                    )
+                    url_for('receipt.edit_receipt',
+                            client_id=client_id, receipt_id=search_term)
+                )
         except KeyError:
             pass
 
         try:
-            nombre = request.form["nombre"]
-            direccion = request.form["direccion"]
-            tel = request.form["tel"]
-            cambio = request.form["cambio"]
-            proyecto = request.form["proyecto"]
-            descripcion = request.form["descripcion"]
-            cotizacion = request.form["cotizacion"]
+            client.nombre = request.form["nombre"]
+            client.direccion = request.form["direccion"]
+            client.tel = request.form["tel"]
+            client.cambio = request.form["cambio"]
+            client.proyecto = request.form["proyecto"]
+            client.descripcion = request.form["descripcion"]
+            client.cotizacion = request.form["cotizacion"]
 
-            db = get_db()
-            db.execute(
-                'UPDATE client SET nombre = ?, direccion = ?, tel = ?,'
-                ' cambio = ?, proyecto = ?, descripcion = ?, cotizacion = ?'
-                ' WHERE id = ?', (nombre, direccion, tel, cambio, proyecto,
-                descripcion, cotizacion, client_id)
-            )
-            db.commit()
+            db.session.commit()
 
             return redirect(url_for('client.clients'))
         except KeyError:
             pass
 
     return render_template(
-        'client/profile.html', client=client, heads=update_heads, receipts=client_receipts,
-        receipt_heads=receipt_heads, format_price=format_price, add_iva=add_iva
-        )
+        'client/profile.html', client=client, heads=update_heads,
+        receipts=client_receipts, receipt_heads=receipt_heads,
+        format_price=format_price, add_iva=add_iva
+    )
 
 
 @bp.route('/<int:client_id>/remove_client', methods=('POST',))
 def remove_client(client_id):
-    db = get_db()
-    db.execute(
-        'DELETE FROM client WHERE id = ?', (client_id,)
-    )
-    db.commit()
+    client = Client.query.get(client_id)
+    db.session.delete(client)
+    db.session.commit()
 
     return redirect(url_for('client.clients'))
