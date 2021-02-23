@@ -1,7 +1,7 @@
 
 <h2>Productos</h2>
 
-{% for codigo in products %}
-{{ codigo }} : {{ products[codigo].nombre }}
+{% for product in products %}
+{{ product["codigo"] }} : {{ product.inventario }}
 <br>
 {% endfor %}

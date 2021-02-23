@@ -2,6 +2,9 @@
 
 {% block header %}
     <h1>{% block title %}Clientes{% endblock %}</h1>
+    <a class="header_link" href="{{ url_for('client.add_client') }}">
+        <h1>Añadir Cliente</h1>
+    </a>
 {% endblock %}
 
 {% block content %}

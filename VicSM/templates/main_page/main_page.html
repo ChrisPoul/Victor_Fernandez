@@ -11,12 +11,16 @@
             {% include "main_page/receipts.html" %}
         </td>
         <td class="main_page" rowspan="2">
-            {% include "main_page/products.html" %}
+            <a class="my_link" href="{{ url_for('inventory.inventory') }}">
+                {% include "main_page/products.html" %}
+            </a>
         </td>
     </tr>
     <tr>
         <td class="main_page">
-            {% include "main_page/clients.html" %}
+            <a class="my_link" href="{{ url_for('client.clients') }}">
+                {% include "main_page/clients.html" %}
+            </a>
         </td>
     </tr>
 </table>
