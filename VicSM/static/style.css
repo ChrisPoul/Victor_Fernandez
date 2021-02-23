@@ -1,6 +1,7 @@
 html { 
   font-family: sans-serif; background: white; 
-  margin: 0; }
+  margin: 0;
+}
 body { max-width: 100%; margin: 0; background: white; }
 h1 { font-family: serif; color: #377ba8; margin: 1rem 0; }
 section { margin: 8px; margin-left: 5%; margin-right: 5%; }
@@ -46,6 +47,7 @@ textarea {height: auto}
 .content label { font-weight: bold; margin-bottom: 0.5em; }
 .content input, .content textarea { margin-bottom: 1em; }
 .content textarea { min-height: 12em; resize: vertical; }
+input { font-size: small; }
 input.danger { color: #cc2f2e; }
 input[type=submit] { align-self: start; min-width: 10em; }
 table {
@@ -101,6 +103,10 @@ table th, table td * {
 }
 .my_p {
   text-align: justify;
+  margin: 0;
+  padding: 0;
+}
+.inv_amnt {
   margin: 0;
   padding: 0;
 }

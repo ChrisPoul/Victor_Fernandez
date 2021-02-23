@@ -1,4 +1,3 @@
-import json
 import click
 import os
 import glob
@@ -7,30 +6,9 @@ from flask import current_app
 from flask.cli import with_appcontext
 from sqlalchemy import (
     Column, Integer, String, Text, Float, PickleType,
-    DateTime, ForeignKey, inspect
+    DateTime, ForeignKey
 )
 from VicSM import db
-
-
-def init_db():
-    db.drop_all()
-    db.create_all()
-
-    all_images = get_all_images(current_app)
-    for image in all_images:
-        os.remove(image)
-
-
-@click.command('init-db')
-@with_appcontext
-def init_db_command():
-    init_db()
-    click.echo('Initialized the database')
-
-
-def add_item(item):
-    db.session.add(item)
-    db.session.commit()
 
 
 class Product(db.Model):
@@ -77,9 +55,26 @@ class Receipt(db.Model):
     def __repr__(self):
         return self.__dict__
 
-    def as_dict(self):
-        return {c.key: getattr(self, c.key)
-                for c in inspect(self).mapper.column_attrs}
+
+def init_db():
+    db.drop_all()
+    db.create_all()
+
+    all_images = get_all_images(current_app)
+    for image in all_images:
+        os.remove(image)
+
+
+@click.command('init-db')
+@with_appcontext
+def init_db_command():
+    init_db()
+    click.echo('Initialized the database')
+
+
+def add_item(item):
+    db.session.add(item)
+    db.session.commit()
 
 
 def get_all_images(app):
@@ -88,22 +83,6 @@ def get_all_images(app):
     all_images = glob.glob(all_images_path)
 
     return all_images
-
-
-def get_receipts():
-    receipts_path = os.path.join(current_app.instance_path, "receipts.json")
-    with open(receipts_path) as receipts_file:
-        receipts = json.load(receipts_file)
-
-    return receipts
-
-
-def get_client_receipts(client_id):
-    receipts = get_receipts()
-    client_id = str(client_id)
-    client_receipts = receipts[client_id]
-
-    return client_receipts
 
 
 def save_image(image_file):
