@@ -131,6 +131,7 @@ def edit_receipt(client_id, receipt_id):
                 cantidades[code] = request.form[code]
                 try:
                     cantidades[code] = int(cantidades[code])
+                    product = get_product(code)
                 except ValueError:
                     cantidades[code] = 0
                 precio_venta = products[code].precio_venta
@@ -166,6 +167,13 @@ def receipt_done(client_id, receipt_id):
     client = get_client(client_id)
     receipt = get_receipt(receipt_id)
     products = get_receipt_products(receipt)
+    cantidades = receipt.cantidades
+
+    for code in products:
+        product = products[code]
+        product.inventario -= cantidades[code]
+
+    db.session.commit()
 
     return render_template(
         'receipt/receipt_done.html', product_heads=product_heads,
