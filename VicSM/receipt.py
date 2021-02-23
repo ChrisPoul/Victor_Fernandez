@@ -148,19 +148,15 @@ def edit_receipt(client_id, receipt_id):
         receipt.totales = totales
         db.session.commit()
 
-    grupo = receipt.grupo
-    cambio = receipt.cambio
-    total = receipt.total
-    fecha = receipt.fecha
-
     return render_template(
         'receipt/receipt.html', product_heads=product_heads,
-        client_heads=client_heads, products=products, totals=totales,
-        total=total, cantidades=cantidades, grupo=grupo,
-        format_price=format_price, add_iva=add_iva, client=client,
-        middle_heads=middle_heads, last_heads=last_heads, cambio=cambio,
-        receipt_id=receipt_id, aasm_image=aasm_image, fecha=format_date(fecha),
-        receipt=receipt
+        client_heads=client_heads, products=products,
+        cantidades=receipt.cantidades, totals=receipt.totales,
+        format_price=format_price, grupo=receipt.grupo,
+        client=client, middle_heads=middle_heads, add_iva=add_iva,
+        cambio=receipt.cambio, receipt_id=receipt_id,
+        fecha=format_date(receipt.fecha), total=receipt.total,
+        aasm_image=aasm_image, last_heads=last_heads,
     )
 
 
@@ -171,20 +167,15 @@ def receipt_done(client_id, receipt_id):
     receipt = get_receipt(receipt_id)
     products = get_receipt_products(receipt)
 
-    totales = receipt.totales
-    total = receipt.total
-    cantidades = receipt.cantidades
-    grupo = receipt.grupo
-    cambio = receipt.cambio
-    fecha = receipt.fecha
-
     return render_template(
         'receipt/receipt_done.html', product_heads=product_heads,
-        client_heads=client_heads, products=products, totals=totales,
-        total=total, cantidades=cantidades, grupo=grupo,
-        format_price=format_price, add_iva=add_iva, client=client,
-        middle_heads=middle_heads, last_heads=last_heads, cambio=cambio,
-        aasm_image=aasm_image, fecha=format_date(fecha)
+        client_heads=client_heads, products=products,
+        cantidades=receipt.cantidades, totals=receipt.totales,
+        format_price=format_price, grupo=receipt.grupo,
+        client=client, middle_heads=middle_heads, add_iva=add_iva,
+        cambio=receipt.cambio, receipt_id=receipt_id,
+        fecha=format_date(receipt.fecha), total=receipt.total,
+        aasm_image=aasm_image, last_heads=last_heads,
     )
 
 
