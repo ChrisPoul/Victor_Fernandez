@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, render_template, request, redirect, url_for
 )
-from VicSM.models import save_image, remove_image, Product, save_item
+from VicSM.models import save_image, remove_image, Product, add_item
 from VicSM import db
 
 bp = Blueprint('inventory', __name__)
@@ -103,7 +103,7 @@ def add_product():
             precio_venta=request.form["precio_venta"],
             inventario=request.form["inventario"]
         )
-        save_item(product)
+        add_item(product)
         save_image(imagen_file)
 
         return redirect(url_for('inventory.inventory'))

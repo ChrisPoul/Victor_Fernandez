@@ -1,7 +1,7 @@
 from flask import (
     Blueprint, request, render_template, redirect, url_for
 )
-from VicSM.models import get_receipts, save_item, Client
+from VicSM.models import add_item, Client, Receipt, format_date
 from VicSM.inventory import format_price, add_iva
 from VicSM import db
 
@@ -76,44 +76,32 @@ def add_client():
             descripcion=request.form["descripcion"],
             cotizacion=request.form["cotizacion"]
         )
-        save_item(client)
+        add_item(client)
 
         return redirect(url_for('client.clients'))
 
     return render_template('client/add_client.html', heads=add_heads)
 
 
-def search_receipt_id(client_id, search_term):
-    receipts = get_receipts()
-    client_receipts = receipts[str(client_id)]
-
-    try:
-        client_receipts[search_term]
-        return True
-    except KeyError:
-        return False
+update_heads = {}
+for head in client_heads:
+    if head != "id":
+        update_heads[head] = client_heads[head]
 
 
 @bp.route('/<int:client_id>/profile', methods=('GET', 'POST'))
 def profile(client_id):
     client = get_client(client_id)
-    receipts = get_receipts()
-    try:
-        client_receipts = receipts[str(client_id)]
-    except KeyError:
-        client_receipts = {}
-    update_heads = {}
-    for head in client_heads:
-        if head != "id":
-            update_heads[head] = client_heads[head]
+    receipts = Receipt.query.all()
 
     if request.method == "POST":
         try:
             search_term = request.form["search_term"]
-            if search_receipt_id(client_id, search_term):
+            receipt = Receipt.query.get(search_term)
+            if receipt:
                 return redirect(
                     url_for('receipt.edit_receipt',
-                            client_id=client_id, receipt_id=search_term)
+                            client_id=client_id, receipt_id=receipt.id)
                 )
         except KeyError:
             pass
@@ -135,8 +123,8 @@ def profile(client_id):
 
     return render_template(
         'client/profile.html', client=client, heads=update_heads,
-        receipts=client_receipts, receipt_heads=receipt_heads,
-        format_price=format_price, add_iva=add_iva
+        receipts=receipts, receipt_heads=receipt_heads,
+        format_price=format_price, add_iva=add_iva, format_date=format_date
     )
 
 

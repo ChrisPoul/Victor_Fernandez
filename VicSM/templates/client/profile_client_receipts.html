@@ -5,29 +5,29 @@
         {{ receipt_heads[head] }}
     </th>
     {% endfor %}
-    {% for receipt_id in receipts %}
-    {% if receipt_id != "numero_de_recibos" %}
+    {% for receipt in receipts %}
     <tr>
     {% for head in receipt_heads %}
         <td class="receipt_table">
         {% if head == "id" %}
-        <a class="default_link" href="{{ url_for('receipt.edit_receipt', client_id=client['id'], receipt_id=receipt_id) }}">
-            {{ receipt_id }}
+        <a class="default_link" href="{{ url_for('receipt.edit_receipt', client_id=client['id'], receipt_id=receipt.id) }}">
+            {{ receipt.id }}
         </a>
         {% elif head == "cantidades" %}
-            {% for code in receipts[receipt_id][head] %}
-            {{ code }}: {{ receipts[receipt_id][head][code] }} ; 
+            {% for code in receipt[head] %}
+            {{ code }}: {{ receipt[head][code] }} ; 
             {% endfor %}
         {% elif head == "cambio" %}
-            {{ format_price(receipts[receipt_id][head]) }}
+            {{ format_price(receipt[head]) }}
         {% elif head == "total" %}
-            {{ add_iva(receipts[receipt_id][head] * 1.16) }}
+            {{ add_iva(receipt[head] * 1.16) }}
+        {% elif head == "fecha" %}
+            {{ format_date(receipt[head]) }}
         {% else %}
-            {{ receipts[receipt_id][head] }}
+            {{ receipt[head] }}
         {% endif %}
         </td>
     {% endfor %}
     </tr>
-    {% endif %}
     {% endfor %}
 </table>

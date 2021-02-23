@@ -2,11 +2,12 @@ import json
 import click
 import os
 import glob
-import datetime
+from datetime import datetime
 from flask import current_app
 from flask.cli import with_appcontext
 from sqlalchemy import (
-    Column, Integer, String, Text
+    Column, Integer, String, Text, Float, PickleType,
+    DateTime, ForeignKey, inspect
 )
 from VicSM import db
 
@@ -14,9 +15,6 @@ from VicSM import db
 def init_db():
     db.drop_all()
     db.create_all()
-
-    receipts = {}
-    save_receipts(receipts)
 
     all_images = get_all_images(current_app)
     for image in all_images:
@@ -30,7 +28,7 @@ def init_db_command():
     click.echo('Initialized the database')
 
 
-def save_item(item):
+def add_item(item):
     db.session.add(item)
     db.session.commit()
 
@@ -60,9 +58,28 @@ class Client(db.Model):
     descripcion = Column(Text, nullable=False)
     cotizacion = Column(String(100), nullable=False)
     cambio = Column(Integer, nullable=False, default=0)
+    recibos = db.relationship('Receipt', backref='author', lazy=True)
 
     def __repr__(self):
         return self.__dict__
+
+
+class Receipt(db.Model):
+    id = Column(Integer, primary_key=True)
+    grupo = Column(String(100), nullable=True, default=None)
+    cambio = Column(Float, nullable=True, default=None)
+    totales = Column(PickleType, nullable=False, default={})
+    total = Column(Float, nullable=False, default=0)
+    cantidades = Column(PickleType, nullable=False, default={})
+    fecha = Column(DateTime, nullable=False, default=datetime.utcnow)
+    client_id = Column(Integer, ForeignKey('client.id'), nullable=False)
+
+    def __repr__(self):
+        return self.__dict__
+
+    def as_dict(self):
+        return {c.key: getattr(self, c.key)
+                for c in inspect(self).mapper.column_attrs}
 
 
 def get_all_images(app):
@@ -87,50 +104,6 @@ def get_client_receipts(client_id):
     client_receipts = receipts[client_id]
 
     return client_receipts
-
-
-def get_receipt(client_id, receipt_id):
-    client_id = str(client_id)
-    receipt_id = str(receipt_id)
-    try:
-        client_receipts = get_client_receipts(client_id)
-        receipt = client_receipts[receipt_id]
-    except KeyError:
-        receipt = {
-            "grupo": None,
-            "cambio": None,
-            "totals": {},
-            "total": 0,
-            "cantidades": {},
-            "fecha": format_date(datetime.date.today())
-        }
-
-    return receipt
-
-
-def save_receipts(receipts):
-    receipts_path = os.path.join(current_app.instance_path, "receipts.json")
-
-    with open(receipts_path, "w+") as receipts_file:
-        json_receipts = json.dumps(receipts, indent=4)
-        receipts_file.write(json_receipts)
-
-
-def save_receipt(client_id, receipt_id, receipt):
-    receipts = get_receipts()
-    client_id = str(client_id)
-    try:
-        client_receipts = receipts[client_id]
-    except KeyError:
-        client_receipts = {"numero_de_recibos": 0}
-
-    if receipt_id == 0:
-        receipt_id = client_receipts["numero_de_recibos"] + 1
-        client_receipts["numero_de_recibos"] += 1
-
-    client_receipts[str(receipt_id)] = receipt
-    receipts[client_id] = client_receipts
-    save_receipts(receipts)
 
 
 def save_image(image_file):
