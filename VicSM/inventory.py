@@ -19,6 +19,9 @@ for head in heads:
 
 
 def format_price(num):
+    if not num:
+        num = 0
+
     num = str(num)
     if "." not in num:
         num += ".00"
