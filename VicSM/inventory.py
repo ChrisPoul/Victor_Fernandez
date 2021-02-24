@@ -1,5 +1,6 @@
 from flask import (
-    Blueprint, render_template, request, redirect, url_for
+    Blueprint, render_template, request, redirect,
+    url_for, flash
 )
 from VicSM.models import save_image, remove_image, Product, add_item
 from VicSM import db
@@ -92,26 +93,48 @@ def inventory():
 
 @bp.route('/add_product', methods=('GET', 'POST'))
 def add_product():
+    form_values = {}
+    for key in heads:
+        if key != "imagen":
+            form_values[key] = ""
+
     if request.method == 'POST':
         imagen_file = request.files["imagen"]
-        product = Product(
-            grupo=request.form["grupo"],
-            serie=request.form["serie"],
-            codigo=request.form["codigo"],
-            nombre=request.form["nombre"],
-            descripcion=request.form["descripcion"],
-            marca=request.form["marca"],
-            imagen=imagen_file.filename,
-            mi_precio=request.form["mi_precio"],
-            precio_venta=request.form["precio_venta"],
-            inventario=request.form["inventario"]
+        imagen = imagen_file.filename
+        for key in form_values:
+            form_values[key] = request.form[key]
+        error = None
+
+        try:
+            float(form_values["mi_precio"])
+            float(form_values["precio_venta"])
+            int(form_values["inventario"])
+        except ValueError:
+            error = "Introdujo un número invalido"
+
+        if not error:
+            product = Product(
+                grupo=form_values["grupo"],
+                serie=form_values["serie"],
+                codigo=form_values["codigo"],
+                nombre=form_values["nombre"],
+                descripcion=form_values["descripcion"],
+                marca=form_values["marca"],
+                imagen=imagen,
+                mi_precio=form_values["mi_precio"],
+                precio_venta=form_values["precio_venta"],
+                inventario=form_values["inventario"]
+            )
+            add_item(product)
+            save_image(imagen_file)
+            return redirect(url_for('inventory.inventory'))
+        
+        flash(error)
+
+    return render_template(
+        'inventory/add_product.html', heads=heads,
+        form_values=form_values
         )
-        add_item(product)
-        save_image(imagen_file)
-
-        return redirect(url_for('inventory.inventory'))
-
-    return render_template('inventory/add_product.html', heads=heads)
 
 
 @bp.route('/<string:codigo>/update_product', methods=('GET', 'POST'))
@@ -128,16 +151,24 @@ def update_product(codigo):
         product.mi_precio = request.form["mi_precio"]
         product.precio_venta = request.form["precio_venta"]
         product.inventario = request.form["inventario"]
-        if not imagen_file:
-            product.imagen = product.imagen
-        else:
-            product.imagen = imagen_file.filename
-            remove_image(product.imagen)
-            save_image(imagen_file)
+        error = None
 
-        db.session.commit()
+        try:
+            float(product.mi_precio)
+            float(product.precio_venta)
+            int(product.inventario)
+        except ValueError:
+            error = "Introdujo un número invalido"
 
-        return redirect(url_for('inventory.inventory'))
+        if not error:
+            if imagen_file:
+                product.imagen = imagen_file.filename
+                remove_image(product.imagen)
+                save_image(imagen_file)
+            db.session.commit()
+            return redirect(url_for('inventory.inventory'))
+
+        flash(error)
 
     return render_template(
         'inventory/update_product.html', product=product, heads=heads

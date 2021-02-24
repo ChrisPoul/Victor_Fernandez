@@ -1,5 +1,6 @@
 from flask import (
-    Blueprint, request, render_template, redirect, url_for
+    Blueprint, request, render_template, redirect,
+    url_for, flash
 )
 from VicSM.models import add_item, Client, Receipt, format_date
 from VicSM.inventory import format_price, add_iva
@@ -60,33 +61,44 @@ def clients():
 
 add_heads = {}
 for head in client_heads:
-    if head != "id" and head != "fecha":
+    if head != "id":
         add_heads[head] = client_heads[head]
 
 
 @bp.route('/add_client', methods=('GET', 'POST'))
 def add_client():
+    form_values = {}
+    for key in add_heads:
+        form_values[key] = ""
+
     if request.method == "POST":
-        client = Client(
-            nombre=request.form["nombre"],
-            direccion=request.form["direccion"],
-            tel=request.form["tel"],
-            cambio=request.form["cambio"],
-            proyecto=request.form["proyecto"],
-            descripcion=request.form["descripcion"],
-            cotizacion=request.form["cotizacion"]
-        )
-        add_item(client)
+        for key in form_values:
+            form_values[key] = request.form[key]
+        error = None
+        try:
+            float(form_values['cambio'])
+        except ValueError:
+            error = "Introdujo un número invalido"
 
-        return redirect(url_for('client.clients'))
+        if not error:
+            client = Client(
+                nombre=form_values["nombre"],
+                direccion=form_values["direccion"],
+                tel=form_values["tel"],
+                cambio=form_values["cambio"],
+                proyecto=form_values["proyecto"],
+                descripcion=form_values["descripcion"],
+                cotizacion=form_values["cotizacion"]
+            )
+            add_item(client)
+            return redirect(url_for('client.clients'))
 
-    return render_template('client/add_client.html', heads=add_heads)
+        flash(error)
 
-
-update_heads = {}
-for head in client_heads:
-    if head != "id":
-        update_heads[head] = client_heads[head]
+    return render_template(
+        'client/add_client.html', heads=add_heads,
+        form_values=form_values
+    )
 
 
 @bp.route('/<int:client_id>/profile', methods=('GET', 'POST'))
@@ -114,10 +126,19 @@ def profile(client_id):
             client.proyecto = request.form["proyecto"]
             client.descripcion = request.form["descripcion"]
             client.cotizacion = request.form["cotizacion"]
+            error = None
 
-            db.session.commit()
+            try:
+                float(client.cambio)
+            except ValueError:
+                error = "Introdujo un número invalido"
 
-            return redirect(url_for('client.clients'))
+            if not error:
+                db.session.commit()
+                return redirect(url_for('client.clients'))
+
+            flash(error)
+
         except KeyError:
             pass
 
@@ -125,7 +146,7 @@ def profile(client_id):
         'client/profile.html', format_price=format_price,
         receipts=receipts, receipt_heads=receipt_heads,
         add_iva=add_iva, format_date=format_date,
-        client=client, heads=update_heads
+        client=client, heads=add_heads
     )
 
 
