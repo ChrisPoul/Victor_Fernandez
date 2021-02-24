@@ -92,7 +92,7 @@ for head in client_heads:
 @bp.route('/<int:client_id>/profile', methods=('GET', 'POST'))
 def profile(client_id):
     client = get_client(client_id)
-    receipts = Receipt.query.all()
+    receipts = Receipt.query.filter_by(client_id=client_id).all()
 
     if request.method == "POST":
         try:
@@ -122,9 +122,10 @@ def profile(client_id):
             pass
 
     return render_template(
-        'client/profile.html', client=client, heads=update_heads,
+        'client/profile.html', format_price=format_price,
         receipts=receipts, receipt_heads=receipt_heads,
-        format_price=format_price, add_iva=add_iva, format_date=format_date
+        add_iva=add_iva, format_date=format_date,
+        client=client, heads=update_heads
     )
 
 

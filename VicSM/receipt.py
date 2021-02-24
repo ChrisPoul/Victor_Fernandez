@@ -72,7 +72,7 @@ def new_receipt(client_id):
             pass
 
     if client:
-        receipt = Receipt(client_id=client_id)
+        receipt = Receipt(client_id=client.id)
         add_item(receipt)
 
         return redirect(
@@ -104,6 +104,7 @@ def edit_receipt(client_id, receipt_id):
         receipt.cambio = client.cambio
     receipt.fecha = datetime.now()
     cantidades = obj_as_dict(receipt.cantidades)
+    cant_ref = obj_as_dict(receipt.cant_ref)
     totales = obj_as_dict(receipt.totales)
 
     if request.method == "POST":
@@ -145,6 +146,17 @@ def edit_receipt(client_id, receipt_id):
             products[codigo] = product
             cantidades[codigo] = 0
 
+        if cantidades != cant_ref:
+            for code in cantidades:
+                try:
+                    change = cantidades[code] - cant_ref[code]
+                except KeyError:
+                    change = cantidades[code]
+                product = get_product(code)
+                product.inventario -= change
+
+            receipt.cant_ref = cantidades
+
         receipt.cantidades = cantidades
         receipt.totales = totales
         db.session.commit()
@@ -167,12 +179,6 @@ def receipt_done(client_id, receipt_id):
     client = get_client(client_id)
     receipt = get_receipt(receipt_id)
     products = get_receipt_products(receipt)
-    cantidades = receipt.cantidades
-
-    for code in products:
-        product = products[code]
-        product.inventario -= cantidades[code]
-
     db.session.commit()
 
     return render_template(
@@ -206,6 +212,7 @@ def reset_receipt(client_id, receipt_id):
     receipt.totales = {}
     receipt.total = 0
     receipt.cantidades = {}
+    receipt.cant_ref = {}
     db.session.commit()
 
     return redirect(
