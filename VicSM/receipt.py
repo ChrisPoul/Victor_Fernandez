@@ -153,7 +153,6 @@ def edit_receipt(client_id, receipt_id):
                     totales[code] = 0
                     product.inventario += change
                     product.inventario += cant_ref[code]
-
             receipt.cant_ref = cantidades
 
         receipt.total = get_total(totales)
@@ -174,7 +173,7 @@ def edit_receipt(client_id, receipt_id):
         client=client, middle_heads=middle_heads, add_iva=add_iva,
         cambio=receipt.cambio, receipt_id=receipt_id,
         fecha=format_date(receipt.fecha), total=receipt.total,
-        aasm_image=aasm_image, last_heads=last_heads,
+        aasm_image=aasm_image, last_heads=last_heads
     )
 
 
@@ -184,7 +183,6 @@ def receipt_done(client_id, receipt_id):
     client = get_client(client_id)
     receipt = get_receipt(receipt_id)
     products = get_receipt_products(receipt)
-    db.session.commit()
 
     return render_template(
         'receipt/receipt_done.html', product_heads=product_heads,
