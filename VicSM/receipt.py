@@ -140,12 +140,6 @@ def edit_receipt(client_id, receipt_id):
             except KeyError:
                 pass
 
-        receipt.total = get_total(totales)
-        product = get_product(codigo)
-        if product is not None:
-            products[codigo] = product
-            cantidades[codigo] = 0
-
         if cantidades != cant_ref:
             for code in cantidades:
                 try:
@@ -154,8 +148,19 @@ def edit_receipt(client_id, receipt_id):
                     change = cantidades[code]
                 product = get_product(code)
                 product.inventario -= change
+                if product.inventario <= 0:
+                    cantidades[code] = 0
+                    totales[code] = 0
+                    product.inventario += change
+                    product.inventario += cant_ref[code]
 
             receipt.cant_ref = cantidades
+
+        receipt.total = get_total(totales)
+        product = get_product(codigo)
+        if product is not None:
+            products[codigo] = product
+            cantidades[codigo] = 0
 
         receipt.cantidades = cantidades
         receipt.totales = totales
