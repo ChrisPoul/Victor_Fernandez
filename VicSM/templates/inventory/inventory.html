@@ -2,7 +2,7 @@
 
 {% block header %}
     <h1>{% block title %}Inventario{% endblock %}</h1>
-    <a class="header_link" href="{{ url_for('inventory.add_product') }}">
+    <a href="{{ url_for('inventory.add_product') }}">
         <h1>Añadir Producto</h1>
     </a>
 {% endblock %}
@@ -22,14 +22,14 @@
 </table>
 </form>
 <hr>
-<table style="width:100%">
+<table style="text-align: center;">
     {% for head in heads %}
         <th>{{ heads[head] }}</th>
     {% endfor %}
     {% for product in products %}
     <tr>
         {% for head in heads %}
-        <td style="text-align: center;">
+        <td>
         {% if head == "imagen" %}
             <image class="my_image" src="{{ url_for('static', filename='images/{}'.format(product[head])) }}">
             </image>
@@ -42,15 +42,15 @@
         {% elif head == "descripcion" %}
             <p class="my_p">{{ product[head] }}</p>
         {% elif head == "inventario" %}
-            {% if product[head] > 300 %}
+            {% if product[head] >= 300 %}
             <p style="color: green;" class="inv_amnt">
                 {{ product[head] }}
             </p>
-            {% elif product[head] < 300 and product[head] > 100 %}
+            {% elif 100 < product[head] < 300 %}
             <p style="color: yellow;" class="inv_amnt">
                 {{ product[head] }}
             </p>
-            {% elif product[head] < 100 %}
+            {% elif product[head] <= 100 %}
             <p style="color: red;" class="inv_amnt">
                 {{ product[head] }}
             </p>

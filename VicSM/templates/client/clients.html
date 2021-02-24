@@ -2,7 +2,7 @@
 
 {% block header %}
     <h1>{% block title %}Clientes{% endblock %}</h1>
-    <a class="header_link" href="{{ url_for('client.add_client') }}">
+    <a href="{{ url_for('client.add_client') }}">
         <h1>Añadir Cliente</h1>
     </a>
 {% endblock %}
@@ -19,14 +19,14 @@
         </td>
     </table>
 </form>
-<table style="width: 100%">
+<table class="clients_table">
 {% for head in heads %}
-    <th style="text-align: left;">{{ heads[head] }}</th>    
+    <th>{{ heads[head] }}</th>    
 {% endfor %}
 {% for client in clients %}
     <tr>
     {% for head in heads %}
-    <td>
+    <td class="clients_table">
     {% if head == "nombre" %}
         <a class="default_link" href="{{ url_for('client.profile', client_id=client['id']) }}">
             {{ client[head] }}

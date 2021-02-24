@@ -22,7 +22,9 @@
         {% elif head == "total" %}
             {{ add_iva(receipt[head] * 1.16) }}
         {% elif head == "fecha" %}
-            {{ format_date(receipt[head]) }}
+            <a class="my_link" href="{{ url_for('receipt.remove_receipt', receipt_id=receipt.id, client_id=client.id) }}">
+                {{ format_date(receipt[head]) }}
+            </a>
         {% else %}
             {{ receipt[head] }}
         {% endif %}
