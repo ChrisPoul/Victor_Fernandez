@@ -15,7 +15,10 @@ header h1 {
   font-size: x-large;
   padding-left: 15px;
   margin-left: 7mm;
+  flex: auto;
 }
+header a { text-decoration: none; }
+header a h1 { margin-right: 12mm; }
 hr { border: none; border-top: 1px solid lightgray; }
 nav { 
   background: #123bad; display: flex; 
@@ -61,7 +64,7 @@ table th, table td * {
     vertical-align: top;
     padding : 5px;
 }
-.receipt_table {
+table.receipt_table {
   border: 1px solid black;
   border-collapse: collapse;
   padding-top: 6px;
@@ -69,15 +72,26 @@ table th, table td * {
   padding-right: 4px;
   text-align: center;
 }
+th.receipt_table {
+  border: 1px solid black;
+  padding: 3mm;
+}
+td.receipt_table {
+  border: 1px solid black;
+  padding: 2mm
+}
+table.clients_table {
+  text-align: center;
+}
+td.clients_table {
+  padding: 3mm;
+}
 .default_link {
   color: #377ba8;
 }
 .my_link {
   text-decoration: none;
   color: black;
-}
-.header_link {
-  text-decoration: none;
 }
 .my_image {
     height: 150px;

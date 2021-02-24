@@ -49,7 +49,7 @@ class Receipt(db.Model):
     totales = Column(PickleType, nullable=False, default={})
     total = Column(Float, nullable=False, default=0)
     cantidades = Column(PickleType, nullable=False, default={})
-    fecha = Column(DateTime, nullable=False, default=datetime.utcnow)
+    fecha = Column(DateTime, nullable=False, default=datetime.now)
     client_id = Column(Integer, ForeignKey('client.id'), nullable=False)
 
     def __repr__(self):

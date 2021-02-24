@@ -1,23 +1,21 @@
 from flask import (
     Blueprint, render_template
 )
-from VicSM.inventory import get_product
+from VicSM.models import (
+    Product, Client, Receipt, format_date
+)
 
 bp = Blueprint('main_page', __name__)
 
 
 @bp.route('/')
 def main_page():
-    recent_receipts = {}
-    clients = []
-
-    codigos_frecuentes = []
-    products = {}
-    for codigo in codigos_frecuentes:
-        product = get_product(codigo)
-        products[codigo] = product
+    recent_receipts = Receipt.query.all()
+    clients = Client.query.all()
+    products = Product.query.all()
 
     return render_template(
-        'main_page/main_page.html', receipts=recent_receipts, clients=clients,
-        products=products
+        'main_page/main_page.html', clients=clients,
+        products=products, format_date=format_date,
+        receipts=recent_receipts
     )

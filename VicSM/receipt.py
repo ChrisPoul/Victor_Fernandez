@@ -72,7 +72,7 @@ def new_receipt(client_id):
             pass
 
     if client:
-        receipt = Receipt(client_id=client_id, cantidades={'SHELLY_1': 0})
+        receipt = Receipt(client_id=client_id)
         add_item(receipt)
 
         return redirect(
@@ -102,7 +102,7 @@ def edit_receipt(client_id, receipt_id):
 
     if not receipt.cambio:
         receipt.cambio = client.cambio
-    receipt.fecha = datetime.utcnow()
+    receipt.fecha = datetime.now()
     cantidades = obj_as_dict(receipt.cantidades)
     totales = obj_as_dict(receipt.totales)
 
@@ -184,6 +184,17 @@ def receipt_done(client_id, receipt_id):
         cambio=receipt.cambio, receipt_id=receipt_id,
         fecha=format_date(receipt.fecha), total=receipt.total,
         aasm_image=aasm_image, last_heads=last_heads,
+    )
+
+
+@bp.route('/<int:receipt_id>/<int:client_id>/remove_receipt')
+def remove_receipt(receipt_id, client_id):
+    receipt = get_receipt(receipt_id)
+    db.session.delete(receipt)
+    db.session.commit()
+
+    return redirect(
+        url_for('client.profile', client_id=client_id)
     )
 
 

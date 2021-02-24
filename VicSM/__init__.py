@@ -6,7 +6,7 @@ db = SQLAlchemy()
 
 
 def create_app():
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{app.instance_path}/VicSM.sqlite"
 
     try:
