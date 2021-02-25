@@ -1,7 +1,11 @@
 
-<h2>Cleintes</h2>
+<h2 class="main_page">Cleintes</h2>
 
 {% for client in clients %}
-{{ client["nombre"] }} : {{ client["proyecto"] }}
-<br>
+<table style="width: 50%">
+    <td class="main_page_client">
+        {{ client["nombre"] }} : {{ client["proyecto"] }}
+        <br>
+    </td>
+</table>
 {% endfor %}

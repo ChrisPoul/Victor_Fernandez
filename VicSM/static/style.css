@@ -128,7 +128,7 @@ td.clients {
   margin: 0;
   padding: 0;
 }
-.main_page {
+td.main_page {
   text-align: left;
   vertical-align: middle;
   padding: 10px;
@@ -136,4 +136,18 @@ td.clients {
   border:solid black 1px;
   border-radius:6px;
   -moz-border-radius:6px;
+}
+h2.main_page {
+  margin-top: 1px;
+  margin-left: 4px;
+}
+td.main_page_client {
+  text-align: left;
+  vertical-align: middle;
+  padding: 10px;
+  border-collapse:separate;
+  border:solid black 1px;
+  border-radius:6px;
+  -moz-border-radius:6px;
+  width: 50%;
 }

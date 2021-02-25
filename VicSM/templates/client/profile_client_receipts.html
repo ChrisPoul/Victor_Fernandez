@@ -13,9 +13,13 @@
         <a class="default_link" href="{{ url_for('receipt.edit_receipt', client_id=client['id'], receipt_id=receipts[receipt_num].id) }}">
             {{ receipt_num }}
         </a>
+        {% elif head == "productos" %}
+            {% for code in receipts[receipt_num]['cantidades'] %}
+            {{ code }}:<br>
+            {% endfor %}
         {% elif head == "cantidades" %}
             {% for code in receipts[receipt_num][head] %}
-            {{ code }}: {{ receipts[receipt_num][head][code] }} ; 
+            {{ receipts[receipt_num][head][code] }}<br>
             {% endfor %}
         {% elif head == "cambio" %}
             {{ format_price(receipts[receipt_num][head]) }}

@@ -12,7 +12,11 @@
             </td>
         {% elif head == "cantidad" %}
             <td>
-            <input style="max-width: 70px" class="my_input" name="{{ code }}" id="{{ code }}," value="{{ cantidades[code] }}">
+            {% if products[code].inventario < 0 %}
+            <input style="max-width: 70px; background-color: rgb(216, 101, 101);" class="my_input" name="{{ code }}" id="{{ code }}" value="{{ cantidades[code] }}">
+            {% else %}
+            <input style="max-width: 70px" class="my_input" name="{{ code }}" id="{{ code }}" value="{{ cantidades[code] }}">
+            {% endif %}
             </td>
         {% elif head == "descripcion" %}
             <td class="justified">{{ products[code][head] }}</td>

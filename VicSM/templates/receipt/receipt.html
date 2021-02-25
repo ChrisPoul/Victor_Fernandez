@@ -21,6 +21,9 @@
     {% include "receipt/receipt_client.html" %}
     {% endif %}
 </div>
+{% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+{% endfor %}
 <div>
     {% include "receipt/receipt_products.html" %}
 </div>

@@ -4,7 +4,7 @@ import glob
 import json
 from flask import (
     Blueprint, render_template, request, redirect, url_for,
-    current_app
+    current_app, flash
 )
 from VicSM.inventory import get_product, format_price, add_iva
 from VicSM.client import get_client, client_heads
@@ -105,6 +105,7 @@ def edit_receipt(client_id, receipt_id):
     cantidades = obj_as_dict(receipt.cantidades)
     cant_ref = obj_as_dict(receipt.cant_ref)
     totales = obj_as_dict(receipt.totales)
+    error = None
 
     if request.method == "POST":
         try:
@@ -147,13 +148,10 @@ def edit_receipt(client_id, receipt_id):
                     change = cantidades[code]
                 product = get_product(code)
                 product.inventario -= change
-                if product.inventario <= 0:
-                    cantidades[code] = 0
-                    totales[code] = 0
-                    product.inventario += change
-                    product.inventario += cant_ref[code]
-            receipt.cant_ref = cantidades
-
+                if product.inventario < 0:
+                    error = "Inventario Exedido"
+            
+        receipt.cant_ref = cantidades
         receipt.total = get_total(totales)
         product = get_product(codigo)
         if product is not None:
@@ -162,7 +160,10 @@ def edit_receipt(client_id, receipt_id):
 
         receipt.cantidades = cantidades
         receipt.totales = totales
-        db.session.commit()
+        if error:
+            flash(error)
+        else:
+            db.session.commit()
 
     return render_template(
         'receipt/receipt.html', product_heads=product_heads,
