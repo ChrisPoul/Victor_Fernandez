@@ -49,20 +49,38 @@ a {
     border: none !important;
     padding: 4px;
 }
-.search_bar {
-    border: 0;
+table.search_bar {
+  margin: 1px;
+  padding: 1px;
+  border: 0;
+}
+td.search_bar {
+  width: 99%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.my_second_input {
+  width: 99%;
+  height: 1.5em;
+  margin: 0;
+}
+.search_bar_button {
+  width: 99%;
+  height: 1.95em;
 }
 .centered {
     text-align: center;
 }
-.client {
+table.client {
     font-weight: 800;
     text-align: center;
-    font-size: 19px;
+    font-size: 0.75em;
 }
 .product {
-    font-size: 0.4cm;
+    font-size: 0.62em;
     font-weight: 500;
+    border: 0;
 }
 .my_image {
     padding-top: 2px;

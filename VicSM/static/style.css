@@ -44,11 +44,6 @@ textarea {height: auto}
   background: #cae6f6; border: 1px solid #377ba8;
   text-align: center;
 }
-.post > header { display: flex; align-items: flex-end; font-size: 0.85em; }
-.post > header > div:first-of-type { flex: auto; }
-.post > header h1 { font-size: 1.5em; margin-bottom: 0; }
-.post .about { color: rgb(196, 193, 36); font-style: italic; }
-.post .body { white-space: pre-line; }
 .content:last-child { margin-bottom: 0; }
 .content form { margin: 1em 0; display: flex; flex-direction: column; }
 .content label { font-weight: bold; margin-bottom: 0.5em; }
@@ -101,18 +96,18 @@ td.clients {
     max-height: 150px;
     max-width: 150px;
 }
-.search_bar {
+table.search_bar {
   margin: 1px;
   padding: 1px;
+}
+td.search_bar {
+  width: 99%;
+  margin: 0;
+  padding: 0;
 }
 .my_second_input {
   width: 99%;
   margin: 0;
-}
-.search_bar_td {
-  width: 99%;
-  margin: 0;
-  padding: 0;
 }
 .search_bar_button {
   width: 5%;

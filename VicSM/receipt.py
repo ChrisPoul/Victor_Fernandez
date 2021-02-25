@@ -62,7 +62,7 @@ class DummyProduct:
 def get_receipt_products(receipt):
     products = {}
     cantidades = receipt.cantidades
-    for code in cantidades:
+    for code in sorted(cantidades, reverse=True):
         products[code] = get_product(code)
 
     filler = 7 - len(products)
@@ -95,10 +95,7 @@ def new_receipt(client_id):
         add_item(receipt)
 
         return redirect(
-            url_for(
-                'receipt.edit_receipt', client_id=client.id,
-                receipt_id=receipt.id
-            )
+            url_for('receipt.edit_receipt', receipt_id=receipt.id)
         )
 
     return render_template('receipt/receipt_search.html')
