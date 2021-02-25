@@ -6,6 +6,9 @@
     <td class="main_page_client">
         {{ client["nombre"] }} : {{ client["proyecto"] }}
         <br>
+        {% for receipt_id in client.recibos %}
+        {% endfor %}
+        <br>
     </td>
 </table>
 {% endfor %}

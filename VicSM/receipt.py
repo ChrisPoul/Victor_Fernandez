@@ -13,12 +13,12 @@ from VicSM.models import (
 )
 from VicSM import db
 
-bp = Blueprint('receipt', __name__)
+bp = Blueprint('receipt', __name__, url_prefix='/receipt')
 
 product_heads = {
-    "codigo": "Código", "nombre": "Nombre", "descripcion": "Descripción",
-    "marca": "Marca", "imagen": "Imagen", "precio_venta": "Precio Venta",
-    "mas_iva": "Mas Iva", "cantidad": "Cnt.", "total": "Total"
+    "cantidad": "Cant.", "codigo": "Código", "nombre": "Nombre",
+    "descripcion": "Descripción", "marca": "Marca", "imagen": "Imagen",
+    "precio_venta": "Precio Unidad", "mas_iva": "Mas Iva", "total": "Total"
 }
 middle_heads = {
     "nombre": "Nombre del Cliente ó Razón Social", "tel": "Tel/Fax",
@@ -45,11 +45,30 @@ def get_aasm_image():
     return aasm_image
 
 
+class DummyProduct:
+    def __init__(self):
+        self.grupo = ""
+        self.serie = ""
+        self.codigo = ""
+        self.nombre = ""
+        self.descripcion = ""
+        self.marca = ""
+        self.imagen = "white_background.jpg"
+        self.mi_precio = 0
+        self.precio_venta = 0
+        self.inventario = 0
+
+
 def get_receipt_products(receipt):
     products = {}
     cantidades = receipt.cantidades
     for code in cantidades:
         products[code] = get_product(code)
+
+    filler = 7 - len(products)
+    if filler > 0:
+        for i in range(filler):
+            products[i] = DummyProduct()
 
     return products
 
@@ -93,11 +112,11 @@ def obj_as_dict(obj_tuple):
     return obj_dict
 
 
-@bp.route('/<int:receipt_id>/<int:client_id>/edit_receipt', methods=('GET', 'POST'))
-def edit_receipt(client_id, receipt_id):
+@bp.route('/<int:receipt_id>/edit_receipt', methods=('GET', 'POST'))
+def edit_receipt(receipt_id):
     aasm_image = get_aasm_image()
-    client = get_client(client_id)
     receipt = get_receipt(receipt_id)
+    client = get_client(receipt.client_id)
     products = get_receipt_products(receipt)
     if not receipt.cambio:
         receipt.cambio = client.cambio
@@ -150,7 +169,7 @@ def edit_receipt(client_id, receipt_id):
                 product.inventario -= change
                 if product.inventario < 0:
                     error = "Inventario Exedido"
-            
+
         receipt.cant_ref = cantidades
         receipt.total = get_total(totales)
         product = get_product(codigo)
@@ -160,6 +179,7 @@ def edit_receipt(client_id, receipt_id):
 
         receipt.cantidades = cantidades
         receipt.totales = totales
+        products = get_receipt_products(receipt)
         if error:
             flash(error)
         else:
@@ -177,11 +197,11 @@ def edit_receipt(client_id, receipt_id):
     )
 
 
-@bp.route('/<int:client_id>/<int:receipt_id>/receipt_done')
-def receipt_done(client_id, receipt_id):
+@bp.route('/<int:receipt_id>/receipt_done')
+def receipt_done(receipt_id):
     aasm_image = get_aasm_image()
-    client = get_client(client_id)
     receipt = get_receipt(receipt_id)
+    client = get_client(receipt.client_id)
     products = get_receipt_products(receipt)
 
     return render_template(
@@ -196,14 +216,38 @@ def receipt_done(client_id, receipt_id):
     )
 
 
-@bp.route('/<int:receipt_id>/<int:client_id>/remove_receipt')
-def remove_receipt(receipt_id, client_id):
+@bp.route('/<int:receipt_id>/<string:codigo>/remove_product')
+def remove_product(receipt_id, codigo):
     receipt = get_receipt(receipt_id)
+    cantidades = obj_as_dict(receipt.cantidades)
+    totales = obj_as_dict(receipt.totales)
+    product = get_product(codigo)
+    product.inventario += cantidades[codigo]
+    cantidades.pop(codigo)
+    try:
+        totales.pop(codigo)
+    except KeyError:
+        pass
+    receipt.cantidades = cantidades
+    receipt.totales = totales
+    db.session.commit()
+
+    return redirect(
+        url_for('receipt.edit_receipt', client_id=receipt.client_id, receipt_id=receipt_id)
+    )
+
+
+@bp.route('/<int:receipt_id>/delete_receipt')
+def delete_receipt(receipt_id):
+    receipt = get_receipt(receipt_id)
+    for code in receipt.cantidades:
+        product = get_product(code)
+        product.inventario += receipt.cantidades[code]
     db.session.delete(receipt)
     db.session.commit()
 
     return redirect(
-        url_for('client.profile', client_id=client_id)
+        url_for('client.profile', client_id=receipt.client_id)
     )
 
 

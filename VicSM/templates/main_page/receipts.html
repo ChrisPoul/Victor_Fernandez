@@ -1,7 +1,0 @@
-
-<h2>Recibos Recientes</h2>
-
-{% for receipt in receipts %}
-{{ receipt.id }} : {{ receipt.grupo }}, {{ format_date(receipt.fecha) }}
-<br>
-{% endfor %}

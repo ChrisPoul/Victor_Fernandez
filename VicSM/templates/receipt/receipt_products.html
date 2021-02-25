@@ -1,5 +1,10 @@
 
 <table class="product search_bar">
+    <thead>
+        <tr>
+            <td class="no_borders"></td>
+        </tr>
+    </thead>
     {% for head in product_heads %}
     <th>{{ product_heads[head] }}</th>
     {% endfor %}
@@ -8,10 +13,12 @@
         {% for head in product_heads %}
         {% if head == "codigo" %}
             <td class="my_code">
+            <a href="{{ url_for('receipt.remove_product', receipt_id=receipt_id, codigo=products[code].codigo) }}">
                 {{ products[code][head] }}
+            </a>
             </td>
         {% elif head == "cantidad" %}
-            <td>
+            <td style="max-width: 20px;">
             {% if products[code].inventario < 0 %}
             <input style="max-width: 70px; background-color: rgb(216, 101, 101);" class="my_input" name="{{ code }}" id="{{ code }}" value="{{ cantidades[code] }}">
             {% else %}
@@ -43,11 +50,8 @@
     </tr>
     {% endfor %}
     <tr>
-        <td colspan="5" class="centered search_bar">
-            <input class="my_second_input" name="codigo" id="codigo">
-        </td>
-        <td colspan="2" class="centered search_bar">
-            <input class="my_second_input" type="submit" value="Aceptar">
+        <td colspan="7">
+
         </td>
         <td style="border-right: 0;">
             USD:<br>
@@ -60,10 +64,10 @@
             <a href="">
             {% endif %}
             {% if not total or not cambio %}
-                {{ format_price(0) }}
+                {{ format_price(0) }}<br>
                 {{ format_price(0) }}
             {% else %}
-                {{ add_iva(total * 1.16) }}
+                {{ add_iva(total * 1.16) }}<br>
                 {{ add_iva(total * cambio * 1.16) }}
             {% endif %}
             </a>

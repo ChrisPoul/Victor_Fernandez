@@ -22,6 +22,6 @@
 </form>
 <hr>
 <form action="{{ url_for('inventory.remove_product', codigo=product['codigo']) }}" method="post">
-    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+    <input class="danger" type="submit" value="Delete" onclick="return confirm('Estás Seguro?');">
 </form>
 {% endblock %}

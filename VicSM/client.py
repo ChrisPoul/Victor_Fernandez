@@ -124,8 +124,7 @@ def profile(client_id):
             receipt = client_receipts[search_term]
             if receipt:
                 return redirect(
-                    url_for('receipt.edit_receipt',
-                            client_id=receipt.client_id, receipt_id=receipt.id)
+                    url_for('receipt.edit_receipt', receipt_id=receipt.id)
                 )
         except KeyError:
             pass

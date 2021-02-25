@@ -41,7 +41,9 @@ a {
 .flash { 
     margin: 1em 0; padding: 1em; 
     background: #cae6f6; border: 1px solid #377ba8;
-    text-align: center;
+    text-align: center; padding-top: 5px; 
+    margin-bottom: 0; margin-top: 6px;
+    padding-bottom: 5px;
   }
 .no_borders {
     border: none !important;

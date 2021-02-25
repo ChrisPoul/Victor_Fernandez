@@ -10,7 +10,7 @@
     {% for head in receipt_heads %}
         <td class="receipt">
         {% if head == "id" %}
-        <a class="default_link" href="{{ url_for('receipt.edit_receipt', client_id=client['id'], receipt_id=receipts[receipt_num].id) }}">
+        <a class="default_link" href="{{ url_for('receipt.edit_receipt', receipt_id=receipts[receipt_num].id) }}">
             {{ receipt_num }}
         </a>
         {% elif head == "productos" %}
@@ -26,7 +26,7 @@
         {% elif head == "total" %}
             {{ add_iva(receipts[receipt_num][head] * 1.16) }}
         {% elif head == "fecha" %}
-            <a class="my_link" href="{{ url_for('receipt.remove_receipt', receipt_id=receipts[receipt_num].id, client_id=client.id) }}">
+            <a class="my_link" onclick="return confirm('Estás Seguro?')" href="{{ url_for('receipt.delete_receipt', receipt_id=receipts[receipt_num].id) }}">
                 {{ format_date(receipts[receipt_num][head]) }}
             </a>
         {% else %}

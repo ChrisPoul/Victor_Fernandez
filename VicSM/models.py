@@ -18,7 +18,7 @@ class Product(db.Model):
     nombre = Column(String(100), nullable=False, unique=True)
     descripcion = Column(Text, nullable=False)
     marca = Column(String(100), nullable=False)
-    imagen = Column(String(100), nullable=False, default="default.jpg")
+    imagen = Column(String(100), nullable=False, default="default.png")
     mi_precio = Column(Integer, nullable=False, default=0)
     precio_venta = Column(Integer, nullable=False, default=0)
     inventario = Column(Integer, nullable=False, default=0)

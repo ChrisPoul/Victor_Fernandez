@@ -50,13 +50,14 @@
             USD:<br>
             MXN:
         </td>
-        {% if not total %}
-        <td style="border-left: 0;" class="centered">$0.00</td>
-        {% else %}
         <td style="text-align: right; border-left: 0;">
-            {{ add_iva(total * 1.16) }}
+        {% if not total %}
+            {{ format_price(0) }}<br>
+            {{ format_price(0) }}
+        {% else %}
+            {{ add_iva(total * 1.16) }}<br>
             {{ add_iva(total * client["cambio"] * 1.16) }}
-        </td>
         {% endif %}
+        </td>
     </tr>
 </table>

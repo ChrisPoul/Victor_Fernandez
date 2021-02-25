@@ -127,6 +127,7 @@ td.clients {
 .inv_amnt {
   margin: 0;
   padding: 0;
+  font-weight: 800;
 }
 td.main_page {
   text-align: left;
@@ -136,6 +137,7 @@ td.main_page {
   border:solid black 1px;
   border-radius:6px;
   -moz-border-radius:6px;
+  width: 50%;
 }
 h2.main_page {
   margin-top: 1px;
