@@ -51,10 +51,11 @@ a {
 }
 table.search_bar {
   margin: 1px;
+  margin-top: 5px;
   padding: 1px;
   border: 0;
 }
-td.search_bar {
+.search_bar td {
   width: 99%;
   margin: 0;
   padding: 0;
@@ -77,19 +78,16 @@ table.client {
     text-align: center;
     font-size: 0.75em;
 }
-.product {
+table.product {
     font-size: 0.62em;
     font-weight: 500;
     border: 0;
 }
+.product td { padding: 5px; }
 .my_image {
     padding-top: 2px;
     max-height: 80px;
     max-width: 80px;
-}
-.my_code {
-    font-size: 0.26cm;
-    text-align: center;
 }
 .receipt_image {
     vertical-align: middle;

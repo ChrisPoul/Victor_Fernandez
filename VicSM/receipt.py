@@ -16,7 +16,7 @@ from VicSM import db
 bp = Blueprint('receipt', __name__, url_prefix='/receipt')
 
 product_heads = {
-    "cantidad": "Cant.", "codigo": "Código", "nombre": "Nombre",
+    "cantidad": "Cant.", "nombre": "Nombre",
     "descripcion": "Descripción", "marca": "Marca", "imagen": "Imagen",
     "precio_venta": "Precio Unidad", "mas_iva": "Mas Iva", "total": "Total"
 }
@@ -62,10 +62,14 @@ class DummyProduct:
 def get_receipt_products(receipt):
     products = {}
     cantidades = receipt.cantidades
-    for code in sorted(cantidades, reverse=True):
+    codigos = []
+    for code in cantidades:
+        codigos.append(code)
+
+    for code in codigos[::-1]:
         products[code] = get_product(code)
 
-    filler = 7 - len(products)
+    filler = 6 - len(products)
     if filler > 0:
         for i in range(filler):
             products[i] = DummyProduct()

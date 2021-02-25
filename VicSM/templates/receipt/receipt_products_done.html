@@ -1,5 +1,5 @@
 
-<table class="product search_bar">
+<table class="product">
     <thead>
         <tr>
             <td class="no_borders"></td>
@@ -11,11 +11,7 @@
     {% for code in products %}
     <tr>
         {% for head in product_heads %}
-        {% if head == "codigo" %}
-            <td class="my_code">
-                {{ products[code][head] }}
-            </td>
-        {% elif head == "cantidad" %}
+        {% if head == "cantidad" %}
             <td class="centered">{{ cantidades[code] }}</td>
         {% elif head == "descripcion" %}
             <td class="justified">{{ products[code][head] }}</td>
@@ -43,7 +39,7 @@
     </tr>
     {% endfor %}
     <tr>
-        <td colspan="7" class="centered">
+        <td colspan="6" class="centered">
         
         </td>
         <td style="border-right: 0;">

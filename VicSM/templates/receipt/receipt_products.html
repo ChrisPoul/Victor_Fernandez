@@ -11,8 +11,8 @@
     {% for code in products %}
     <tr>
         {% for head in product_heads %}
-        {% if head == "codigo" %}
-            <td class="my_code">
+        {% if head == "nombre" %}
+            <td class="centered">
             <a href="{{ url_for('receipt.remove_product', receipt_id=receipt_id, codigo=products[code].codigo) }}">
                 {{ products[code][head] }}
             </a>
@@ -50,7 +50,7 @@
     </tr>
     {% endfor %}
     <tr>
-        <td colspan="7">
+        <td colspan="6">
 
         </td>
         <td style="border-right: 0;">
