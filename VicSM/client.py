@@ -101,19 +101,31 @@ def add_client():
     )
 
 
+def get_client_receipts(client_id):
+    receipts = Receipt.query.filter_by(client_id=client_id).all()
+    client_receipts = {}
+    for i, receipt in enumerate(receipts, start=1):
+        client_receipts[i] = receipt
+    return client_receipts
+
+
 @bp.route('/<int:client_id>/profile', methods=('GET', 'POST'))
 def profile(client_id):
     client = get_client(client_id)
-    receipts = Receipt.query.filter_by(client_id=client_id).all()
+    client_receipts = get_client_receipts(client_id)
 
     if request.method == "POST":
         try:
             search_term = request.form["search_term"]
-            receipt = Receipt.query.get(search_term)
+            try:
+                search_term = int(search_term)
+            except ValueError:
+                pass
+            receipt = client_receipts[search_term]
             if receipt:
                 return redirect(
                     url_for('receipt.edit_receipt',
-                            client_id=client_id, receipt_id=receipt.id)
+                            client_id=receipt.client_id, receipt_id=receipt.id)
                 )
         except KeyError:
             pass
@@ -144,7 +156,7 @@ def profile(client_id):
 
     return render_template(
         'client/profile.html', format_price=format_price,
-        receipts=receipts, receipt_heads=receipt_heads,
+        receipts=client_receipts, receipt_heads=receipt_heads,
         add_iva=add_iva, format_date=format_date,
         client=client, heads=add_heads
     )

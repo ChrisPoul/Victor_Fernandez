@@ -99,7 +99,6 @@ def edit_receipt(client_id, receipt_id):
     client = get_client(client_id)
     receipt = get_receipt(receipt_id)
     products = get_receipt_products(receipt)
-
     if not receipt.cambio:
         receipt.cambio = client.cambio
     receipt.fecha = datetime.now()
