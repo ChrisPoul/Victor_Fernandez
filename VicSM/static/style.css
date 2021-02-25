@@ -68,7 +68,7 @@ table th, table td * {
     vertical-align: top;
     padding : 5px;
 }
-table.receipt_table {
+table.receipt {
   border: 1px solid black;
   border-collapse: collapse;
   padding-top: 6px;
@@ -76,18 +76,18 @@ table.receipt_table {
   padding-right: 4px;
   text-align: center;
 }
-th.receipt_table {
+th.receipt {
   border: 1px solid black;
   padding: 3mm;
 }
-td.receipt_table {
+td.receipt {
   border: 1px solid black;
   padding: 2mm
 }
-table.clients_table {
+table.clients {
   text-align: center;
 }
-td.clients_table {
+td.clients {
   padding: 3mm;
 }
 .default_link {
@@ -98,12 +98,12 @@ td.clients_table {
   color: black;
 }
 .my_image {
-    height: 150px;
-    width: 150px;
+    max-height: 150px;
+    max-width: 150px;
 }
 .search_bar {
-  margin: 0;
-  padding: 0;
+  margin: 1px;
+  padding: 1px;
 }
 .my_second_input {
   width: 99%;

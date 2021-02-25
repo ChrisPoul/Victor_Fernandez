@@ -1,14 +1,14 @@
 
-<table class="receipt_table">
+<table class="receipt">
     {% for head in receipt_heads %}
-    <th class="receipt_table">
+    <th class="receipt">
         {{ receipt_heads[head] }}
     </th>
     {% endfor %}
     {% for receipt in receipts %}
     <tr>
     {% for head in receipt_heads %}
-        <td class="receipt_table">
+        <td class="receipt">
         {% if head == "id" %}
         <a class="default_link" href="{{ url_for('receipt.edit_receipt', client_id=client['id'], receipt_id=receipt.id) }}">
             {{ receipt.id }}

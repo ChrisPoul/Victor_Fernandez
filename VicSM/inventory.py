@@ -10,8 +10,8 @@ bp = Blueprint('inventory', __name__)
 heads = {
     "grupo": "Grupo", "serie": "Serie", "codigo": "Código",
     "nombre": "Nombre", "descripcion": "Descripción",
-    "marca": "Marca", "imagen": "Imagen", "mi_precio": "Mi Precio",
-    "precio_venta": "Precio Venta", "inventario": "Inventario"
+    "marca": "Marca", "imagen": "Imagen", "mi_precio": "Precio Compra",
+    "precio_venta": "Precio Venta", "inventario": "Inv."
 }
 search_heads = {}
 for head in heads:
@@ -76,6 +76,12 @@ def get_product(codigo):
     return product
 
 
+inv_heads = {}
+for head in heads:
+    if head != "grupo" and head != "serie" and head != "descripcion":
+        inv_heads[head] = heads[head]
+
+
 @bp.route('/inventory', methods=('POST', 'GET'))
 def inventory():
     products = Product.query.all()
@@ -86,7 +92,7 @@ def inventory():
             products = Product.query.all()
 
     return render_template(
-        'inventory/inventory.html', products=products, heads=heads,
+        'inventory/inventory.html', products=products, heads=inv_heads,
         format_price=format_price
     )
 
