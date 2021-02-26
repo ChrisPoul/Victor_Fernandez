@@ -17,13 +17,21 @@ bp = Blueprint('main_page', __name__)
 
 
 def get_graphs_figure():
-    fig = Figure(dpi=200)
-    ax = fig.subplots(nrows=2, ncols=2)
+    fig = Figure(dpi=220)
+    axs = fig.subplots(nrows=2, ncols=2)
 
-    ax[0, 0].plot([1, 2, 3, 4])
-    ax[0, 1].plot([1, 5])
-    ax[1, 0].plot([3, 2, 1])
-    ax[1, 1].plot([1, 2])
+    axs[0, 0].plot([2, 3, 3, 2])
+    axs[0, 0].set_title('Ganancias del mes')
+    axs[0, 1].plot([1, 4])
+    axs[0, 1].set_title('Ganancias de la semana')
+    axs[1, 0].plot([3, 4, 1])
+    axs[1, 0].set_title('Ventas del mes')
+    axs[1, 1].plot([3, 1, 1])
+    axs[1, 1].set_title('Ventas de la semana')
+
+    # Hide x labels and tick labels for top plots and y ticks for right plots.
+    for ax in axs.flat:
+        ax.label_outer()
 
     # Save figuro to a temporary buffer.
     buf = BytesIO()

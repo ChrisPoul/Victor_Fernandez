@@ -36,7 +36,10 @@ class Client(db.Model):
     descripcion = Column(Text, nullable=False)
     cotizacion = Column(String(100), nullable=False)
     cambio = Column(Integer, nullable=False, default=0)
-    recibos = db.relationship('Receipt', backref='author', lazy=True)
+    recibos = db.relationship(
+        'Receipt', backref='author', lazy=True,
+        cascade='all, delete-orphan'
+    )
 
     def __repr__(self):
         return self.__dict__
