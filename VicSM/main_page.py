@@ -3,12 +3,38 @@ from flask import (
     Blueprint, render_template
 )
 from operator import attrgetter
+from datetime import datetime
 from VicSM.models import (
-    Product, Client, format_date
+    Product, Client, format_date, days
 )
 from VicSM.inventory import add_iva
 
 bp = Blueprint('main_page', __name__)
+
+
+def format_time(time):
+    hour = str(time.hour)
+    minute = str(time.minute)
+    if len(hour) == 1:
+        hour = "0" + hour
+    if len(minute) == 1:
+        minute = "0" + minute
+
+    day = time.weekday()
+    today = datetime.now().weekday()
+    if day == today:
+        day = "Hoy"
+    elif day == today-1:
+        day = "Ayer"
+    else:
+        day = days[str(day)]
+
+    if hour == "01":
+        formated_time = f"{day} a la {hour}:{minute}"
+    else:
+        formated_time = f"{day} a las {hour}:{minute}"
+
+    return formated_time
 
 
 def get_recent_receipts(clients):
@@ -26,7 +52,8 @@ def get_recent_receipts(clients):
 def get_recent_clients():
     clients = Client.query.all()
     recent_receipts = get_recent_receipts(clients)
-    receipts_sorted = sorted(recent_receipts, key=attrgetter('fecha'), reverse=True)
+    receipts_sorted = sorted(
+        recent_receipts, key=attrgetter('fecha'), reverse=True)
     if len(receipts_sorted) <= 6:
         index = len(receipts_sorted)
     else:
@@ -54,5 +81,6 @@ def main_page():
         products=products, columns=columns,
         format_date=format_date, rows=rows,
         receipts=recent_receipts,
-        clients=clients, add_iva=add_iva
+        clients=clients, add_iva=add_iva,
+        format_time=format_time
     )
