@@ -5,13 +5,18 @@
 {% endblock %}
 
 {% block content %}
-<table>
+<table class="main_page">
     <tr>
-        <td class="main_page">
+        <td>
             {% include "main_page/clients.html" %}
         </td>
-        <td class="main_page" rowspan="2">
+        <td>
             {% include "main_page/products.html" %}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            {% include "main_page/summary.html" %}
         </td>
     </tr>
 </table>

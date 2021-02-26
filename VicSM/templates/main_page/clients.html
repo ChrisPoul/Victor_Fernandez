@@ -18,7 +18,7 @@
             </h4>
             <a class="my_link" href="{{ url_for('receipt.edit_receipt', receipt_id=clients[i+j+i].recibos[-1].id) }}">
                 <p>
-                    Recibo Reciente: <br>
+                    Recibo mas reciente: <br>
                     Modificado {{ format_time(receipts[2*i + j].fecha) }}<br>
                     Total: {{ add_iva(receipts[2*i + j].total) }}
                 </p>

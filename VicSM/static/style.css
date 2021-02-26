@@ -127,7 +127,7 @@ td.search_bar {
 table.main_page {
   width: 100%;
 }
-td.main_page {
+.main_page td {
   text-align: left;
   vertical-align: middle;
   padding: 10px;
@@ -148,6 +148,10 @@ td.item {
   width: 50%;
 }
 .item h4 {
+  font-size: large;
   margin-top: 0.3em;
-  margin-bottom: 0.3em;
+  margin-bottom: 0;
+}
+.item p {
+  margin: 0;
 }
