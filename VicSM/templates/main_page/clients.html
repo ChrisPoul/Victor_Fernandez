@@ -1,14 +1,33 @@
 
-<h2 class="main_page">Cleintes</h2>
-
-{% for client in clients %}
-<table style="width: 50%">
-    <td class="main_page_client">
-        {{ client["nombre"] }} : {{ client["proyecto"] }}
-        <br>
-        {% for receipt_id in client.recibos %}
+<h2>
+    <a class="my_link" href="{{ url_for('client.clients') }}">
+        Cleintes
+    </a>
+</h2>
+<hr>
+{% for i in columns %}
+<table class="main_page">
+    <tr>
+        {% for j in rows %}
+        <td class="item">
+        {% if i+j+i != len(clients) %}
+            <h4>
+            <a class="my_link" href="{{ url_for('client.profile', client_id=clients[2*i + j].id) }}">
+                {{ clients[2*i + j].nombre }}
+            </a>
+            </h4>
+            <p>
+            {% if clients[2*i + j].recibos %}
+            <a class="default_link" href="{{ url_for('receipt.edit_receipt', receipt_id=clients[i+j+i].recibos[-1].id) }}">
+                {{ receipts[2*i + j].id }}
+            </a>
+            {% else %}
+            <br>
+            {% endif %}
+            </p>
+        {% endif %}
+        </td>
         {% endfor %}
-        <br>
-    </td>
+    </tr>
 </table>
 {% endfor %}

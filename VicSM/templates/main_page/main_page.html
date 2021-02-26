@@ -8,14 +8,10 @@
 <table>
     <tr>
         <td class="main_page">
-            <a class="my_link" href="{{ url_for('client.clients') }}">
-                {% include "main_page/clients.html" %}
-            </a>
+            {% include "main_page/clients.html" %}
         </td>
         <td class="main_page" rowspan="2">
-            <a class="my_link" href="{{ url_for('inventory.inventory') }}">
-                {% include "main_page/products.html" %}
-            </a>
+            {% include "main_page/products.html" %}
         </td>
     </tr>
 </table>

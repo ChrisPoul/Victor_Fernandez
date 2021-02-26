@@ -1,5 +1,9 @@
 
-<h2>Productos</h2>
+<h2>
+    <a class="my_link" href="{{ url_for('inventory.inventory') }}">
+        Productos
+    </a>
+</h2>
 
 {% for product in products %}
 {{ product["codigo"] }} : {{ product.inventario }}
