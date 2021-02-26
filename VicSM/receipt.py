@@ -156,7 +156,7 @@ def edit_receipt(receipt_id):
                 except ValueError:
                     cantidades[code] = 0
                 precio_venta = products[code].precio_venta
-                totales[code] = cantidades[code] * precio_venta
+                totales[code] = cantidades[code] * precio_venta * 1.16
             except KeyError:
                 pass
 

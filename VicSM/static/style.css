@@ -141,9 +141,13 @@ td.item {
   text-align: left;
   vertical-align: middle;
   padding: 10px;
-  border-collapse:separate;
+  border-collapse: separate;
   border:solid black 1px;
   border-radius:6px;
   -moz-border-radius:6px;
   width: 50%;
+}
+.item h4 {
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
 }

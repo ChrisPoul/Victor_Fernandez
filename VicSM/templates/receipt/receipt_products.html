@@ -36,7 +36,7 @@
                 {% if not totals[code] %}
                 $0.00
                 {% else %}
-                {{ add_iva(totals[code] * 1.16) }}
+                {{ add_iva(totals[code]) }}
                 {% endif %}
             </td>
         {% elif head == "precio_venta" %}
@@ -67,8 +67,8 @@
                 {{ format_price(0) }}<br>
                 {{ format_price(0) }}
             {% else %}
-                {{ add_iva(total * 1.16) }}<br>
-                {{ add_iva(total * cambio * 1.16) }}
+                {{ add_iva(total) }}<br>
+                {{ add_iva(total * cambio) }}
             {% endif %}
             </a>
         </td>

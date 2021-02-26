@@ -6,6 +6,7 @@ from operator import attrgetter
 from VicSM.models import (
     Product, Client, format_date
 )
+from VicSM.inventory import add_iva
 
 bp = Blueprint('main_page', __name__)
 
@@ -53,5 +54,5 @@ def main_page():
         products=products, columns=columns,
         format_date=format_date, rows=rows,
         receipts=recent_receipts,
-        clients=clients
+        clients=clients, add_iva=add_iva
     )

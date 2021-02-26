@@ -16,15 +16,11 @@
                 {{ clients[2*i + j].nombre }}
             </a>
             </h4>
-            <p>
-            {% if clients[2*i + j].recibos %}
-            <a class="default_link" href="{{ url_for('receipt.edit_receipt', receipt_id=clients[i+j+i].recibos[-1].id) }}">
-                {{ receipts[2*i + j].id }}
+            <a class="my_link" href="{{ url_for('receipt.edit_receipt', receipt_id=clients[i+j+i].recibos[-1].id) }}">
+                <p>
+                    Recibo Reciente: {{ add_iva(receipts[2*i + j].total) }}
+                </p>
             </a>
-            {% else %}
-            <br>
-            {% endif %}
-            </p>
         {% endif %}
         </td>
         {% endfor %}
