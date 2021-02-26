@@ -1,15 +1,37 @@
 import math
+import base64
+from io import BytesIO
 from flask import (
     Blueprint, render_template
 )
 from operator import attrgetter
 from datetime import datetime
+from matplotlib.figure import Figure
 from VicSM.models import (
     Product, Client, format_date, days
 )
 from VicSM.inventory import add_iva
 
+
 bp = Blueprint('main_page', __name__)
+
+
+def get_graphs_figure():
+    fig = Figure(dpi=200)
+    ax = fig.subplots(nrows=2, ncols=2)
+
+    ax[0, 0].plot([1, 2, 3, 4])
+    ax[0, 1].plot([1, 5])
+    ax[1, 0].plot([3, 2, 1])
+    ax[1, 1].plot([1, 2])
+
+    # Save figuro to a temporary buffer.
+    buf = BytesIO()
+    fig.savefig(buf, format="png")
+    # Embed the result in the html output.
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+
+    return data
 
 
 @bp.route('/')
@@ -19,6 +41,7 @@ def main_page():
     products = Product.query.all()
     columns = range(math.ceil(len(clients)/2))
     rows = range(2)
+    data = get_graphs_figure()
 
     return render_template(
         'main_page/main_page.html', len=len,
@@ -26,7 +49,7 @@ def main_page():
         format_date=format_date, rows=rows,
         receipts=recent_receipts,
         clients=clients, add_iva=add_iva,
-        format_time=format_time
+        format_time=format_time, data=data
     )
 
 
