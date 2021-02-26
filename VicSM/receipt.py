@@ -1,6 +1,5 @@
 import os
 from datetime import datetime
-import glob
 import json
 from flask import (
     Blueprint, render_template, request, redirect, url_for,
@@ -234,7 +233,8 @@ def remove_product(receipt_id, codigo):
     db.session.commit()
 
     return redirect(
-        url_for('receipt.edit_receipt', client_id=receipt.client_id, receipt_id=receipt_id)
+        url_for('receipt.edit_receipt',
+                client_id=receipt.client_id, receipt_id=receipt_id)
     )
 
 
@@ -271,17 +271,18 @@ def reset_receipt(client_id, receipt_id):
 
 def save_my_image(image_file):
     images_path = os.path.join(current_app.root_path, "static/my_images")
-    all_images_path = os.path.join(images_path, "*")
-    all_images = glob.glob(all_images_path)
-    for image in all_images:
-        os.remove(image)
+    references_path = os.path.join(images_path, 'references.json')
+    with open(references_path, "r") as references_file:
+        references = json.load(references_file)
+    aasm_image = references["aasm"]
+    aasm_image_path = os.path.join(images_path, aasm_image)
+    os.remove(aasm_image_path)
 
     image_name = image_file.filename
+    references['aasm'] = image_name
     image_path = os.path.join(images_path, image_name)
     image_file.save(image_path)
-
-    references_path = os.path.join(images_path, 'references.json')
-    json_references = json.dumps({"aasm": image_name})
+    json_references = json.dumps(references)
     with open(references_path, "w") as references_file:
         references_file.write(json_references)
 
@@ -292,6 +293,6 @@ def receipt_config():
         my_image_file = request.files["imagen"]
         save_my_image(my_image_file)
 
-        return redirect(url_for('receipt.receipt'))
+        return redirect(url_for('receipt.new_receipt', client_id=0))
 
     return render_template('receipt/receipt_config.html')

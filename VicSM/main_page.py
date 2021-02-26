@@ -12,6 +12,24 @@ from VicSM.inventory import add_iva
 bp = Blueprint('main_page', __name__)
 
 
+@bp.route('/')
+def main_page():
+    clients = get_recent_clients()
+    recent_receipts = get_recent_receipts(clients)
+    products = Product.query.all()
+    columns = range(math.ceil(len(clients)/2))
+    rows = range(2)
+
+    return render_template(
+        'main_page/main_page.html', len=len,
+        products=products, columns=columns,
+        format_date=format_date, rows=rows,
+        receipts=recent_receipts,
+        clients=clients, add_iva=add_iva,
+        format_time=format_time
+    )
+
+
 def format_time(time):
     hour = str(time.hour)
     minute = str(time.minute)
@@ -66,21 +84,3 @@ def get_recent_clients():
             recent_clients.append(client)
 
     return recent_clients
-
-
-@bp.route('/')
-def main_page():
-    clients = get_recent_clients()
-    recent_receipts = get_recent_receipts(clients)
-    products = Product.query.all()
-    columns = range(math.ceil(len(clients)/2))
-    rows = range(2)
-
-    return render_template(
-        'main_page/main_page.html', len=len,
-        products=products, columns=columns,
-        format_date=format_date, rows=rows,
-        receipts=recent_receipts,
-        clients=clients, add_iva=add_iva,
-        format_time=format_time
-    )
