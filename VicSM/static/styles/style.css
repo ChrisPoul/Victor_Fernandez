@@ -4,7 +4,7 @@ html {
 }
 body { max-width: 100%; margin: 0; background: white; }
 h1 { font-family: serif; color: #377ba8; margin: 1rem 0; }
-section { margin: 8px; margin-left: 5%; margin-right: 5%; }
+section { margin: 8px; margin-left: 6%; margin-right: 6%; }
 a { color: #d8dbdd; }
 header {
   background-color: rgb(84, 120, 197);

@@ -22,6 +22,7 @@ class Product(db.Model):
     mi_precio = Column(Integer, nullable=False, default=0)
     precio_venta = Column(Integer, nullable=False, default=0)
     inventario = Column(Integer, nullable=False, default=0)
+    inv_ref = Column(Integer, nullable=False, default=0)
 
     def __repr__(self):
         return self.__dict__
@@ -61,12 +62,8 @@ class Receipt(db.Model):
 
 
 def init_db():
-    db.drop_all()
+    Receipt.__table__.drop(db.engine)
     db.create_all()
-
-    all_images = get_all_images(current_app)
-    for image in all_images:
-        os.remove(image)
 
 
 @click.command('init-db')

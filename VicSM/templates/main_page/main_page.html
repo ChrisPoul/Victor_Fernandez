@@ -7,16 +7,16 @@
 {% block content %}
 <table class="main_page">
     <tr>
+        <td colspan="2">
+            {% include "main_page/summary.html" %}
+        </td>
+    </tr>
+    <tr>
         <td>
             {% include "main_page/clients.html" %}
         </td>
         <td>
             {% include "main_page/products.html" %}
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            {% include "main_page/summary.html" %}
         </td>
     </tr>
 </table>

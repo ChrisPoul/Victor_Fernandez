@@ -16,7 +16,7 @@ client_heads = {
 receipt_heads = {
     "id": "Id.", "grupo": "Grupo", "cambio": "Tipo de Cambio",
     "productos": "Productos", "cantidades": "Cantidades",
-    "total": "Total", "fecha": "Fecha"
+    "total": "Total", "totales": "totales", "fecha": "Fecha"
 }
 
 

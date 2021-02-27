@@ -20,12 +20,16 @@ def get_graphs_figure():
     fig = Figure(dpi=220)
     axs = fig.subplots(nrows=2, ncols=2)
 
-    axs[0, 0].plot([2, 3, 3, 2])
-    axs[0, 0].set_title('Ganancias del mes')
+    products_sold = [2, 3, 3, 2]
+    axs[0, 0].plot(products_sold)
+    axs[0, 0].set_title('Productos Vendidos')
+
     axs[0, 1].plot([1, 4])
     axs[0, 1].set_title('Ganancias de la semana')
+
     axs[1, 0].plot([3, 4, 1])
     axs[1, 0].set_title('Ventas del mes')
+
     axs[1, 1].plot([3, 1, 1])
     axs[1, 1].set_title('Ventas de la semana')
 
@@ -46,7 +50,7 @@ def get_graphs_figure():
 def main_page():
     clients = get_recent_clients()
     recent_receipts = get_recent_receipts(clients)
-    products = Product.query.all()
+    products = get_most_used_products()
     columns = range(math.ceil(len(clients)/2))
     rows = range(2)
     data = get_graphs_figure()
@@ -115,3 +119,8 @@ def get_recent_clients():
             recent_clients.append(client)
 
     return recent_clients
+
+
+def get_most_used_products():
+    products = Product.query.all()
+    return products

@@ -18,64 +18,6 @@ for head in heads:
     if head != "descripcion" and head != "imagen":
         search_heads[head] = heads[head]
 
-
-def format_price(num):
-    if not num:
-        num = 0
-
-    num = str(num)
-    if "." not in num:
-        num += ".00"
-
-    num_parts = num.split(".")
-    num_int = num_parts[0]
-    num_dec = num_parts[1]
-
-    if len(num_dec) == 1:
-        num_dec += "0"
-
-    comma_track = 1
-    int_with_commas = ""
-    for i, num in enumerate(num_int[::-1]):
-        int_with_commas += num
-        if comma_track == 3 and i != len(num_int)-1:
-            int_with_commas += ","
-            comma_track = 0
-
-        comma_track += 1
-
-    num_int = int_with_commas[::-1]
-    num = f"${num_int}.{num_dec}"
-
-    return num
-
-
-def add_iva(num):
-    num = round(float(num) * 1.16, 2)
-
-    return format_price(num)
-
-
-def get_products(search_term):
-    products = Product.query.filter_by(codigo=search_term).all()
-    if not products:
-        products = Product.query.filter_by(grupo=search_term).all()
-    if not products:
-        products = Product.query.filter_by(serie=search_term).all()
-    if not products:
-        products = Product.query.filter_by(nombre=search_term).all()
-    if not products:
-        products = Product.query.filter_by(marca=search_term).all()
-
-    return products
-
-
-def get_product(codigo):
-    product = Product.query.filter_by(codigo=codigo).first()
-
-    return product
-
-
 inv_heads = {}
 for head in heads:
     if head != "grupo" and head != "serie" and head != "descripcion":
@@ -129,18 +71,19 @@ def add_product():
                 imagen=imagen,
                 mi_precio=form_values["mi_precio"],
                 precio_venta=form_values["precio_venta"],
-                inventario=form_values["inventario"]
+                inventario=form_values["inventario"],
+                inv_ref=form_values["inventario"]
             )
             add_item(product)
             save_image(imagen_file)
             return redirect(url_for('inventory.inventory'))
-        
+
         flash(error)
 
     return render_template(
         'inventory/add_product.html', heads=heads,
         form_values=form_values
-        )
+    )
 
 
 @bp.route('/<string:codigo>/update_product', methods=('GET', 'POST'))
@@ -189,3 +132,62 @@ def remove_product(codigo):
     remove_image(product.imagen)
 
     return redirect(url_for('inventory.inventory'))
+
+
+def format_price(num):
+    if not num:
+        num = 0
+
+    num = str(num)
+    if "." not in num:
+        num += ".00"
+
+    num_parts = num.split(".")
+    num_int = num_parts[0]
+    num_dec = num_parts[1]
+
+    if len(num_dec) == 1:
+        num_dec += "0"
+
+    comma_track = 1
+    int_with_commas = ""
+    for i, num in enumerate(num_int[::-1]):
+        int_with_commas += num
+        if comma_track == 3 and i != len(num_int)-1:
+            int_with_commas += ","
+            comma_track = 0
+
+        comma_track += 1
+
+    num_int = int_with_commas[::-1]
+    num = f"${num_int}.{num_dec}"
+
+    return num
+
+
+def add_iva(num):
+    num = round(float(num) * 1.16, 2)
+
+    return format_price(num)
+
+
+def get_products(search_term):
+    products = Product.query.filter_by(codigo=search_term).all()
+    if not products:
+        products = Product.query.filter_by(grupo=search_term).all()
+    if not products:
+        products = Product.query.filter_by(serie=search_term).all()
+    if not products:
+        products = Product.query.filter_by(nombre=search_term).all()
+    if not products:
+        products = Product.query.filter_by(marca=search_term).all()
+
+    return products
+
+
+def get_product(search_term):
+    product = Product.query.filter_by(codigo=search_term).first()
+    if not product:
+        product = Product.query.filter_by(nombre=search_term).first()
+
+    return product

@@ -26,62 +26,6 @@ middle_heads = {
 last_heads = ["direccion", "nombre", "descripcion"]
 
 
-def get_total(totals):
-    total = 0
-    for key in totals:
-        total += totals[key]
-
-    return round(total, 2)
-
-
-def get_aasm_image():
-    my_images_path = os.path.join(current_app.root_path, "static/my_images")
-    references_path = os.path.join(my_images_path, 'references.json')
-    with open(references_path) as aasm_reference_file:
-        aasm_reference = json.load(aasm_reference_file)
-    aasm_image = aasm_reference["aasm"]
-
-    return aasm_image
-
-
-class DummyProduct:
-    def __init__(self):
-        self.grupo = ""
-        self.serie = ""
-        self.codigo = ""
-        self.nombre = ""
-        self.descripcion = ""
-        self.marca = ""
-        self.imagen = "white_background.jpg"
-        self.mi_precio = 0
-        self.precio_venta = 0
-        self.inventario = 0
-
-
-def get_receipt_products(receipt):
-    products = {}
-    cantidades = receipt.cantidades
-    codigos = []
-    for code in cantidades:
-        codigos.append(code)
-
-    for code in codigos[::-1]:
-        products[code] = get_product(code)
-
-    filler = 6 - len(products)
-    if filler > 0:
-        for i in range(filler):
-            products[i] = DummyProduct()
-
-    return products
-
-
-def get_receipt(receipt_id):
-    receipt = Receipt.query.get(receipt_id)
-
-    return receipt
-
-
 @bp.route('/<int:client_id>/new_receipt', methods=('GET', 'POST'))
 def new_receipt(client_id):
     client = Client.query.get(client_id)
@@ -142,7 +86,7 @@ def edit_receipt(receipt_id):
             pass
 
         try:
-            codigo = request.form["codigo"]
+            codigo = request.form["product_search_term"]
         except KeyError:
             codigo = ""
 
@@ -165,17 +109,24 @@ def edit_receipt(receipt_id):
                     change = cantidades[code] - cant_ref[code]
                 except KeyError:
                     change = cantidades[code]
+                    cant_ref[code] = 0
                 product = get_product(code)
                 product.inventario -= change
                 if product.inventario < 0:
-                    error = "Inventario Exedido"
+                    inv_disponible = product.inventario + \
+                        change + cant_ref[code]
+                    exedent = inv_disponible - cantidades[code]
+                    error = f"""
+                        Inventario exedido por {-exedent} unidades,
+                        solo hay {inv_disponible} unidades de
+                        {product.nombre} disponibles"""
 
         receipt.cant_ref = cantidades
         receipt.total = get_total(totales)
         product = get_product(codigo)
         if product is not None:
-            products[codigo] = product
-            cantidades[codigo] = 0
+            products[product.codigo] = product
+            cantidades[product.codigo] = 0
 
         receipt.cantidades = cantidades
         receipt.totales = totales
@@ -269,6 +220,17 @@ def reset_receipt(client_id, receipt_id):
     )
 
 
+@bp.route('/receipt_config', methods=('GET', 'POST'))
+def receipt_config():
+    if request.method == 'POST':
+        my_image_file = request.files["imagen"]
+        save_my_image(my_image_file)
+
+        return redirect(url_for('receipt.new_receipt', client_id=0))
+
+    return render_template('receipt/receipt_config.html')
+
+
 def save_my_image(image_file):
     images_path = os.path.join(current_app.root_path, "static/my_images")
     references_path = os.path.join(images_path, 'references.json')
@@ -287,12 +249,66 @@ def save_my_image(image_file):
         references_file.write(json_references)
 
 
-@bp.route('/receipt_config', methods=('GET', 'POST'))
-def receipt_config():
-    if request.method == 'POST':
-        my_image_file = request.files["imagen"]
-        save_my_image(my_image_file)
+def get_total(totals):
+    total = 0
+    for key in totals:
+        total += totals[key]
 
-        return redirect(url_for('receipt.new_receipt', client_id=0))
+    return round(total, 2)
 
-    return render_template('receipt/receipt_config.html')
+
+def get_aasm_image():
+    my_images_path = os.path.join(current_app.root_path, "static/my_images")
+    references_path = os.path.join(my_images_path, 'references.json')
+    with open(references_path) as aasm_reference_file:
+        aasm_reference = json.load(aasm_reference_file)
+    aasm_image = aasm_reference["aasm"]
+
+    return aasm_image
+
+
+class DummyProduct:
+    def __init__(self):
+        self.grupo = ""
+        self.serie = ""
+        self.codigo = ""
+        self.nombre = ""
+        self.descripcion = ""
+        self.marca = ""
+        self.imagen = "white_background.jpg"
+        self.mi_precio = 0
+        self.precio_venta = 0
+        self.inventario = 0
+
+
+def get_receipt_products(receipt):
+    products = {}
+    cantidades = obj_as_dict(receipt.cantidades)
+    totales = obj_as_dict(receipt.totales)
+    codigos = []
+    for code in cantidades:
+        codigos.append(code)
+
+    for code in codigos[::-1]:
+        product = get_product(code)
+        if product is not None:
+            products[code] = product
+        else:
+            cantidades.pop(code)
+            receipt.cantidades = cantidades
+            totales.pop(code)
+            receipt.totales = totales
+            db.session.commit()
+
+    filler = 6 - len(products)
+    if filler > 0:
+        for i in range(filler):
+            products[i] = DummyProduct()
+
+    return products
+
+
+def get_receipt(receipt_id):
+    receipt = Receipt.query.get(receipt_id)
+
+    return receipt
