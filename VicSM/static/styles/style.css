@@ -137,7 +137,7 @@ table.main_page {
   -moz-border-radius:6px;
   width: 50%;
 }
-td.item {
+td.client {
   text-align: left;
   vertical-align: middle;
   padding: 10px;
@@ -147,11 +147,21 @@ td.item {
   -moz-border-radius:6px;
   width: 50%;
 }
-.item h4 {
+.client h4 {
   font-size: large;
   margin-top: 0.3em;
   margin-bottom: 0;
 }
-.item p {
+.client p {
   margin: 0;
+}
+td.product {
+  text-align: left;
+  vertical-align: middle;
+  padding: 10px;
+  border-collapse: separate;
+  border:solid black 1px;
+  border-radius:6px;
+  -moz-border-radius:6px;
+  width: 100%;
 }

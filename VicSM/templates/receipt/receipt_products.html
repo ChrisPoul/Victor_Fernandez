@@ -13,16 +13,20 @@
         {% for head in product_heads %}
         {% if head == "nombre" %}
             <td class="centered">
-            <a href="{{ url_for('receipt.remove_product', receipt_id=receipt_id, codigo=products[code].codigo) }}">
+            <a href="{{ url_for('inventory.update_product', codigo=products[code].codigo) }}">
                 {{ products[code][head] }}
             </a>
             </td>
         {% elif head == "cantidad" %}
             <td style="max-width: 20px;">
-            {% if products[code].inventario < 0 %}
-            <input style="max-width: 70px; background-color: rgb(216, 101, 101);" class="my_input" name="{{ code }}" id="{{ code }}" value="{{ cantidades[code] }}">
+            {% if products[code].codigo != "" %}
+                {% if products[code].inventario < 0 %}
+                <input style="max-width: 70px; background-color: rgb(216, 101, 101);" class="my_input" name="{{ code }}" id="{{ code }}" value="{{ cantidades[code] }}">
+                {% else %}
+                <input style="max-width: 70px" class="my_input" name="{{ code }}" id="{{ code }}" value="{{ cantidades[code] }}">
+                {% endif %}
             {% else %}
-            <input style="max-width: 70px" class="my_input" name="{{ code }}" id="{{ code }}" value="{{ cantidades[code] }}">
+                <p></p>
             {% endif %}
             </td>
         {% elif head == "descripcion" %}

@@ -8,6 +8,7 @@ from sqlalchemy import (
     Column, Integer, String, Text, Float, PickleType,
     DateTime, ForeignKey
 )
+from sqlalchemy.exc import IntegrityError
 from VicSM import db
 
 
@@ -23,6 +24,7 @@ class Product(db.Model):
     precio_venta = Column(Integer, nullable=False, default=0)
     inventario = Column(Integer, nullable=False, default=0)
     inv_ref = Column(Integer, nullable=False, default=0)
+    unidades_vendidas = Column(Integer, nullable=False, default=0)
 
     def __repr__(self):
         return self.__dict__
@@ -62,7 +64,7 @@ class Receipt(db.Model):
 
 
 def init_db():
-    Receipt.__table__.drop(db.engine)
+    Product.__table__.drop(db.engine)
     db.create_all()
 
 
@@ -75,7 +77,13 @@ def init_db_command():
 
 def add_item(item):
     db.session.add(item)
-    db.session.commit()
+    error = None
+    try:
+        db.session.commit()
+    except IntegrityError:
+        error = "Ese valor ya se encuentra en uso"
+    
+    return error
 
 
 def get_all_images(app):
@@ -130,3 +138,11 @@ def format_date(date):
     year = date_parts[2]
 
     return f"{day} {day_num} de {month} del {year}"
+
+
+def obj_as_dict(obj_tuple):
+    obj_dict = {}
+    for key in obj_tuple:
+        obj_dict[key] = obj_tuple[key]
+
+    return obj_dict

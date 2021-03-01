@@ -1,7 +1,7 @@
 
 <h2>
     <a class="my_link" href="{{ url_for('client.clients') }}">
-        Cleintes
+        Clientes
     </a>
 </h2>
 <hr>
@@ -9,7 +9,7 @@
 <table class="main_page">
     <tr>
         {% for j in rows %}
-        <td class="item">
+        <td class="client">
         {% if i+j+i != len(clients) %}
             <h4>
             <a class="my_link" href="{{ url_for('client.profile', client_id=clients[2*i + j].id) }}">

@@ -90,8 +90,10 @@ def add_client():
                 descripcion=form_values["descripcion"],
                 cotizacion=form_values["cotizacion"]
             )
-            add_item(client)
-            return redirect(url_for('client.clients'))
+            error = add_item(client)
+
+            if not error:
+                return redirect(url_for('client.clients'))
 
         flash(error)
 

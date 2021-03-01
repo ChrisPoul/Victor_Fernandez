@@ -8,7 +8,8 @@ from flask import (
 from VicSM.inventory import get_product, format_price, add_iva
 from VicSM.client import get_client, client_heads
 from VicSM.models import (
-    format_date, add_item, Client, Receipt
+    format_date, add_item, Client,
+    Receipt, obj_as_dict
 )
 from VicSM import db
 
@@ -46,14 +47,6 @@ def new_receipt(client_id):
         )
 
     return render_template('receipt/receipt_search.html')
-
-
-def obj_as_dict(obj_tuple):
-    obj_dict = {}
-    for key in obj_tuple:
-        obj_dict[key] = obj_tuple[key]
-
-    return obj_dict
 
 
 @bp.route('/<int:receipt_id>/edit_receipt', methods=('GET', 'POST'))
@@ -111,13 +104,18 @@ def edit_receipt(receipt_id):
                     change = cantidades[code]
                     cant_ref[code] = 0
                 product = get_product(code)
+                product.unidades_vendidas += change
                 product.inventario -= change
                 if product.inventario < 0:
                     inv_disponible = product.inventario + \
                         change + cant_ref[code]
                     exedent = inv_disponible - cantidades[code]
+                    if -exedent == 1:
+                        unidades_txt = "unidad"
+                    else:
+                        unidades_txt = "unidades"
                     error = f"""
-                        Inventario exedido por {-exedent} unidades,
+                        Inventario exedido por {-exedent} {unidades_txt},
                         solo hay {inv_disponible} unidades de
                         {product.nombre} disponibles"""
 
@@ -173,7 +171,9 @@ def remove_product(receipt_id, codigo):
     cantidades = obj_as_dict(receipt.cantidades)
     totales = obj_as_dict(receipt.totales)
     product = get_product(codigo)
-    product.inventario += cantidades[codigo]
+    cantidad = cantidades[codigo]
+    product.inventario += cantidad
+    product.unidades_vendidas -= cantidad
     cantidades.pop(codigo)
     try:
         totales.pop(codigo)
@@ -194,7 +194,10 @@ def delete_receipt(receipt_id):
     receipt = get_receipt(receipt_id)
     for code in receipt.cantidades:
         product = get_product(code)
-        product.inventario += receipt.cantidades[code]
+        if product:
+            cantidad = receipt.cantidades[code]
+            product.inventario += cantidad
+            product.unidades_vendidas -= cantidad
     db.session.delete(receipt)
     db.session.commit()
 
@@ -206,6 +209,10 @@ def delete_receipt(receipt_id):
 @bp.route('/<int:client_id>/<int:receipt_id>/reset_receipt')
 def reset_receipt(client_id, receipt_id):
     receipt = get_receipt(receipt_id)
+    cantidades = receipt.cantidades
+    for code in cantidades:
+        product = get_product(code)
+        product.unidades_vendidas -= cantidades[code]
     receipt.grupo = None
     receipt.cambio = None
     receipt.totales = {}

@@ -123,4 +123,5 @@ def get_recent_clients():
 
 def get_most_used_products():
     products = Product.query.all()
+
     return products

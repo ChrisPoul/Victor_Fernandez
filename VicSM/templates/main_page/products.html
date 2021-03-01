@@ -6,6 +6,9 @@
 </h2>
 
 {% for product in products %}
-{{ product["codigo"] }} : {{ product.inventario }}
-<br>
+<table>
+    <td class="product">
+        {{ product.nombre }} {{ product["codigo"] }} : {{ product.unidades_vendidas }}
+    </td>
+</table>
 {% endfor %}

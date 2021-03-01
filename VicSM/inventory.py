@@ -74,9 +74,10 @@ def add_product():
                 inventario=form_values["inventario"],
                 inv_ref=form_values["inventario"]
             )
-            add_item(product)
-            save_image(imagen_file)
-            return redirect(url_for('inventory.inventory'))
+            error = add_item(product)
+            if not error:
+                save_image(imagen_file)
+                return redirect(url_for('inventory.inventory'))
 
         flash(error)
 
