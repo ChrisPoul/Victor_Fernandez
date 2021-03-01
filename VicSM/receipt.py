@@ -17,8 +17,10 @@ bp = Blueprint('receipt', __name__, url_prefix='/receipt')
 
 product_heads = {
     "cantidad": "Cant.", "nombre": "Nombre",
-    "descripcion": "Descripción", "marca": "Marca", "imagen": "Imagen",
-    "precio_venta": "Precio Unidad", "mas_iva": "Mas Iva", "total": "Total"
+    "descripcion": "Descripción", "marca": "Marca",
+    "imagen": "Imagen", "precio_venta": "Precio Unidad",
+    "mas_iva": "Mas Iva", "total": "Total",
+    "eliminar": "Quitar"
 }
 middle_heads = {
     "nombre": "Nombre del Cliente ó Razón Social", "tel": "Tel/Fax",
@@ -146,6 +148,12 @@ def edit_receipt(receipt_id):
     )
 
 
+product_done_heads = {}
+for head in product_heads:
+    if head != "eliminar":
+        product_done_heads[head] = product_heads[head]
+
+
 @bp.route('/<int:receipt_id>/receipt_done')
 def receipt_done(receipt_id):
     aasm_image = get_aasm_image()
@@ -154,7 +162,7 @@ def receipt_done(receipt_id):
     products = get_receipt_products(receipt)
 
     return render_template(
-        'receipt/receipt_done.html', product_heads=product_heads,
+        'receipt/receipt_done.html', product_heads=product_done_heads,
         client_heads=client_heads, products=products,
         cantidades=receipt.cantidades, totals=receipt.totales,
         format_price=format_price, grupo=receipt.grupo,
@@ -175,17 +183,14 @@ def remove_product(receipt_id, codigo):
     product.inventario += cantidad
     product.unidades_vendidas -= cantidad
     cantidades.pop(codigo)
-    try:
-        totales.pop(codigo)
-    except KeyError:
-        pass
+    totales.pop(codigo)
     receipt.cantidades = cantidades
     receipt.totales = totales
+    receipt.total = get_total(totales)
     db.session.commit()
 
     return redirect(
-        url_for('receipt.edit_receipt',
-                client_id=receipt.client_id, receipt_id=receipt_id)
+        url_for('receipt.edit_receipt', receipt_id=receipt_id)
     )
 
 
@@ -203,27 +208,6 @@ def delete_receipt(receipt_id):
 
     return redirect(
         url_for('client.profile', client_id=receipt.client_id)
-    )
-
-
-@bp.route('/<int:client_id>/<int:receipt_id>/reset_receipt')
-def reset_receipt(client_id, receipt_id):
-    receipt = get_receipt(receipt_id)
-    cantidades = receipt.cantidades
-    for code in cantidades:
-        product = get_product(code)
-        product.unidades_vendidas -= cantidades[code]
-    receipt.grupo = None
-    receipt.cambio = None
-    receipt.totales = {}
-    receipt.total = 0
-    receipt.cantidades = {}
-    receipt.cant_ref = {}
-    db.session.commit()
-
-    return redirect(
-        url_for('receipt.edit_receipt',
-                client_id=client_id, receipt_id=receipt_id)
     )
 
 

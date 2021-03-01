@@ -23,8 +23,6 @@
     {% include "receipt/receipt_products.html" %}
 </div>
 </form>
-{% if client %}
 <form action="{{ url_for('receipt.receipt_done', receipt_id=receipt_id) }}">
     <input type="submit" value="Listo">
 </form>
-{% endif %}

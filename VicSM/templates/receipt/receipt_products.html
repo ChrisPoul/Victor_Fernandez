@@ -47,6 +47,16 @@
             <td class="centered">{{ add_iva(products[code][head]) }}</td>
         {% elif head == "mas_iva" %}
             <td class="centered">{{ add_iva(products[code]["precio_venta"] * 1.16) }}</td>
+        {% elif head == "eliminar" %}
+            <td class="centered">
+                {% if products[code].codigo != "" %}
+                <button>
+                <a href="{{ url_for('receipt.remove_product', receipt_id=receipt_id, codigo=code) }}">
+                    quitar
+                </a>
+                </button>
+                {% endif %}
+            </td>
         {% else %}
             <td class="centered">{{ products[code][head] }}</td>
         {% endif %}
@@ -54,7 +64,7 @@
     </tr>
     {% endfor %}
     <tr>
-        <td colspan="6">
+        <td colspan="7">
 
         </td>
         <td style="border-right: 0;">
@@ -62,11 +72,6 @@
             MXN:
         </td>
         <td style="text-align: right; border-left: 0;">
-            {% if client %}
-            <a href="{{ url_for('receipt.reset_receipt', client_id=client['id'], receipt_id=receipt_id) }}">
-            {% else %}
-            <a href="">
-            {% endif %}
             {% if not total or not cambio %}
                 {{ format_price(0) }}<br>
                 {{ format_price(0) }}
@@ -74,7 +79,6 @@
                 {{ add_iva(total) }}<br>
                 {{ add_iva(total * cambio) }}
             {% endif %}
-            </a>
         </td>
     </tr>
 </table>

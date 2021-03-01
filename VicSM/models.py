@@ -82,7 +82,7 @@ def add_item(item):
         db.session.commit()
     except IntegrityError:
         error = "Ese valor ya se encuentra en uso"
-    
+
     return error
 
 

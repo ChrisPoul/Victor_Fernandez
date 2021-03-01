@@ -2,7 +2,7 @@
 <table class="client">
     <tr>
         <td rowspan="3">
-            <a href="{{ url_for('client.profile', client_id=client['id']) }}">
+            <a href="{{ url_for('main_page.main_page') }}">
                 <image class="receipt_image" src="{{ url_for('static', filename='my_images/{}'.format(aasm_image)) }}">
                 </image>
             </a>
@@ -35,9 +35,13 @@
             <h3>{{ middle_heads[head] }}:</h3>
             <p class="centered middle_heads">
                 {% if head == "cambio" %}
-                {{ format_price(cambio) }}
+                    {{ format_price(cambio) }}
+                {% elif head == "nombre" %}
+                    <a href="{{ url_for('client.profile', client_id=client['id']) }}">
+                        {{ client[head] }}
+                    </a>
                 {% else %}
-                {{ client[head] }}
+                    {{ client[head] }}
                 {% endif %}
             </p>
         </td>
@@ -47,7 +51,15 @@
     <tr>
         <td colspan="4">
             <h3>{{ client_heads[head] }}:</h3>
-            <p class="centered">{{ client[head] }}</p>
+            <p class="centered">
+                {% if head == "nombre" %}
+                    <a href="{{ url_for('client.profile', client_id=client['id']) }}">
+                        {{ client[head] }}
+                    </a>
+                {% else %}
+                    {{ client[head] }}
+                {% endif %}
+            </p>
         </td>
     </tr>
     {% endfor %}

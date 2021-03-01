@@ -12,6 +12,7 @@ setup(
     install_requires=[
         "flask",
         "flask-sqlalchemy",
-        "sqlalchemy"
+        "sqlalchemy",
+        "matplotlib"
     ]
 )
