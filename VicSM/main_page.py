@@ -208,6 +208,9 @@ def get_products_figure():
     fig = Figure(dpi=200)
     ax = fig.subplots()
     products_sold, units_sold = get_sold_products()
+    if units_sold[-1] == 0:
+        products_sold = products_sold[:-1]
+        units_sold = units_sold[:-1]
     ax.pie(units_sold, labels=products_sold)
     ax.set_title('Productos Vendidos')
 
@@ -220,21 +223,20 @@ def get_products_figure():
 
 def get_current_total_earnings():
     clients = Client.query.all()
-    ganancias_brutas = 0
+    ventas = 0
     for client in clients:
-        ganancias_brutas += client.total * 1.16
+        ventas += client.total * 1.16
 
     products = Product.query.all()
-    gastos = 0
+    costos = 0
     for product in products:
-        gastos += product.mi_precio * product.unidades_vendidas
+        costos += product.mi_precio * product.unidades_vendidas
 
-    utilidades = ganancias_brutas - gastos
+    utilidades = ventas - costos
 
     ganancias_totales = {
-        "ganancias_brutas": ganancias_brutas,
-        "utilidades": utilidades,
-        "gastos": gastos
+        "ventas": ventas,
+        "utilidades": utilidades
     }
 
     return ganancias_totales
@@ -257,15 +259,13 @@ def get_summary_figure():
     fig = Figure(dpi=220)
     ax = fig.subplots()
     total_earnings = get_total_earnings()
-    ganancias_brutas = total_earnings["ganancias_brutas"]
+    ventas = total_earnings["ventas"]
     utilidades = total_earnings["utilidades"]
-    gastos = total_earnings["gastos"]
 
-    ax.plot(ganancias_brutas, label="G.Brutas")
+    ax.plot(ventas, label="Ventas")
     ax.plot(utilidades, label="Utilidades")
-    ax.plot(gastos, label="Gastos")
     ax.legend()
-    ax.set_title("Ganancias y Gastos A través del tiempo")
+    ax.set_title("Ganancias a través del tiempo")
 
     # Save figuro to a temporary buffer.
     buf = BytesIO()

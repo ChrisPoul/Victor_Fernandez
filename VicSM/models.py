@@ -74,7 +74,7 @@ def init_db():
     db.create_all()
 
     references = get_references()
-    references['ganancias_brutas'] = [0]
+    references['ventas'] = [0]
     references['gastos'] = [0]
     references['utilidades'] = [0]
     save_references(references)

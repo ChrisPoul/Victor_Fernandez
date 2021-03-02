@@ -159,7 +159,6 @@ def format_price(num):
         if comma_track == 3 and i != len(num_int)-1:
             int_with_commas += ","
             comma_track = 0
-
         comma_track += 1
 
     num_int = int_with_commas[::-1]

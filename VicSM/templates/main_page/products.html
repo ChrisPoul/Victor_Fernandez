@@ -23,7 +23,7 @@
                 {% endif %}
             </td>
             {% else %}
-            <td class="p_column" style="width: 10%">
+            <td class="p_column" style="width: 10%; text-align: center;">
                 <a href="{{ url_for('inventory.update_product', codigo=product['codigo']) }}">
                 <image class="small_img" src="{{ url_for('static', filename='images/{}'.format(product[head])) }}">
                 </image>
