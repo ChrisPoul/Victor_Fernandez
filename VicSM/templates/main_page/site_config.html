@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>{% block title %}Configuración{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form style="flex-direction: row;" method="post" enctype="multipart/form-data">
+    <table>
+        <tr>
+            <td>
+                <label for="image_receipt">
+                    Seleccionar imagen del recibo (.jpeg .jpg .png ....):<br>
+                    <input type="file" name="image_receipt" id="image_receipt">
+                </label>
+            </td>
+            <td>
+                <label for="image_icon">
+                    Seleccionar icono del sitio web (extención .ico):<br>
+                    <input type="file" name="image_icon" id="image_icon">
+                </label>
+            </td>
+            <td>
+                <input type="submit" value="Aceptar">
+            </td>
+        </tr>
+    </table>
+</form>
+{% endblock %}

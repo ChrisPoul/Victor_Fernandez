@@ -182,3 +182,9 @@ td.p_column {
   max-height: 45px;
   padding: 0;
 }
+.summary td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0;
+  border: 0;
+}

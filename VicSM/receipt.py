@@ -20,7 +20,7 @@ product_heads = {
     "descripcion": "Descripción", "marca": "Marca",
     "imagen": "Imagen", "precio_venta": "Precio Unidad",
     "mas_iva": "Mas Iva", "total": "Total",
-    "eliminar": "Quitar"
+    "eliminar": "Eliminar"
 }
 middle_heads = {
     "nombre": "Nombre del Cliente ó Razón Social", "tel": "Tel/Fax",
@@ -214,35 +214,6 @@ def delete_receipt(receipt_id):
     return redirect(
         url_for('client.profile', client_id=receipt.client_id)
     )
-
-
-@bp.route('/receipt_config', methods=('GET', 'POST'))
-def receipt_config():
-    if request.method == 'POST':
-        my_image_file = request.files["imagen"]
-        save_my_image(my_image_file)
-
-        return redirect(url_for('receipt.new_receipt', client_id=0))
-
-    return render_template('receipt/receipt_config.html')
-
-
-def save_my_image(image_file):
-    images_path = os.path.join(current_app.root_path, "static/my_images")
-    references_path = os.path.join(images_path, 'references.json')
-    with open(references_path, "r") as references_file:
-        references = json.load(references_file)
-    aasm_image = references["aasm"]
-    aasm_image_path = os.path.join(images_path, aasm_image)
-    os.remove(aasm_image_path)
-
-    image_name = image_file.filename
-    references['aasm'] = image_name
-    image_path = os.path.join(images_path, image_name)
-    image_file.save(image_path)
-    json_references = json.dumps(references)
-    with open(references_path, "w") as references_file:
-        references_file.write(json_references)
 
 
 def get_total(totals):

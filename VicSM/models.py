@@ -19,7 +19,8 @@ class Product(db.Model):
     nombre = Column(String(100), nullable=False, unique=True)
     descripcion = Column(Text, nullable=False)
     marca = Column(String(100), nullable=False)
-    imagen = Column(String(100), nullable=False, default="default.png", unique=True)
+    imagen = Column(String(100), nullable=False,
+                    default="default.png", unique=True)
     mi_precio = Column(Integer, nullable=False, default=0)
     precio_venta = Column(Integer, nullable=False, default=0)
     inventario = Column(Integer, nullable=False, default=0)
@@ -65,8 +66,10 @@ class Receipt(db.Model):
 
 
 def init_db():
-    Client.__table__.drop(db.engine)
-    Receipt.__table__.drop(db.engine)
+    # Client.__table__.drop(db.engine)
+    # Receipt.__table__.drop(db.engine)
+    # Product.__table__.drop(db.engine)
+    db.drop_all()
     db.create_all()
 
 
