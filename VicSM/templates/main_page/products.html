@@ -4,11 +4,40 @@
         Productos
     </a>
 </h2>
-
+<hr>
 {% for product in products %}
 <table>
     <td class="product">
-        {{ product.nombre }} {{ product["codigo"] }} : {{ product.unidades_vendidas }}
+        <table class="product">
+        <tr>
+        {% for head in product_heads %}
+            {% if head != "imagen" %}
+            <td class="p_column">
+                {% if head == "unidades_vendidas" %}
+                    {{ product[head] }} unidades vendidas
+                {% elif head == "codigo" %}
+                    <a class="default_link" href="{{ url_for('inventory.update_product', codigo=product[head]) }}">
+                        {{ product[head] }}
+                    </a>
+                {% else %}
+                    {{ product[head] }}
+                {% endif %}
+            </td>
+            {% else %}
+            <td class="p_column" style="width: 10%">
+                <a href="{{ url_for('inventory.update_product', codigo=product['codigo']) }}">
+                <image class="small_img" src="{{ url_for('static', filename='images/{}'.format(product[head])) }}">
+                </image>
+                </a>
+            </td>
+            {% endif %}
+        {% endfor %}
+        </tr>
+        </table>
     </td>
 </table>
 {% endfor %}
+
+<div style="text-align: center;">
+    <img style="width: 100%;" src="{{ 'data:image/png;base64,{}'.format(products_data) }}"/>
+</div>

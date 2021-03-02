@@ -129,7 +129,7 @@ table.main_page {
 }
 .main_page td {
   text-align: left;
-  vertical-align: middle;
+  vertical-align: top;
   padding: 10px;
   border-collapse:separate;
   border:solid black 1px;
@@ -156,12 +156,29 @@ td.client {
   margin: 0;
 }
 td.product {
-  text-align: left;
+  text-align: center;
   vertical-align: middle;
-  padding: 10px;
+  padding: 0;
+  padding-left: 2%;
+  padding-right: 2%;
   border-collapse: separate;
   border:solid black 1px;
   border-radius:6px;
   -moz-border-radius:6px;
   width: 100%;
+}
+table.product {
+  padding: 0;
+}
+td.p_column {
+  text-align: left;
+  width: 30%;
+  vertical-align: middle;
+  padding: 0;
+  border: 0;
+}
+.small_img {
+  max-width: 45px;
+  max-height: 45px;
+  padding: 0;
 }

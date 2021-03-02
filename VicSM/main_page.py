@@ -15,23 +15,52 @@ from VicSM.inventory import add_iva
 
 bp = Blueprint('main_page', __name__)
 
+product_heads = {
+    "imagen": "Imagen",
+    "codigo": "Codigo", "nombre": "Nombre",
+    "unidades_vendidas": "Ventas"
+}
 
-def get_graphs_figure():
+
+def get_clients_figure():
+    fig = Figure(dpi=200)
+    ax = fig.subplots()
+    clients_names, clients_totals = get_client_totals()
+    ax.bar(clients_names, clients_totals)
+    ax.set_ylabel("Dolares")
+
+    # Save figure to a temporary buffer.
+    buf = BytesIO()
+    fig.savefig(buf, format="png")
+    # Embed the result in the html output.
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+
+    return data
+
+
+def get_products_figure():
+    fig = Figure(dpi=200)
+    ax = fig.subplots()
+    products_sold, units_sold = get_sold_products()
+    ax.pie(units_sold, labels=products_sold)
+    ax.set_title('Productos Vendidos')
+
+    buf = BytesIO()
+    fig.savefig(buf, format="png")
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+
+    return data
+
+
+def get_summary_figure():
     fig = Figure(dpi=220)
-    axs = fig.subplots(nrows=2, ncols=2)
+    axs = fig.subplots(ncols=2)
 
-    products_sold = [2, 3, 3, 2]
-    axs[0, 0].plot(products_sold)
-    axs[0, 0].set_title('Productos Vendidos')
+    axs[0].plot([1, 2])
+    axs[0].set_title("Dummy data")
 
-    axs[0, 1].plot([1, 4])
-    axs[0, 1].set_title('Ganancias de la semana')
-
-    axs[1, 0].plot([3, 4, 1])
-    axs[1, 0].set_title('Ventas del mes')
-
-    axs[1, 1].plot([3, 1, 1])
-    axs[1, 1].set_title('Ventas de la semana')
+    axs[1].plot([2, 1])
+    axs[1].set_title("More dummy data")
 
     # Hide x labels and tick labels for top plots and y ticks for right plots.
     for ax in axs.flat:
@@ -50,18 +79,24 @@ def get_graphs_figure():
 def main_page():
     clients = get_recent_clients()
     recent_receipts = get_recent_receipts(clients)
-    products = get_most_used_products()
+    products = get_most_sold_products()
     columns = range(math.ceil(len(clients)/2))
     rows = range(2)
-    data = get_graphs_figure()
+    clients_data = get_clients_figure()
+    products_data = get_products_figure()
+    summary_data = get_summary_figure()
 
     return render_template(
         'main_page/main_page.html', len=len,
         products=products, columns=columns,
         format_date=format_date, rows=rows,
         receipts=recent_receipts,
+        clients_data=clients_data,
+        products_data=products_data,
+        summary_data=summary_data,
         clients=clients, add_iva=add_iva,
-        format_time=format_time, data=data
+        format_time=format_time,
+        product_heads=product_heads
     )
 
 
@@ -107,13 +142,9 @@ def get_recent_clients():
     recent_receipts = get_recent_receipts(clients)
     receipts_sorted = sorted(
         recent_receipts, key=attrgetter('fecha'), reverse=True)
-    if len(receipts_sorted) <= 6:
-        index = len(receipts_sorted)
-    else:
-        index = 6
 
     recent_clients = []
-    for receipt in receipts_sorted[:index]:
+    for receipt in receipts_sorted[:6]:
         client = receipt.author
         if client not in recent_clients:
             recent_clients.append(client)
@@ -121,7 +152,50 @@ def get_recent_clients():
     return recent_clients
 
 
-def get_most_used_products():
-    products = Product.query.all()
+def get_client_totals():
+    clients = get_recent_clients()
+    clients = sorted(clients, key=attrgetter('total'), reverse=True)
 
-    return products
+    clients_names = []
+    clients_totals = []
+    for client in clients:
+        clients_names.append(client.nombre)
+        clients_totals.append(client.total * 1.16)
+
+    return clients_names, clients_totals
+
+
+class Other:
+
+    def __init__(self, unidades_vendidas):
+        self.codigo = "Otros"
+        self.nombre = "Otros"
+        self.imagen = "default.png"
+        self.unidades_vendidas = unidades_vendidas
+
+
+def get_most_sold_products():
+    products = Product.query.all()
+    products = sorted(products, key=attrgetter(
+        "unidades_vendidas"), reverse=True)
+    ms_products = []
+    others_unidades_vendidas = 0
+    for i, product in enumerate(products):
+        if product.unidades_vendidas > 0 and i < 5:
+            ms_products.append(product)
+        else:
+            others_unidades_vendidas += product.unidades_vendidas
+    ms_products.append(Other(others_unidades_vendidas))
+
+    return ms_products
+
+
+def get_sold_products():
+    products = get_most_sold_products()
+    sold_products = []
+    sold_units = []
+    for product in products:
+        sold_products.append(product.nombre)
+        sold_units.append(product.unidades_vendidas)
+
+    return sold_products, sold_units

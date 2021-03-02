@@ -43,6 +43,7 @@ class Client(db.Model):
         'Receipt', backref='author', lazy=True,
         cascade='all, delete-orphan'
     )
+    total = Column(Integer, nullable=False, default=0)
 
     def __repr__(self):
         return self.__dict__
@@ -64,7 +65,8 @@ class Receipt(db.Model):
 
 
 def init_db():
-    Product.__table__.drop(db.engine)
+    Client.__table__.drop(db.engine)
+    Receipt.__table__.drop(db.engine)
     db.create_all()
 
 

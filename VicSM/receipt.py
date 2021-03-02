@@ -122,6 +122,7 @@ def edit_receipt(receipt_id):
                         {product.nombre} disponibles"""
 
         receipt.cant_ref = cantidades
+        client.total -= receipt.total - get_total(totales)
         receipt.total = get_total(totales)
         product = get_product(codigo)
         if product is not None:
@@ -176,6 +177,7 @@ def receipt_done(receipt_id):
 @bp.route('/<int:receipt_id>/<string:codigo>/remove_product')
 def remove_product(receipt_id, codigo):
     receipt = get_receipt(receipt_id)
+    client = receipt.author
     cantidades = obj_as_dict(receipt.cantidades)
     totales = obj_as_dict(receipt.totales)
     product = get_product(codigo)
@@ -186,6 +188,7 @@ def remove_product(receipt_id, codigo):
     totales.pop(codigo)
     receipt.cantidades = cantidades
     receipt.totales = totales
+    client.total -= receipt.total - get_total(totales)
     receipt.total = get_total(totales)
     db.session.commit()
 
@@ -203,6 +206,8 @@ def delete_receipt(receipt_id):
             cantidad = receipt.cantidades[code]
             product.inventario += cantidad
             product.unidades_vendidas -= cantidad
+    client = receipt.author
+    client.total -= receipt.total
     db.session.delete(receipt)
     db.session.commit()
 
