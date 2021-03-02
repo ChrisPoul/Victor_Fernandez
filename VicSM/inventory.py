@@ -140,7 +140,7 @@ def remove_product(codigo):
 def format_price(num):
     if not num:
         num = 0
-
+    num = round(num, 2)
     num = str(num)
     if "." not in num:
         num += ".00"
