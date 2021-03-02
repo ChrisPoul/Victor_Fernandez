@@ -13,7 +13,7 @@
                 {{ form_values[head] }}
             </textarea>
         {% elif head == "imagen" %}
-            <input type="file" name="{{ head }}" id="{{ head }}" required>
+            <input type="file" name="{{ head }}" id="{{ head }}">
         {% else %}
             <input name="{{ head }}" id="{{ head }}" value="{{ form_values[head] }}" required>
         {% endif %}

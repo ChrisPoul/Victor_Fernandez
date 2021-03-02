@@ -19,7 +19,7 @@ class Product(db.Model):
     nombre = Column(String(100), nullable=False, unique=True)
     descripcion = Column(Text, nullable=False)
     marca = Column(String(100), nullable=False)
-    imagen = Column(String(100), nullable=False, default="default.png")
+    imagen = Column(String(100), nullable=False, default="default.png", unique=True)
     mi_precio = Column(Integer, nullable=False, default=0)
     precio_venta = Column(Integer, nullable=False, default=0)
     inventario = Column(Integer, nullable=False, default=0)
@@ -32,9 +32,9 @@ class Product(db.Model):
 
 class Client(db.Model):
     id = Column(Integer, primary_key=True)
-    nombre = Column(String(100), nullable=False)
+    nombre = Column(String(100), nullable=False, unique=True)
     direccion = Column(String(200), nullable=False)
-    tel = Column(String(20), nullable=False)
+    tel = Column(String(20), nullable=False, unique=True)
     proyecto = Column(String(100), nullable=False)
     descripcion = Column(Text, nullable=False)
     cotizacion = Column(String(100), nullable=False)
@@ -97,18 +97,20 @@ def get_all_images(app):
 
 
 def save_image(image_file):
-    images_path = os.path.join(current_app.root_path, "static/images")
-    image_path = os.path.join(images_path, image_file.filename)
-    image_file.save(image_path)
+    if image_file:
+        images_path = os.path.join(current_app.root_path, "static/images")
+        image_path = os.path.join(images_path, image_file.filename)
+        image_file.save(image_path)
 
 
 def remove_image(image_name):
-    try:
-        images_path = os.path.join(current_app.root_path, "static/images")
-        image_path = os.path.join(images_path, image_name)
-        os.remove(image_path)
-    except FileNotFoundError:
-        pass
+    if image_name:
+        try:
+            images_path = os.path.join(current_app.root_path, "static/images")
+            image_path = os.path.join(images_path, image_name)
+            os.remove(image_path)
+        except FileNotFoundError:
+            pass
 
 
 days = {

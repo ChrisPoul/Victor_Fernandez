@@ -22,64 +22,11 @@ product_heads = {
 }
 
 
-def get_clients_figure():
-    fig = Figure(dpi=200)
-    ax = fig.subplots()
-    clients_names, clients_totals = get_client_totals()
-    ax.bar(clients_names, clients_totals)
-    ax.set_ylabel("Dolares")
-
-    # Save figure to a temporary buffer.
-    buf = BytesIO()
-    fig.savefig(buf, format="png")
-    # Embed the result in the html output.
-    data = base64.b64encode(buf.getbuffer()).decode("ascii")
-
-    return data
-
-
-def get_products_figure():
-    fig = Figure(dpi=200)
-    ax = fig.subplots()
-    products_sold, units_sold = get_sold_products()
-    ax.pie(units_sold, labels=products_sold)
-    ax.set_title('Productos Vendidos')
-
-    buf = BytesIO()
-    fig.savefig(buf, format="png")
-    data = base64.b64encode(buf.getbuffer()).decode("ascii")
-
-    return data
-
-
-def get_summary_figure():
-    fig = Figure(dpi=220)
-    axs = fig.subplots(ncols=2)
-
-    axs[0].plot([1, 2])
-    axs[0].set_title("Dummy data")
-
-    axs[1].plot([2, 1])
-    axs[1].set_title("More dummy data")
-
-    # Hide x labels and tick labels for top plots and y ticks for right plots.
-    for ax in axs.flat:
-        ax.label_outer()
-
-    # Save figuro to a temporary buffer.
-    buf = BytesIO()
-    fig.savefig(buf, format="png")
-    # Embed the result in the html output.
-    data = base64.b64encode(buf.getbuffer()).decode("ascii")
-
-    return data
-
-
 @bp.route('/')
 def main_page():
     clients = get_recent_clients()
     recent_receipts = get_recent_receipts(clients)
-    products = get_most_sold_products()
+    products = get_most_sold_products()[:-1]
     columns = range(math.ceil(len(clients)/2))
     rows = range(2)
     clients_data = get_clients_figure()
@@ -146,23 +93,39 @@ def get_recent_clients():
     recent_clients = []
     for receipt in receipts_sorted[:6]:
         client = receipt.author
-        if client not in recent_clients:
-            recent_clients.append(client)
+        recent_clients.append(client)
 
     return recent_clients
 
 
-def get_client_totals():
-    clients = get_recent_clients()
+def get_most_spending_clients():
+    clients = Client.query.all()
     clients = sorted(clients, key=attrgetter('total'), reverse=True)
 
     clients_names = []
     clients_totals = []
-    for client in clients:
+    for client in clients[:6]:
         clients_names.append(client.nombre)
         clients_totals.append(client.total * 1.16)
 
     return clients_names, clients_totals
+
+
+def get_clients_figure():
+    fig = Figure(dpi=200)
+    ax = fig.subplots()
+    clients_names, clients_totals = get_most_spending_clients()
+    ax.bar(clients_names, clients_totals)
+    ax.set_title('Cleintes Más Importantes')
+    ax.set_ylabel("Dolares")
+
+    # Save figure to a temporary buffer.
+    buf = BytesIO()
+    fig.savefig(buf, format="png")
+    # Embed the result in the html output.
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+
+    return data
 
 
 class Other:
@@ -181,7 +144,7 @@ def get_most_sold_products():
     ms_products = []
     others_unidades_vendidas = 0
     for i, product in enumerate(products):
-        if product.unidades_vendidas > 0 and i < 5:
+        if product.unidades_vendidas > 0 and i < 8:
             ms_products.append(product)
         else:
             others_unidades_vendidas += product.unidades_vendidas
@@ -199,3 +162,40 @@ def get_sold_products():
         sold_units.append(product.unidades_vendidas)
 
     return sold_products, sold_units
+
+
+def get_products_figure():
+    fig = Figure(dpi=200)
+    ax = fig.subplots()
+    products_sold, units_sold = get_sold_products()
+    ax.pie(units_sold, labels=products_sold)
+    ax.set_title('Productos Vendidos')
+
+    buf = BytesIO()
+    fig.savefig(buf, format="png")
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+
+    return data
+
+
+def get_summary_figure():
+    fig = Figure(dpi=220)
+    axs = fig.subplots(ncols=2)
+
+    axs[0].plot([1, 2])
+    axs[0].set_title("Producción de la Semana")
+
+    axs[1].plot([2, 1])
+    axs[1].set_title("Producción del Mes")
+
+    # Hide x labels and tick labels for top plots and y ticks for right plots.
+    for ax in axs.flat:
+        ax.label_outer()
+
+    # Save figuro to a temporary buffer.
+    buf = BytesIO()
+    fig.savefig(buf, format="png")
+    # Embed the result in the html output.
+    data = base64.b64encode(buf.getbuffer()).decode("ascii")
+
+    return data

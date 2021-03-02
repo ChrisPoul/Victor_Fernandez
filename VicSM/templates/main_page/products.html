@@ -14,13 +14,12 @@
             {% if head != "imagen" %}
             <td class="p_column">
                 {% if head == "unidades_vendidas" %}
-                    {{ product[head] }} unidades vendidas
-                {% elif head == "codigo" %}
-                    <a class="default_link" href="{{ url_for('inventory.update_product', codigo=product[head]) }}">
+                    {{ product[head] }} unidades<br>
+                    vendidas
+                {% else %}
+                    <a class="my_link" href="{{ url_for('inventory.update_product', codigo=product[head]) }}">
                         {{ product[head] }}
                     </a>
-                {% else %}
-                    {{ product[head] }}
                 {% endif %}
             </td>
             {% else %}

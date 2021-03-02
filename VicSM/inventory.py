@@ -49,6 +49,8 @@ def add_product():
     if request.method == 'POST':
         imagen_file = request.files["imagen"]
         imagen = imagen_file.filename
+        if not imagen:
+            imagen = "default.png"
         for key in form_values:
             form_values[key] = request.form[key]
         error = None

@@ -9,8 +9,8 @@
 <table class="main_page">
     <tr>
         {% for j in rows %}
-        <td class="client">
         {% if i+j+i != len(clients) %}
+        <td class="client">
             <h4>
             <a class="my_link" href="{{ url_for('client.profile', client_id=clients[2*i + j].id) }}">
                 {{ clients[2*i + j].nombre }}
@@ -23,8 +23,8 @@
                     Total: {{ add_iva(receipts[2*i + j].total) }}
                 </p>
             </a>
-        {% endif %}
         </td>
+        {% endif %}
         {% endfor %}
     </tr>
 </table>

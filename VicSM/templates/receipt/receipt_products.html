@@ -51,8 +51,8 @@
             <td class="centered">
                 {% if products[code].codigo != "" %}
                 <button>
-                <a href="{{ url_for('receipt.remove_product', receipt_id=receipt_id, codigo=code) }}">
-                    quitar
+                <a style="color: red;" href="{{ url_for('receipt.remove_product', receipt_id=receipt_id, codigo=code) }}">
+                    X
                 </a>
                 </button>
                 {% endif %}
