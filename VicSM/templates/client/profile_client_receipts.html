@@ -24,7 +24,7 @@
         {% elif head == "cambio" %}
             {{ format_price(receipts[receipt_num][head]) }}
         {% elif head == "total" %}
-            {{ add_iva(receipts[receipt_num][head] * 1.16) }}
+            {{ add_iva(receipts[receipt_num][head]) }}
         {% elif head == "fecha" %}
             <a class="my_link" onclick="return confirm('Estás Seguro?')" href="{{ url_for('receipt.delete_receipt', receipt_id=receipts[receipt_num].id) }}">
                 {{ format_date(receipts[receipt_num][head]) }}

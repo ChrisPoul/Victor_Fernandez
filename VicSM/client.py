@@ -9,14 +9,20 @@ from VicSM import db
 bp = Blueprint('client', __name__, url_prefix='/client')
 
 client_heads = {
-    'id': "Id.", 'nombre': 'Nombre', 'direccion': 'Dirección', 'tel': 'Tel.',
-    'cambio': 'Tipo de Cambio', 'descripcion': 'Descripción del Proyecto',
-    'proyecto': 'Proyecto', 'cotizacion': 'Cotización'
+    'id': "Id.", 'nombre': 'Nombre',
+    'direccion': 'Dirección', 'tel': 'Tel.',
+    'cambio': 'Tipo de Cambio',
+    'descripcion': 'Descripción del Proyecto',
+    'proyecto': 'Proyecto',
+    'cotizacion': 'Cotización'
 }
 receipt_heads = {
-    "id": "Id.", "grupo": "Grupo", "cambio": "Tipo de Cambio",
-    "productos": "Productos", "cantidades": "Cantidades",
-    "total": "Total", "totales": "totales", "fecha": "Fecha"
+    "id": "Id.", "grupo": "Grupo",
+    "cambio": "Tipo de Cambio",
+    "productos": "Productos",
+    "cantidades": "Cantidades",
+    "total": "Total",
+    "fecha": "Fecha"
 }
 
 
