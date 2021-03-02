@@ -50,11 +50,9 @@
         {% elif head == "eliminar" %}
             <td class="centered">
                 {% if products[code].codigo != "" %}
-                <button>
-                <a style="color: red;" href="{{ url_for('receipt.remove_product', receipt_id=receipt_id, codigo=code) }}">
-                    X
+                <a href="{{ url_for('receipt.remove_product', receipt_id=receipt_id, codigo=code) }}">
+                    <input style="color: red;" type="button" value="X">
                 </a>
-                </button>
                 {% endif %}
             </td>
         {% else %}

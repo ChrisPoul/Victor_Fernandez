@@ -1,7 +1,6 @@
 import math
 import base64
 import os
-import json
 from io import BytesIO
 from flask import (
     Blueprint, render_template, request,
@@ -11,9 +10,10 @@ from operator import attrgetter
 from datetime import datetime
 from matplotlib.figure import Figure
 from VicSM.models import (
-    Product, Client, format_date, days
+    Product, Client, format_date, days,
+    get_references, save_references
 )
-from VicSM.inventory import add_iva
+from VicSM.inventory import add_iva, format_price
 
 
 bp = Blueprint('main_page', __name__)
@@ -30,6 +30,7 @@ def main_page():
     clients = get_recent_clients()
     recent_receipts = get_recent_receipts(clients)
     products = get_most_sold_products()[:-1]
+    total_earnings = get_current_total_earnings()
     columns = range(math.ceil(len(clients)/2))
     rows = range(2)
     clients_data = get_clients_figure()
@@ -45,8 +46,10 @@ def main_page():
         products_data=products_data,
         summary_data=summary_data,
         clients=clients, add_iva=add_iva,
+        format_price=format_price,
         format_time=format_time,
-        product_heads=product_heads
+        product_heads=product_heads,
+        total_earnings=total_earnings
     )
 
 
@@ -68,11 +71,9 @@ def site_config():
 
 
 def save_my_image(key, image_file):
-    images_path = os.path.join(current_app.root_path, "static/my_images")
-    references_path = os.path.join(images_path, 'references.json')
-    with open(references_path, "r") as references_file:
-        references = json.load(references_file)
+    references = get_references()
     image_name = references[key]
+    images_path = os.path.join(current_app.static_folder, "my_images")
     image_path = os.path.join(images_path, image_name)
     try:
         os.remove(image_path)
@@ -83,9 +84,7 @@ def save_my_image(key, image_file):
     references[key] = image_name
     image_path = os.path.join(images_path, image_name)
     image_file.save(image_path)
-    json_references = json.dumps(references)
-    with open(references_path, "w") as references_file:
-        references_file.write(json_references)
+    save_references(references)
 
 
 def format_time(time):
@@ -169,7 +168,7 @@ def get_clients_figure():
     return data
 
 
-class Other:
+class Others:
 
     def __init__(self, unidades_vendidas):
         self.codigo = "Otros"
@@ -189,7 +188,7 @@ def get_most_sold_products():
             ms_products.append(product)
         else:
             others_unidades_vendidas += product.unidades_vendidas
-    ms_products.append(Other(others_unidades_vendidas))
+    ms_products.append(Others(others_unidades_vendidas))
 
     return ms_products
 
@@ -219,19 +218,54 @@ def get_products_figure():
     return data
 
 
+def get_current_total_earnings():
+    clients = Client.query.all()
+    ganancias_brutas = 0
+    for client in clients:
+        ganancias_brutas += client.total * 1.16
+
+    products = Product.query.all()
+    gastos = 0
+    for product in products:
+        gastos += product.mi_precio * product.unidades_vendidas
+
+    utilidades = ganancias_brutas - gastos
+
+    ganancias_totales = {
+        "ganancias_brutas": ganancias_brutas,
+        "utilidades": utilidades,
+        "gastos": gastos
+    }
+
+    return ganancias_totales
+
+
+def get_total_earnings():
+    references = get_references()
+    current_total_earnings = get_current_total_earnings()
+    total_earnings = {}
+    for key in current_total_earnings:
+        if references[key][-1] != current_total_earnings[key]:
+            references[key].append(current_total_earnings[key])
+        total_earnings[key] = references[key]
+    save_references(references)
+
+    return total_earnings
+
+
 def get_summary_figure():
     fig = Figure(dpi=220)
-    axs = fig.subplots(nrows=2)
+    ax = fig.subplots()
+    total_earnings = get_total_earnings()
+    ganancias_brutas = total_earnings["ganancias_brutas"]
+    utilidades = total_earnings["utilidades"]
+    gastos = total_earnings["gastos"]
 
-    axs[0].plot([1, 2])
-    axs[0].set_title("Producción de la Semana")
-
-    axs[1].plot([2, 1])
-    axs[1].set_title("Producción del Mes")
-
-    # Hide x labels and tick labels for top plots and y ticks for right plots.
-    for ax in axs.flat:
-        ax.label_outer()
+    ax.plot(ganancias_brutas, label="G.Brutas")
+    ax.plot(utilidades, label="Utilidades")
+    ax.plot(gastos, label="Gastos")
+    ax.legend()
+    ax.set_title("Ganancias y Gastos A través del tiempo")
 
     # Save figuro to a temporary buffer.
     buf = BytesIO()

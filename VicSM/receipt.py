@@ -128,6 +128,7 @@ def edit_receipt(receipt_id):
         if product is not None:
             products[product.codigo] = product
             cantidades[product.codigo] = 0
+            totales[product.codigo] = 0
 
         receipt.cantidades = cantidades
         receipt.totales = totales
@@ -225,8 +226,7 @@ def get_total(totals):
 
 
 def get_aasm_image():
-    my_images_path = os.path.join(current_app.root_path, "static/my_images")
-    references_path = os.path.join(my_images_path, 'references.json')
+    references_path = os.path.join(current_app.static_folder, 'references.json')
     with open(references_path) as aasm_reference_file:
         aasm_reference = json.load(aasm_reference_file)
     aasm_image = aasm_reference["aasm"]

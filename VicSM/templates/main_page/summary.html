@@ -9,9 +9,13 @@
             <img style="width: 100%;" src="{{ 'data:image/png;base64,{}'.format(summary_data) }}"/>
         </td>
         <td>
-            <h2>Pene</h2>
+            <h2>Ganancias y Gastos Actuales</h2>
             <hr>
-            algo de datos
+            <h4>Ganancias Brutas:</h4> {{ format_price(total_earnings["ganancias_brutas"]) }}
+            <br>
+            <h4>Gastos:</h4> {{ format_price(total_earnings["gastos"] )}}
+            <br>
+            <h4>Utilidades:</h4> {{ format_price(total_earnings["utilidades"]) }}
         </td>
     </tr>
 </table>

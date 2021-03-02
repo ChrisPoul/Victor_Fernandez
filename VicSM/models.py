@@ -1,6 +1,7 @@
 import click
 import os
 import glob
+import json
 from datetime import datetime
 from flask import current_app
 from flask.cli import with_appcontext
@@ -69,8 +70,14 @@ def init_db():
     # Client.__table__.drop(db.engine)
     # Receipt.__table__.drop(db.engine)
     # Product.__table__.drop(db.engine)
-    db.drop_all()
+    # db.drop_all()
     db.create_all()
+
+    references = get_references()
+    references['ganancias_brutas'] = [0]
+    references['gastos'] = [0]
+    references['utilidades'] = [0]
+    save_references(references)
 
 
 @click.command('init-db')
@@ -80,13 +87,28 @@ def init_db_command():
     click.echo('Initialized the database')
 
 
+def get_references():
+    references_path = os.path.join(current_app.static_folder, 'references.json')
+    with open(references_path, 'r') as references_file:
+        references = json.load(references_file)
+
+    return references
+
+
+def save_references(references):
+    references_path = os.path.join(current_app.static_folder, 'references.json')
+    json_references = json.dumps(references, indent=4)
+    with open(references_path, "w") as references_file:
+        references_file.write(json_references)
+
+
 def add_item(item):
     db.session.add(item)
     error = None
     try:
         db.session.commit()
     except IntegrityError:
-        error = "Ese valor ya se encuentra en uso"
+        error = "Error, uno de los valores que introdujo ya se encuentra en uso"
 
     return error
 

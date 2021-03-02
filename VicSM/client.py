@@ -2,6 +2,7 @@ from flask import (
     Blueprint, request, render_template, redirect,
     url_for, flash
 )
+from operator import attrgetter
 from VicSM.models import add_item, Client, Receipt, format_date
 from VicSM.inventory import format_price, add_iva
 from VicSM import db
@@ -59,6 +60,7 @@ def clients():
             return redirect(url_for('client.profile', client_id=client.id))
 
     clients = Client.query.all()
+    clients = sorted(clients, key=attrgetter('id'), reverse=True)
 
     return render_template(
         'client/clients.html', clients=clients, heads=clients_heads
