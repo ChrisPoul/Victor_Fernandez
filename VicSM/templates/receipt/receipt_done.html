@@ -6,7 +6,7 @@
 <div>
     {% include "receipt/receipt_client_done.html" %}
 </div>
-<a href="{{ url_for('receipt.new_receipt', client_id=0) }}">
+<a href="{{ url_for('receipt.new_receipt', client_id=client.id) }}">
     <div>
         {% include "receipt/receipt_products_done.html" %}
     </div>
