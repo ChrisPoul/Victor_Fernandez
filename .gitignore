@@ -10,4 +10,4 @@ out/
 dist/
 build/
 .vscode/
-references.json
+VicSM/static/references.json
