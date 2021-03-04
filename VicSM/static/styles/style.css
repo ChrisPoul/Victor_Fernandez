@@ -138,7 +138,7 @@ table.main_page {
   width: 50%;
 }
 td.client {
-  text-align: center;
+  text-align: left;
   vertical-align: middle;
   padding: 10px;
   border-collapse: separate;
