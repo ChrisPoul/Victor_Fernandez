@@ -4,12 +4,13 @@ from VicSM import create_app, db
 
 class MyTest(TestCase):
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite://'
-    TESTING = True
-
     def create_app(self):
         # pass in test configuration
-        return create_app()
+        app = create_app()
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+        app.config['TESTING'] = True
+
+        return app
 
     def setUp(self):
 
