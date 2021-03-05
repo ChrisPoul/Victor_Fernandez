@@ -48,3 +48,29 @@ class DbTests(MyTest):
 
         assert error is None
         assert receipt in db.session
+
+    def test_add_repeated_item(self):
+        item1 = Client(
+            nombre="test",
+            direccion="test",
+            tel="test",
+            cambio=1,
+            proyecto="test",
+            descripcion="test",
+            cotizacion="test"
+        )
+        error1 = add_item(item1)
+        item2 = Client(
+            nombre="test",
+            direccion="test",
+            tel="test",
+            cambio=1,
+            proyecto="test",
+            descripcion="test",
+            cotizacion="test"
+        )
+        error2 = add_item(item2)
+
+        assert error1 is None
+        assert item1 in db.session
+        assert error2 == "Error, uno de los valores que introdujo ya se encuentra en uso"

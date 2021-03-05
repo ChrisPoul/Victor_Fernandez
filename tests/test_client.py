@@ -5,9 +5,10 @@ from VicSM.models import Client, add_item
 class ClientTests(MyTest):
 
     def test_clients_page(self):
-        response = self.client.get('/client/clients')
+        response = self.client.get('/clients')
 
         assert b"Clientes" in response.data
+        self.assertTemplateUsed('client/clients.html')
 
     def test_client_profile(self):
         client = Client(
@@ -20,7 +21,7 @@ class ClientTests(MyTest):
             cotizacion="test cotizacion"
         )
         add_item(client)
-        response = self.client.get('/client/1/profile')
+        response = self.client.get('/1/profile')
 
         assert b"Test" in response.data
         assert b"test direccion" in response.data
@@ -28,3 +29,4 @@ class ClientTests(MyTest):
         assert b"test proyect" in response.data
         assert b"test descripcion" in response.data
         assert b"test cotizacion" in response.data
+        self.assertTemplateUsed('client/profile.html')

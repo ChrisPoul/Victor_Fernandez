@@ -7,3 +7,4 @@ class MainPageTest(MyTest):
         response = self.client.get("/")
 
         assert b"Pagina Principal" in response.data
+        self.assertTemplateUsed('main_page/main_page.html')

@@ -7,7 +7,7 @@ from VicSM.models import add_item, Client, Receipt, format_date
 from VicSM.inventory import format_price, add_iva
 from VicSM import db
 
-bp = Blueprint('client', __name__, url_prefix='/client')
+bp = Blueprint('client', __name__)
 
 client_heads = {
     'id': "Id.", 'nombre': 'Nombre',
