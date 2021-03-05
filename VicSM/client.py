@@ -27,23 +27,6 @@ receipt_heads = {
 }
 
 
-def get_client(search_term):
-    try:
-        client_id = int(search_term)
-        client = Client.query.get(client_id)
-    except ValueError:
-        client = None
-
-    if not client:
-        client = Client.query.filter_by(nombre=search_term).first()
-    if not client:
-        client = Client.query.filter_by(tel=search_term).first()
-    if not client:
-        client = Client.query.filter_by(proyecto=search_term).first()
-
-    return client
-
-
 clients_heads = {}
 for head in client_heads:
     if head != "descripcion" and head != "cambio":
@@ -178,3 +161,20 @@ def remove_client(client_id):
     db.session.commit()
 
     return redirect(url_for('client.clients'))
+
+
+def get_client(search_term):
+    try:
+        client_id = int(search_term)
+        client = Client.query.get(client_id)
+    except ValueError:
+        client = None
+
+    if not client:
+        client = Client.query.filter_by(nombre=search_term).first()
+    if not client:
+        client = Client.query.filter_by(tel=search_term).first()
+    if not client:
+        client = Client.query.filter_by(proyecto=search_term).first()
+
+    return client
