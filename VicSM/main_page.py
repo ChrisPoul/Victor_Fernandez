@@ -211,7 +211,7 @@ def get_products_figure():
     if units_sold[-1] == 0:
         products_sold = products_sold[:-1]
         units_sold = units_sold[:-1]
-    ax.pie(units_sold, labels=products_sold, normalize=True)
+    ax.pie(units_sold, labels=products_sold)
     ax.set_title('Productos Vendidos')
 
     buf = BytesIO()
