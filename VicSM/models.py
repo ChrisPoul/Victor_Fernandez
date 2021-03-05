@@ -70,7 +70,7 @@ def init_db():
     # Client.__table__.drop(db.engine)
     # Receipt.__table__.drop(db.engine)
     # Product.__table__.drop(db.engine)
-    # db.drop_all()
+    db.drop_all()
     db.create_all()
 
     references = get_references()
