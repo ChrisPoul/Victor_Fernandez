@@ -8,8 +8,9 @@ class ReceiptTests(MyTest):
     def test_new_receipt(self):
         response = self.client.get('receipt/0/new_receipt')
 
-        self.assertTemplateUsed('receipt/receipt_search.html')
         assert b"Recibo Nuevo" in response.data
+        self.assertTemplateUsed('receipt/receipt_search.html')
+        self.assert200(response)
 
     def test_edit_receipt(self):
         client = Client(
@@ -35,6 +36,7 @@ class ReceiptTests(MyTest):
         add_item(receipt)
         response = self.client.get('receipt/1/edit_receipt')
 
-        self.assertTemplateUsed('receipt/receipt.html')
         assert b"test receipt" in response.data
         assert b"Test client" in response.data
+        self.assertTemplateUsed('receipt/receipt.html')
+        self.assert200(response)

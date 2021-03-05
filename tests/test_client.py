@@ -9,6 +9,7 @@ class ClientTests(MyTest):
 
         assert b"Clientes" in response.data
         self.assertTemplateUsed('client/clients.html')
+        self.assert200(response)
 
     def test_client_profile(self):
         client = Client(
@@ -30,3 +31,4 @@ class ClientTests(MyTest):
         assert b"test descripcion" in response.data
         assert b"test cotizacion" in response.data
         self.assertTemplateUsed('client/profile.html')
+        self.assert200(response)

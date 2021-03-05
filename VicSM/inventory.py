@@ -173,7 +173,7 @@ def add_iva(num):
     return format_price(num)
 
 
-def get_products(search_term):
+def get_products(search_term=None):
     products = Product.query.filter_by(codigo=search_term).all()
     if not products:
         products = Product.query.filter_by(grupo=search_term).all()
@@ -183,6 +183,8 @@ def get_products(search_term):
         products = Product.query.filter_by(nombre=search_term).all()
     if not products:
         products = Product.query.filter_by(marca=search_term).all()
+    if not products:
+        products = Product.query.all()
 
     return products
 

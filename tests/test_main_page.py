@@ -8,3 +8,4 @@ class MainPageTest(MyTest):
 
         assert b"Pagina Principal" in response.data
         self.assertTemplateUsed('main_page/main_page.html')
+        self.assert200(response)
