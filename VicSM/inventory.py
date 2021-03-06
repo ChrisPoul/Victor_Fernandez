@@ -206,6 +206,8 @@ def get_autocomplete_data(products):
             autocomplete_data.append(product.grupo)
         if product.serie not in autocomplete_data:
             autocomplete_data.append(product.serie)
+        if product.marca not in autocomplete_data:
+            autocomplete_data.append(product.marca)
         autocomplete_data.append(product.nombre)
 
     return autocomplete_data
