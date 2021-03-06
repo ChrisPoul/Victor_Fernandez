@@ -27,6 +27,7 @@ for head in heads:
 @bp.route('/inventory', methods=('POST', 'GET'))
 def inventory():
     products = Product.query.all()
+    autocomplete_inv = [product.nombre for product in products]
     if request.method == 'POST':
         search_term = request.form["search_term"]
         products = get_products(search_term)
@@ -34,8 +35,9 @@ def inventory():
             products = Product.query.all()
 
     return render_template(
-        'inventory/inventory.html', products=products, heads=inv_heads,
-        format_price=format_price
+        'inventory/inventory.html', products=products,
+        heads=inv_heads, format_price=format_price,
+        autocomplete_inv=autocomplete_inv
     )
 
 

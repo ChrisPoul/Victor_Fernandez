@@ -44,9 +44,12 @@ def clients():
 
     clients = Client.query.all()
     clients = sorted(clients, key=attrgetter('id'), reverse=True)
+    autocomplete_clients = [client.nombre for client in clients]
 
     return render_template(
-        'client/clients.html', clients=clients, heads=clients_heads
+        'client/clients.html', clients=clients,
+        autocomplete_clients=autocomplete_clients,
+        heads=clients_heads,
     )
 
 
@@ -106,6 +109,7 @@ def get_client_receipts(client_id):
 def profile(client_id):
     client = get_client(client_id)
     client_receipts = get_client_receipts(client_id)
+    autocomplete_receipt = [receipt_id for receipt_id in client_receipts]
 
     if request.method == "POST":
         try:
@@ -150,6 +154,7 @@ def profile(client_id):
         'client/profile.html', format_price=format_price,
         receipts=client_receipts, receipt_heads=receipt_heads,
         add_iva=add_iva, format_date=format_date,
+        autocomplete_receipt=autocomplete_receipt,
         client=client, heads=add_heads
     )
 

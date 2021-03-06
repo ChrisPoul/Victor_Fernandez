@@ -3,8 +3,14 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/style_receipt.css') }}">
 <link rel="shortcut icon" href="{{ url_for('static', filename='my_images/app_icon.ico') }}">
 
+<datalist id="autocomplete-receipt">
+    {% for name in autocomplete_receipt %}
+    <option>{{ name }}</option>
+    {% endfor %}
+</datalist>
+
 <div>
-<form method="post">
+<form method="post" autocomplete="off">
     {% include "receipt/receipt_client.html" %}
 </div>
 {% for message in get_flashed_messages() %}
@@ -13,7 +19,9 @@
 <table class="search_bar">
     <tr>
         <td colspan="5">
-            <input class="my_second_input" name="product_search_term" id="product_search_term">
+            <input class="my_second_input" name="product_search_term" id="product_search_term"
+                placeholder="Escribe el nombre del producto que quieres agregar..."
+                list="autocomplete-receipt">
         </td>
         <td colspan="2">
             <input class="search_bar_button" type="submit" value="Aceptar">

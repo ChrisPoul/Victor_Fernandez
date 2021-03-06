@@ -9,7 +9,7 @@ from VicSM.inventory import get_product, format_price, add_iva
 from VicSM.client import get_client, client_heads
 from VicSM.models import (
     format_date, add_item, Client,
-    Receipt, obj_as_dict
+    Receipt, obj_as_dict, Product
 )
 from VicSM import db
 
@@ -55,6 +55,7 @@ def new_receipt(client_id):
 def edit_receipt(receipt_id):
     aasm_image = get_aasm_image()
     receipt = get_receipt(receipt_id)
+    autocomplete_receipt = get_product_names(receipt)
     client = get_client(receipt.client_id)
     products = get_receipt_products(receipt)
     if not receipt.cambio:
@@ -146,7 +147,8 @@ def edit_receipt(receipt_id):
         client=client, middle_heads=middle_heads, add_iva=add_iva,
         cambio=receipt.cambio, receipt_id=receipt_id,
         fecha=format_date(receipt.fecha), total=receipt.total,
-        aasm_image=aasm_image, last_heads=last_heads
+        aasm_image=aasm_image, last_heads=last_heads,
+        autocomplete_receipt=autocomplete_receipt
     )
 
 
@@ -279,3 +281,13 @@ def get_receipt(receipt_id):
     receipt = Receipt.query.get(receipt_id)
 
     return receipt
+
+
+def get_product_names(receipt):
+    products = Product.query.all()
+    product_names = []
+    for product in products:
+        if product.codigo not in receipt.cantidades:
+            product_names.append(product.nombre)
+
+    return product_names
