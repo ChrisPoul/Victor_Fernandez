@@ -55,7 +55,7 @@ def new_receipt(client_id):
 def edit_receipt(receipt_id):
     aasm_image = get_aasm_image()
     receipt = get_receipt(receipt_id)
-    autocomplete_receipt = get_product_names(receipt)
+    autocomplete_receipt = get_autocomplete_data(receipt)
     client = get_client(receipt.client_id)
     products = get_receipt_products(receipt)
     if not receipt.cambio:
@@ -283,11 +283,11 @@ def get_receipt(receipt_id):
     return receipt
 
 
-def get_product_names(receipt):
+def get_autocomplete_data(receipt):
     products = Product.query.all()
-    product_names = []
+    autocomplete_products = []
     for product in products:
         if product.codigo not in receipt.cantidades:
-            product_names.append(product.nombre)
+            autocomplete_products.append(product.nombre)
 
-    return product_names
+    return autocomplete_products

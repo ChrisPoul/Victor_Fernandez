@@ -3,12 +3,6 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/style_receipt.css') }}">
 <link rel="shortcut icon" href="{{ url_for('static', filename='my_images/app_icon.ico') }}">
 
-<datalist id="autocomplete-receipt">
-    {% for name in autocomplete_receipt %}
-    <option>{{ name }}</option>
-    {% endfor %}
-</datalist>
-
 <div>
 <form method="post" autocomplete="off">
     {% include "receipt/receipt_client.html" %}
@@ -16,6 +10,11 @@
 {% for message in get_flashed_messages() %}
     <div class="flash">{{ message }}</div>
 {% endfor %}
+<datalist id="autocomplete-receipt">
+    {% for name in autocomplete_receipt %}
+    <option>{{ name }}</option>
+    {% endfor %}
+</datalist>
 <table class="search_bar">
     <tr>
         <td colspan="5">
