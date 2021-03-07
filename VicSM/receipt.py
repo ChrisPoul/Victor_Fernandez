@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 import json
+from operator import attrgetter
 from flask import (
     Blueprint, render_template, request, redirect, url_for,
     current_app, flash
@@ -290,7 +291,7 @@ def get_receipt(receipt_id):
 
 def get_autocomplete_client_data():
     clients = Client.query.all()
-    clients = sorted(clients, reverse=True)
+    clients = sorted(clients, key=attrgetter('id'), reverse=True)
     autocomplete_clients = [client.nombre for client in clients]
 
     return autocomplete_clients
