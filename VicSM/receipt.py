@@ -32,6 +32,7 @@ last_heads = ["direccion", "nombre", "descripcion"]
 @bp.route('/<int:client_id>/new_receipt', methods=('GET', 'POST'))
 def new_receipt(client_id):
     client = Client.query.get(client_id)
+    autocomplete_client_receipt = get_autocomplete_client_data()
 
     if request.method == "POST":
         try:
@@ -48,14 +49,17 @@ def new_receipt(client_id):
             url_for('receipt.edit_receipt', receipt_id=receipt.id)
         )
 
-    return render_template('receipt/receipt_search.html')
+    return render_template(
+        'receipt/receipt_search.html',
+        autocomplete_client_receipt=autocomplete_client_receipt
+    )
 
 
 @bp.route('/<int:receipt_id>/edit_receipt', methods=('GET', 'POST'))
 def edit_receipt(receipt_id):
     aasm_image = get_aasm_image()
     receipt = get_receipt(receipt_id)
-    autocomplete_receipt = get_autocomplete_data(receipt)
+    autocomplete_receipt = get_autocomplete_product_data(receipt)
     client = get_client(receipt.client_id)
     products = get_receipt_products(receipt)
     if not receipt.cambio:
@@ -228,7 +232,8 @@ def get_total(totals):
 
 
 def get_aasm_image():
-    references_path = os.path.join(current_app.static_folder, 'references.json')
+    references_path = os.path.join(
+        current_app.static_folder, 'references.json')
     with open(references_path) as aasm_reference_file:
         aasm_reference = json.load(aasm_reference_file)
     aasm_image = aasm_reference["aasm"]
@@ -283,7 +288,15 @@ def get_receipt(receipt_id):
     return receipt
 
 
-def get_autocomplete_data(receipt):
+def get_autocomplete_client_data():
+    clients = Client.query.all()
+    clients = sorted(reverse=True)
+    autocomplete_clients = [client.nombre for client in clients]
+
+    return autocomplete_clients
+
+
+def get_autocomplete_product_data(receipt):
     products = Product.query.all()
     autocomplete_products = []
     for product in products:
