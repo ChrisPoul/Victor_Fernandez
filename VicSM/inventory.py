@@ -211,4 +211,6 @@ def get_autocomplete_data(products):
         autocomplete_data.append(product.nombre)
         autocomplete_data.append(product.codigo)
 
+    autocomplete_data = sorted(autocomplete_data)
+
     return autocomplete_data

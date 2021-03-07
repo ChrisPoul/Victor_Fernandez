@@ -11,7 +11,7 @@
     <div class="flash">{{ message }}</div>
 {% endfor %}
 <datalist id="autocomplete-receipt">
-    {% for name in autocomplete_receipt %}
+    {% for name in autocomplete_receipt_products %}
     <option>{{ name }}</option>
     {% endfor %}
 </datalist>
@@ -19,7 +19,7 @@
     <tr>
         <td colspan="5">
             <input class="my_second_input" name="product_search_term" id="product_search_term"
-                placeholder="Escribe el nombre del producto que quieres agregar..."
+                placeholder="Escribe el nombre o el código del producto que deseas agregar..."
                 list="autocomplete-receipt">
         </td>
         <td colspan="2">

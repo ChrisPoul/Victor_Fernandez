@@ -26,7 +26,18 @@
     <tr>
         <td colspan="3">
             <h3>Sistema:</h3>
-            <input class="my_second_input" name="grupo" id="grupo" value="{{ grupo }}">
+            <datalist id="autocomplete-receipt-groups">
+                {% for group in autocomplete_receipt_groups %}
+                <option>{{ group }}</option>
+                {% endfor %}
+            </datalist>
+            {% if grupo %}
+            <input class="my_second_input" name="grupo" id="grupo" value="{{ grupo }}"
+                list="autocomplete-receipt-groups">
+            {% else %}
+            <input class="my_second_input" name="grupo" id="grupo"
+                list="autocomplete-receipt-groups">
+            {% endif %}
         </td>
     </tr>
     <tr>
