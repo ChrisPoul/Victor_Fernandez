@@ -209,5 +209,6 @@ def get_autocomplete_data(products):
         if product.marca not in autocomplete_data:
             autocomplete_data.append(product.marca)
         autocomplete_data.append(product.nombre)
+        autocomplete_data.append(product.codigo)
 
     return autocomplete_data

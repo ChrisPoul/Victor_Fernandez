@@ -303,5 +303,6 @@ def get_autocomplete_product_data(receipt):
     for product in products:
         if product.codigo not in receipt.cantidades:
             autocomplete_products.append(product.nombre)
+            autocomplete_products.append(product.codigo)
 
     return autocomplete_products
