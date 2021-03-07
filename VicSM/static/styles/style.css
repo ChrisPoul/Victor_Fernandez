@@ -55,78 +55,29 @@ input[type=submit] { align-self: start; min-width: 10em; }
 table {
   width: 100%;
 }
-table td, table td * {
-    vertical-align: top;
-    padding : 5px;
-}
-table th, table td * {
-    vertical-align: top;
-    padding : 5px;
-}
+table td, table td * { vertical-align: top; padding : 5px; }
+table th, table td * { vertical-align: top; padding : 5px; }
 table.receipt {
-  border: 1px solid black;
-  border-collapse: collapse;
-  padding-top: 6px;
-  padding-left: 4px;
-  padding-right: 4px;
-  text-align: center;
+  border: 1px solid black; border-collapse: collapse;
+  padding-top: 6px; padding-left: 4px;
+  padding-right: 4px; text-align: center;
 }
-th.receipt {
-  border: 1px solid black;
-  padding: 3mm;
-}
-td.receipt {
-  border: 1px solid black;
-  padding: 2mm
-}
-table.clients {
-  text-align: center;
-}
-td.clients {
-  padding: 3mm;
-}
-.default_link {
-  color: #377ba8;
-}
-.my_link {
-  text-decoration: none;
-  color: black;
-}
-.my_image {
-    max-height: 150px;
-    max-width: 150px;
-}
-table.search_bar {
-  margin: 1px;
-  padding: 1px;
-}
-td.search_bar {
-  width: 99%;
-  margin: 0;
-  padding: 0;
-}
-.my_second_input {
-  width: 99%;
-  margin: 0;
-}
-.search_bar_button {
-  width: 5%;
-  margin: 0;
-  margin-left: 7px;
-}
-.my_p {
-  text-align: justify;
-  margin: 0;
-  padding: 0;
-}
-.inv_amnt {
-  margin: 0;
-  padding: 0;
-  font-weight: 800;
-}
-table.main_page {
-  width: 100%;
-}
+th.receipt { border: 1px solid black; padding: 3mm; }
+td.receipt { border: 1px solid black; padding: 2mm }
+table.clients { text-align: center; }
+td.clients { padding: 3mm; }
+.text-right { text-align: right; }
+.text-center { text-align: center; margin-top: 1em; }
+.default_link { color: #377ba8; }
+.my_link { text-decoration: none; color: black; }
+.my_image { max-height: 150px; max-width: 150px; }
+table.search_bar { margin: 1px; padding: 1px; }
+td.search_bar { width: 99%; margin: 0; padding: 0; }
+.my_second_input { width: 99%; margin: 0; }
+.search_bar_button { width: 5%; margin: 0; margin-left: 7px; }
+.my_p { text-align: justify; margin: 0; padding: 0; }
+.inv_amnt { margin: 0; padding: 0; font-weight: 800; }
+table.main_page { width: 100%; }
 .main_page td {
   text-align: left;
   vertical-align: top;
@@ -147,14 +98,8 @@ td.client {
   -moz-border-radius:6px;
   width: 50%;
 }
-.client h4 {
-  font-size: large;
-  margin-top: 0.3em;
-  margin-bottom: 0;
-}
-.client p {
-  margin: 0;
-}
+.client h4 { font-size: large; margin-top: 0.3em; margin-bottom: 0; }
+.client p { margin: 0; }
 td.product {
   text-align: left;
   vertical-align: middle;
@@ -167,9 +112,7 @@ td.product {
   -moz-border-radius:6px;
   width: 100%;
 }
-table.product {
-  padding: 0;
-}
+table.product { padding: 0; }
 td.p_column {
   text-align: left;
   width: 30%;
@@ -177,14 +120,25 @@ td.p_column {
   padding: 0;
   border: 0;
 }
-.small_img {
-  max-width: 45px;
-  max-height: 45px;
-  padding: 0;
-}
+.small_img { max-width: 45px; max-height: 45px; padding: 0; }
 .summary td {
   text-align: left;
   vertical-align: top;
   padding: 0;
   border: 0;
+}
+a.btn {
+  color: blue;
+  font-weight: 600;
+  text-decoration: none;
+  border-style: inset;
+  border-color: blue;
+  border-width: 2px;
+  padding: 0.3em;
+  margin: 1px;
+}
+a.btn-outline-dark {
+  color: rgb(29, 29, 153);
+  border-width: 1px;
+  font-weight: 500;
 }

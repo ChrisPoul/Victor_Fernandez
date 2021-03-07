@@ -26,8 +26,9 @@ for head in heads:
 
 @bp.route('/inventory', methods=('POST', 'GET'))
 def inventory():
-    products = Product.query.all()
-    autocomplete_inv = get_autocomplete_data(products)
+    page = request.args.get('page', 1, type=int)
+    products = Product.query.paginate(page=page, per_page=6)
+    autocomplete_inv = get_autocomplete_data()
     if request.method == 'POST':
         search_term = request.form["search_term"]
         products = get_products(search_term)
@@ -199,7 +200,8 @@ def get_product(search_term):
     return product
 
 
-def get_autocomplete_data(products):
+def get_autocomplete_data():
+    products = Product.query.all()
     autocomplete_data = []
     for product in products:
         if product.grupo not in autocomplete_data:
