@@ -290,7 +290,7 @@ def get_receipt(receipt_id):
 
 def get_autocomplete_client_data():
     clients = Client.query.all()
-    clients = sorted(reverse=True)
+    clients = sorted(clients, reverse=True)
     autocomplete_clients = [client.nombre for client in clients]
 
     return autocomplete_clients
