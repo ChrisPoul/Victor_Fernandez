@@ -1,0 +1,1 @@
+This proyect is an aplication to manage several aspects of a business dedicated to turning normal houses into smart homes. The intent of this application is to automate the task or writing and managing receipts, keeping track of all products used by the company and their avalable inventory, as well as keeping record of clients, their information and theri respective receipts.
