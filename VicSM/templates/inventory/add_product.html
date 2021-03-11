@@ -10,12 +10,12 @@
         <label for="{{ head }}">{{ heads[head] }}</label>
         {% if head == "descripcion" %}
             <textarea name="{{ head }}" id="{{ head }}">
-                {{ form_values[head] }}
+                {{ form[head] }}
             </textarea>
         {% elif head == "imagen" %}
             <input type="file" name="{{ head }}" id="{{ head }}">
         {% else %}
-            <input name="{{ head }}" id="{{ head }}" value="{{ form_values[head] }}" required>
+            <input name="{{ head }}" id="{{ head }}" value="{{ form[head] }}" required>
         {% endif %}
         {% endfor %}
         <input type="submit" value="Aceptar">
