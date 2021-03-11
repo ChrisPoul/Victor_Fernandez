@@ -58,92 +58,18 @@ def new_receipt(client_id):
 
 @bp.route('/<int:receipt_id>/edit_receipt', methods=('GET', 'POST'))
 def edit_receipt(receipt_id):
-    aasm_image = get_aasm_image()
-    receipt = get_receipt(receipt_id)
-    autocomplete_receipt_products = get_autocomplete_product_data(receipt)
-    autocomplete_receipt_groups = get_all_groups()
-    client = get_client(receipt.client_id)
-    products = get_receipt_products(receipt)
-    if not receipt.cambio:
-        receipt.cambio = client.cambio
-    receipt.fecha = datetime.now()
-    cantidades = obj_as_dict(receipt.cantidades)
-    cant_ref = obj_as_dict(receipt.cant_ref)
-    totales = obj_as_dict(receipt.totales)
-    error = None
+    current_receipt = CurrentReceipt(receipt_id)
 
     if request.method == "POST":
-        try:
-            receipt.grupo = request.form['grupo']
-        except KeyError:
-            pass
+        current_receipt.process_changes()
 
-        try:
-            cambio = request.form['cambio']
-            try:
-                receipt.cambio = float(cambio)
-            except ValueError:
-                receipt.cambio = client.cambio
-        except KeyError:
-            pass
-
-        try:
-            codigo = request.form["product_search_term"]
-        except KeyError:
-            codigo = ""
-
-        for code in products:
-            try:
-                cantidades[code] = request.form[code]
-                try:
-                    cantidades[code] = int(cantidades[code])
-                    product = get_product(code)
-                except ValueError:
-                    cantidades[code] = 0
-                precio_venta = products[code].precio_venta
-                totales[code] = cantidades[code] * precio_venta * 1.16
-            except KeyError:
-                pass
-
-        if cantidades != cant_ref:
-            for code in cantidades:
-                try:
-                    change = cantidades[code] - cant_ref[code]
-                except KeyError:
-                    change = cantidades[code]
-                    cant_ref[code] = 0
-                product = get_product(code)
-                product.unidades_vendidas += change
-                product.inventario -= change
-                if product.inventario < 0:
-                    inv_disponible = product.inventario + \
-                        change + cant_ref[code]
-                    exedent = inv_disponible - cantidades[code]
-                    if -exedent == 1:
-                        unidades_txt = "unidad"
-                    else:
-                        unidades_txt = "unidades"
-                    error = f"""
-                        Inventario exedido por {-exedent} {unidades_txt},
-                        solo hay {inv_disponible} unidades de
-                        {product.nombre} disponibles"""
-
-        receipt.cant_ref = cantidades
-        client.total -= receipt.total - get_total(totales)
-        receipt.total = get_total(totales)
-        product = get_product(codigo)
-        if product is not None:
-            products[product.codigo] = product
-            cantidades[product.codigo] = 0
-            totales[product.codigo] = 0
-
-        receipt.cantidades = cantidades
-        receipt.totales = totales
-        products = get_receipt_products(receipt)
-        if error:
-            flash(error)
-        else:
-            db.session.commit()
+    receipt = current_receipt.receipt
+    products = current_receipt.products
+    client = current_receipt.client
+    aasm_image = current_receipt.aasm_image
+    autocomplete_receipt_products = get_autocomplete_product_data(
+        receipt.cantidades)
+    autocomplete_receipt_groups = get_all_groups()
 
     return render_template(
         'receipt/receipt.html', product_heads=product_heads,
@@ -167,10 +93,11 @@ for head in product_heads:
 
 @bp.route('/<int:receipt_id>/receipt_done')
 def receipt_done(receipt_id):
-    aasm_image = get_aasm_image()
-    receipt = get_receipt(receipt_id)
-    client = get_client(receipt.client_id)
-    products = get_receipt_products(receipt)
+    current_receipt = CurrentReceipt()
+    receipt = current_receipt.receipt
+    products = current_receipt.products
+    client = current_receipt.client
+    aasm_image = current_receipt.aasm_image
 
     return render_template(
         'receipt/receipt_done.html', product_heads=product_done_heads,
@@ -187,19 +114,23 @@ def receipt_done(receipt_id):
 @bp.route('/<int:receipt_id>/<string:codigo>/remove_product')
 def remove_product(receipt_id, codigo):
     receipt = get_receipt(receipt_id)
-    client = receipt.author
     cantidades = obj_as_dict(receipt.cantidades)
     totales = obj_as_dict(receipt.totales)
+
     product = get_product(codigo)
     cantidad = cantidades[codigo]
     product.inventario += cantidad
     product.unidades_vendidas -= cantidad
+
     cantidades.pop(codigo)
     totales.pop(codigo)
     receipt.cantidades = cantidades
     receipt.totales = totales
+
+    client = receipt.author
     client.total -= receipt.total - get_total(totales)
     receipt.total = get_total(totales)
+
     db.session.commit()
 
     return redirect(
@@ -226,22 +157,151 @@ def delete_receipt(receipt_id):
     )
 
 
-def get_total(totals):
-    total = 0
-    for key in totals:
-        total += totals[key]
+class CurrentReceipt:
 
-    return round(total, 2)
+    def __init__(self, receipt_id):
+        self.aasm_image = get_aasm_image()
+        self.receipt = get_receipt(receipt_id)
+        self.cantidades = obj_as_dict(self.receipt.cantidades)
+        self.totales = obj_as_dict(self.receipt.totales)
+        self.client = get_client(self.receipt.client_id)
+        if not self.receipt.cambio:
+            self.receipt.cambio = self.client.cambio
+        self.receipt.fecha = datetime.now()
+        self.update_receipt_products()
+        self.error = None
 
+    def process_changes(self):
+        try:
+            self.receipt.grupo = request.form['grupo']
+        except KeyError:
+            pass
+        try:
+            cambio = request.form['cambio']
+            self.update_cambio(cambio)
+        except KeyError:
+            pass
 
-def get_aasm_image():
-    references_path = os.path.join(
-        current_app.static_folder, 'references.json')
-    with open(references_path) as aasm_reference_file:
-        aasm_reference = json.load(aasm_reference_file)
-    aasm_image = aasm_reference["aasm"]
+        self.update_cantidades_and_totales()
+        self.update_receipt()
 
-    return aasm_image
+    def update_cambio(self, cambio):
+        try:
+            cambio = float(cambio)
+        except ValueError:
+            cambio = self.client.cambio
+        self.receipt.cambio = cambio
+
+    def update_cantidades_and_totales(self):
+        for code in self.products:
+            try:
+                self.update_cantidades_cantidad(code)
+                self.update_totales_total(code)
+            except KeyError:
+                pass
+        if self.cantidades != self.receipt.cant_ref:
+            self.handle_change_in_cantidades()
+
+    def update_cantidades_cantidad(self, code):
+        cantidad = request.form[code]
+        try:
+            cantidad = int(cantidad)
+        except ValueError:
+            cantidad = 0
+        self.cantidades[code] = cantidad
+
+    def update_totales_total(self, code):
+        product = self.products[code]
+        precio_venta = product.precio_venta
+        total = self.cantidades[code] * precio_venta * 1.16
+        self.totales[code] = total
+
+    def handle_change_in_cantidades(self):
+        for code in self.cantidades:
+            change = self.get_change_in_cantidades(code)
+            product = self.update_product_sales(code, change)
+            if product.inventario < 0:
+                self.handle_inv_exceeded(product)
+
+    def get_change_in_cantidades(self, code):
+        new_cantidad = self.cantidades[code]
+        try:
+            previous_cantidad = self.receipt.cant_ref[code]
+        except KeyError:
+            self.receipt.cant_ref[code] = 0
+            previous_cantidad = 0
+
+        return new_cantidad - previous_cantidad
+
+    def update_product_sales(self, code, change):
+        product = get_product(code)
+        product.unidades_vendidas += change
+        product.inventario -= change
+
+        return product
+
+    def handle_inv_exceeded(self, product):
+        cantidad = self.cantidades[product.codigo]
+        inv_disponible = product.inventario + cantidad
+        exedent = product.inventario * -1
+        if exedent == 1:
+            unidades_txt = "unidad"
+        else:
+            unidades_txt = "unidades"
+
+        self.error = f"""
+            Inventario exedido por {exedent} {unidades_txt}, solo hay
+            {inv_disponible} unidades de {product.nombre} disponibles
+        """
+
+    def update_receipt(self):
+        self.update_client_total()
+        self.add_product_to_receipt()
+        self.update_receipt_products()
+        self.receipt.cantidades = self.cantidades
+        self.receipt.totales = self.totales
+        self.receipt.total = get_total(self.totales)
+        if self.error:
+            flash(self.error)
+        else:
+            db.session.commit()
+
+    def update_client_total(self):
+        receipt_total_before_updating = self.receipt.total
+        receipt_total_after_updating = get_total(self.totales)
+        total_change = receipt_total_before_updating - receipt_total_after_updating
+        self.client.total -= total_change
+
+    def add_product_to_receipt(self):
+        try:
+            codigo = request.form["product_search_term"]
+        except KeyError:
+            codigo = ""
+        product = get_product(codigo)
+        if product is not None:
+            self.cantidades[product.codigo] = 0
+            self.totales[product.codigo] = 0
+
+    def update_receipt_products(self):
+        self.products = {}
+        codigos = []
+        for code in self.cantidades:
+            codigos.append(code)
+
+        for code in codigos[::-1]:
+            product = get_product(code)
+            if product is not None:
+                self.products[code] = product
+            else:
+                self.cantidades.pop(code)
+                self.receipt.cantidades = self.cantidades
+                self.totales.pop(code)
+                self.receipt.totales = self.totales
+
+        filler = 6 - len(self.products)
+        if filler > 0:
+            for i in range(filler):
+                self.products[i] = DummyProduct()
 
 
 class DummyProduct:
@@ -258,37 +318,28 @@ class DummyProduct:
         self.inventario = 0
 
 
-def get_receipt_products(receipt):
-    products = {}
-    cantidades = obj_as_dict(receipt.cantidades)
-    totales = obj_as_dict(receipt.totales)
-    codigos = []
-    for code in cantidades:
-        codigos.append(code)
-
-    for code in codigos[::-1]:
-        product = get_product(code)
-        if product is not None:
-            products[code] = product
-        else:
-            cantidades.pop(code)
-            receipt.cantidades = cantidades
-            totales.pop(code)
-            receipt.totales = totales
-            db.session.commit()
-
-    filler = 6 - len(products)
-    if filler > 0:
-        for i in range(filler):
-            products[i] = DummyProduct()
-
-    return products
-
-
 def get_receipt(receipt_id):
     receipt = Receipt.query.get(receipt_id)
 
     return receipt
+
+
+def get_total(totals):
+    total = 0
+    for key in totals:
+        total += totals[key]
+
+    return round(total, 2)
+
+
+def get_aasm_image():
+    references_path = os.path.join(
+        current_app.static_folder, 'references.json')
+    with open(references_path) as aasm_reference_file:
+        aasm_reference = json.load(aasm_reference_file)
+    aasm_image = aasm_reference["aasm"]
+
+    return aasm_image
 
 
 def get_all_groups():
@@ -309,11 +360,11 @@ def get_autocomplete_client_data():
     return autocomplete_clients
 
 
-def get_autocomplete_product_data(receipt):
+def get_autocomplete_product_data(cantidades):
     products = Product.query.all()
     autocomplete_products = []
     for product in products:
-        if product.codigo not in receipt.cantidades:
+        if product.codigo not in cantidades:
             autocomplete_products.append(product.nombre)
             autocomplete_products.append(product.codigo)
 

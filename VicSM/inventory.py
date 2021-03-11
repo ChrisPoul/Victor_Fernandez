@@ -27,13 +27,11 @@ for head in heads:
 @bp.route('/inventory', methods=('POST', 'GET'))
 def inventory():
     page = request.args.get('page', 1, type=int)
-    products = Product.query.paginate(page=page, per_page=6)
+    products = get_products(page=page)
     autocomplete_inv = get_autocomplete_data()
     if request.method == 'POST':
         search_term = request.form["search_term"]
-        products = get_products(search_term)
-        if not products:
-            products = Product.query.all()
+        products = get_products(search_term, page)
 
     return render_template(
         'inventory/inventory.html', products=products,
@@ -44,40 +42,38 @@ def inventory():
 
 @bp.route('/add_product', methods=('GET', 'POST'))
 def add_product():
-    form_values = {}
+    form = create_new_form()
     for key in heads:
         if key != "imagen":
-            form_values[key] = ""
+            form[key] = ""
 
     if request.method == 'POST':
         imagen_file = request.files["imagen"]
         imagen = imagen_file.filename
         if not imagen:
             imagen = "default.png"
-        for key in form_values:
-            form_values[key] = request.form[key]
+        for key in form:
+            form[key] = request.form[key]
         error = None
 
         try:
-            float(form_values["mi_precio"])
-            float(form_values["precio_venta"])
-            int(form_values["inventario"])
+            validate_form_numbers(form)
         except ValueError:
             error = "Introdujo un número invalido"
 
         if not error:
             product = Product(
-                grupo=form_values["grupo"],
-                serie=form_values["serie"],
-                codigo=form_values["codigo"],
-                nombre=form_values["nombre"],
-                descripcion=form_values["descripcion"],
-                marca=form_values["marca"],
+                grupo=form["grupo"],
+                serie=form["serie"],
+                codigo=form["codigo"],
+                nombre=form["nombre"],
+                descripcion=form["descripcion"],
+                marca=form["marca"],
                 imagen=imagen,
-                mi_precio=form_values["mi_precio"],
-                precio_venta=form_values["precio_venta"],
-                inventario=form_values["inventario"],
-                inv_ref=form_values["inventario"]
+                mi_precio=form["mi_precio"],
+                precio_venta=form["precio_venta"],
+                inventario=form["inventario"],
+                inv_ref=form["inventario"]
             )
             error = add_item(product)
             if not error:
@@ -88,7 +84,7 @@ def add_product():
 
     return render_template(
         'inventory/add_product.html', heads=heads,
-        form_values=form_values
+        form=form
     )
 
 
@@ -148,26 +144,27 @@ def format_price(num):
     if "." not in num:
         num += ".00"
 
-    num_parts = num.split(".")
-    num_int = num_parts[0]
-    num_dec = num_parts[1]
-
+    num_int, num_dec = num.split(".")
     if len(num_dec) == 1:
         num_dec += "0"
 
+    num_int = add_commas_to_num(num_int)
+    num = f"${num_int}.{num_dec}"
+
+    return num
+
+
+def add_commas_to_num(num_str):
     comma_track = 1
     int_with_commas = ""
-    for i, num in enumerate(num_int[::-1]):
+    for i, num in enumerate(num_str[::-1]):
         int_with_commas += num
-        if comma_track == 3 and i != len(num_int)-1:
+        if comma_track == 3 and i != len(num_str)-1:
             int_with_commas += ","
             comma_track = 0
         comma_track += 1
 
-    num_int = int_with_commas[::-1]
-    num = f"${num_int}.{num_dec}"
-
-    return num
+    return int_with_commas[::-1]
 
 
 def add_iva(num):
@@ -176,18 +173,39 @@ def add_iva(num):
     return format_price(num)
 
 
-def get_products(search_term=None):
-    products = Product.query.filter_by(codigo=search_term).all()
-    if not products:
-        products = Product.query.filter_by(grupo=search_term).all()
-    if not products:
-        products = Product.query.filter_by(serie=search_term).all()
-    if not products:
-        products = Product.query.filter_by(nombre=search_term).all()
-    if not products:
-        products = Product.query.filter_by(marca=search_term).all()
-    if not products:
-        products = Product.query.all()
+def create_new_form():
+    form = {}
+    for key in heads:
+        if key != "imagen":
+            form[key] = ""
+
+    return form
+
+
+def validate_form_numbers(form):
+    float(form["mi_precio"])
+    float(form["precio_venta"])
+    int(form["inventario"])
+
+
+def get_products(search_term=None, page=None):
+    items_per_page = 7
+    products = Product.query.filter_by(codigo=search_term).paginate(
+        page=page, per_page=items_per_page)
+    if not products.items:
+        products = Product.query.filter_by(grupo=search_term).paginate(
+            page=page, per_page=items_per_page)
+    if not products.items:
+        products = Product.query.filter_by(serie=search_term).paginate(
+            page=page, per_page=items_per_page)
+    if not products.items:
+        products = Product.query.filter_by(nombre=search_term).paginate(
+            page=page, per_page=items_per_page)
+    if not products.items:
+        products = Product.query.filter_by(marca=search_term).paginate(
+            page=page, per_page=items_per_page)
+    if not products.items:
+        products = Product.query.paginate(page=page, per_page=items_per_page)
 
     return products
 
