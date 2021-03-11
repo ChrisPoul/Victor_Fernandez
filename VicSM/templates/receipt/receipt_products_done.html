@@ -16,8 +16,9 @@
         {% elif head == "descripcion" %}
             <td class="justified">{{ products[code][head] }}</td>
         {% elif head == "imagen" %}
-            <td>
-            <image class="my_image" src="{{ url_for('static', filename='images/{}'.format(products[code][head])) }}">
+            <td class="centered">
+            <image class="my_image" 
+                src="{{ url_for('static', filename='images/{}'.format(products[code][head])) }}">
             </image>
             </td>
         {% elif head == "total" %}
@@ -29,11 +30,11 @@
                 {% endif %}
             </td>
         {% elif head == "precio_venta" %}
-            <td>{{ add_iva(products[code][head]) }}</td>
+            <td class="centered">{{ add_iva(products[code][head]) }}</td>
         {% elif head == "mas_iva" %}
-            <td>{{ add_iva(products[code]["precio_venta"] * 1.16) }}</td>
+            <td class="centered">{{ add_iva(products[code]["precio_venta"] * 1.16) }}</td>
         {% else %}
-        <td class="centered">{{ products[code][head] }}</td>
+            <td class="centered">{{ products[code][head] }}</td>
         {% endif %}
         {% endfor %}
     </tr>

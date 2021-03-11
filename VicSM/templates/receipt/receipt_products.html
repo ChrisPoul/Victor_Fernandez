@@ -32,8 +32,10 @@
         {% elif head == "descripcion" %}
             <td class="justified">{{ products[code][head] }}</td>
         {% elif head == "imagen" %}
-            <td>
-            <image class="my_image" src="{{ url_for('static', filename='images/{}'.format(products[code][head])) }}"></image>
+            <td class="centered">
+            <image class="my_image" 
+                src="{{ url_for('static', filename='images/{}'.format(products[code][head])) }}">
+            </image>
             </td>
         {% elif head == "total" %}
             <td class="centered">
