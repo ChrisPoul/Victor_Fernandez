@@ -36,16 +36,12 @@ def new_receipt(client_id):
     autocomplete_client_receipt = get_autocomplete_client_data()
 
     if request.method == "POST":
-        try:
-            search_term = request.form['search_term']
-            client = get_client(search_term)
-        except KeyError:
-            pass
+        search_term = request.form['search_term']
+        client = get_client(search_term)
 
     if client:
         receipt = Receipt(client_id=client.id)
         add_item(receipt)
-
         return redirect(
             url_for('receipt.edit_receipt', receipt_id=receipt.id)
         )
@@ -115,6 +111,7 @@ def receipt_done(receipt_id):
 def remove_product(receipt_id, codigo):
     current_receipt = CurrentReceipt(receipt_id)
     current_receipt.remove_product(codigo)
+    current_receipt.update_receipt()
 
     return redirect(
         url_for('receipt.edit_receipt', receipt_id=receipt_id)
@@ -123,20 +120,12 @@ def remove_product(receipt_id, codigo):
 
 @bp.route('/<int:receipt_id>/delete_receipt')
 def delete_receipt(receipt_id):
-    receipt = get_receipt(receipt_id)
-    for code in receipt.cantidades:
-        product = get_product(code)
-        if product:
-            cantidad = receipt.cantidades[code]
-            product.inventario += cantidad
-            product.unidades_vendidas -= cantidad
-    client = receipt.author
-    client.total -= receipt.total
-    db.session.delete(receipt)
-    db.session.commit()
+    current_receipt = CurrentReceipt(receipt_id)
+    client_id = current_receipt.client.id
+    current_receipt.delete_receipt()
 
     return redirect(
-        url_for('client.profile', client_id=receipt.client_id)
+        url_for('client.profile', client_id=client_id)
     )
 
 
@@ -256,9 +245,9 @@ class CurrentReceipt:
             db.session.commit()
 
     def update_client_total(self):
-        receipt_total_before_updating = self.receipt.total
-        receipt_total_after_updating = get_total(self.totales)
-        total_change = receipt_total_before_updating - receipt_total_after_updating
+        total_before_updating = self.receipt.total
+        total_after_updating = get_total(self.totales)
+        total_change = total_before_updating - total_after_updating
         self.client.total -= total_change
 
     def add_product(self):
@@ -294,13 +283,23 @@ class CurrentReceipt:
 
     def remove_product(self, code):
         product = get_product(code)
-        cantidad = self.cantidades[code]
-        product.inventario += cantidad
-        product.unidades_vendidas -= cantidad
+        if product:
+            cantidad = self.cantidades[code]
+            product.inventario += cantidad
+            product.unidades_vendidas -= cantidad
+        try:
+            self.cantidades.pop(code)
+            self.totales.pop(code)
+        except KeyError:
+            pass
 
-        self.cantidades.pop(code)
-        self.totales.pop(code)
-        self.update_receipt()
+    def delete_receipt(self):
+        for code in self.products:
+            self.remove_product(code)
+
+        self.update_client_total()
+        db.session.delete(self.receipt)
+        db.session.commit()
 
 
 class DummyProduct:
