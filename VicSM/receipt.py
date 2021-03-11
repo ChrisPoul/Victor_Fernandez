@@ -93,7 +93,7 @@ for head in product_heads:
 
 @bp.route('/<int:receipt_id>/receipt_done')
 def receipt_done(receipt_id):
-    current_receipt = CurrentReceipt()
+    current_receipt = CurrentReceipt(receipt_id)
     receipt = current_receipt.receipt
     products = current_receipt.products
     client = current_receipt.client
@@ -113,25 +113,8 @@ def receipt_done(receipt_id):
 
 @bp.route('/<int:receipt_id>/<string:codigo>/remove_product')
 def remove_product(receipt_id, codigo):
-    receipt = get_receipt(receipt_id)
-    cantidades = obj_as_dict(receipt.cantidades)
-    totales = obj_as_dict(receipt.totales)
-
-    product = get_product(codigo)
-    cantidad = cantidades[codigo]
-    product.inventario += cantidad
-    product.unidades_vendidas -= cantidad
-
-    cantidades.pop(codigo)
-    totales.pop(codigo)
-    receipt.cantidades = cantidades
-    receipt.totales = totales
-
-    client = receipt.author
-    client.total -= receipt.total - get_total(totales)
-    receipt.total = get_total(totales)
-
-    db.session.commit()
+    current_receipt = CurrentReceipt(receipt_id)
+    current_receipt.remove_product(codigo)
 
     return redirect(
         url_for('receipt.edit_receipt', receipt_id=receipt_id)
@@ -163,6 +146,7 @@ class CurrentReceipt:
         self.aasm_image = get_aasm_image()
         self.receipt = get_receipt(receipt_id)
         self.cantidades = obj_as_dict(self.receipt.cantidades)
+        self.cant_ref = obj_as_dict(self.receipt.cant_ref)
         self.totales = obj_as_dict(self.receipt.totales)
         self.client = get_client(self.receipt.client_id)
         if not self.receipt.cambio:
@@ -199,8 +183,11 @@ class CurrentReceipt:
                 self.update_totales_total(code)
             except KeyError:
                 pass
-        if self.cantidades != self.receipt.cant_ref:
+
+        if self.cantidades != self.cant_ref:
             self.handle_change_in_cantidades()
+
+        self.cant_ref = self.cantidades
 
     def update_cantidades_cantidad(self, code):
         cantidad = request.form[code]
@@ -218,27 +205,28 @@ class CurrentReceipt:
 
     def handle_change_in_cantidades(self):
         for code in self.cantidades:
-            change = self.get_change_in_cantidades(code)
-            product = self.update_product_sales(code, change)
+            product = self.update_product_sales(code)
             if product.inventario < 0:
                 self.handle_inv_exceeded(product)
 
-    def get_change_in_cantidades(self, code):
-        new_cantidad = self.cantidades[code]
-        try:
-            previous_cantidad = self.receipt.cant_ref[code]
-        except KeyError:
-            self.receipt.cant_ref[code] = 0
-            previous_cantidad = 0
-
-        return new_cantidad - previous_cantidad
-
-    def update_product_sales(self, code, change):
+    def update_product_sales(self, code):
         product = get_product(code)
+        change = self.get_change_in_cantidades(code)
         product.unidades_vendidas += change
         product.inventario -= change
 
         return product
+
+    def get_change_in_cantidades(self, code):
+        new_cantidad = self.cantidades[code]
+        try:
+            previous_cantidad = self.cant_ref[code]
+        except KeyError:
+            self.cant_ref[code] = 0
+            previous_cantidad = 0
+        change = new_cantidad - previous_cantidad
+
+        return change
 
     def handle_inv_exceeded(self, product):
         cantidad = self.cantidades[product.codigo]
@@ -256,9 +244,10 @@ class CurrentReceipt:
 
     def update_receipt(self):
         self.update_client_total()
-        self.add_product_to_receipt()
+        self.add_product()
         self.update_receipt_products()
         self.receipt.cantidades = self.cantidades
+        self.receipt.cant_ref = self.cant_ref
         self.receipt.totales = self.totales
         self.receipt.total = get_total(self.totales)
         if self.error:
@@ -272,7 +261,7 @@ class CurrentReceipt:
         total_change = receipt_total_before_updating - receipt_total_after_updating
         self.client.total -= total_change
 
-    def add_product_to_receipt(self):
+    def add_product(self):
         try:
             codigo = request.form["product_search_term"]
         except KeyError:
@@ -302,6 +291,16 @@ class CurrentReceipt:
         if filler > 0:
             for i in range(filler):
                 self.products[i] = DummyProduct()
+
+    def remove_product(self, code):
+        product = get_product(code)
+        cantidad = self.cantidades[code]
+        product.inventario += cantidad
+        product.unidades_vendidas -= cantidad
+
+        self.cantidades.pop(code)
+        self.totales.pop(code)
+        self.update_receipt()
 
 
 class DummyProduct:
