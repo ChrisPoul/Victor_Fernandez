@@ -26,11 +26,12 @@ for head in heads:
 
 @bp.route('/inventory', methods=('POST', 'GET'))
 def inventory():
-    products = get_products()
+    page = request.args.get('page', 1, type=int)
+    products = get_products(page=page)
     autocomplete_inv = get_autocomplete_data()
     if request.method == 'POST':
         search_term = request.form["search_term"]
-        products = get_products(search_term)
+        products = get_products(search_term, page)
 
     return render_template(
         'inventory/inventory.html', products=products,
@@ -187,8 +188,7 @@ def validate_form_numbers(form):
     int(form["inventario"])
 
 
-def get_products(search_term=None):
-    page = request.args.get('page', 1, type=int)
+def get_products(search_term=None, page=None):
     items_per_page = 7
     products = Product.query.filter_by(codigo=search_term).paginate(
         page=page, per_page=items_per_page)
