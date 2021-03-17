@@ -1,0 +1,41 @@
+<table style="text-align: center;">
+    {% for head in heads %}
+        <th>{{ heads[head] }}</th>
+    {% endfor %}
+    {% for product in products_lst %}
+    <tr>
+        {% for head in heads %}
+        <td>
+        {% if head == "imagen" %}
+            <image class="my_image" src="{{ url_for('static', filename='images/{}'.format(product[head])) }}">
+            </image>
+        {% elif head == "codigo" %}
+        <a style="font-size: x-small;" class="default_link" href="{{ url_for('inventory.update_product', codigo=product['codigo']) }}">
+            {{ product[head] }}
+        </a>
+        {% elif head == "precio_venta" or head == "mi_precio" %}
+            {{ format_price(product[head]) }}
+        {% elif head == "descripcion" %}
+            <p class="my_p">{{ product[head] }}</p>
+        {% elif head == "inventario" %}
+            {% if product[head] >= 300 %}
+            <p style="color: green;" class="inv_amnt">
+                {{ product[head] }}
+            </p>
+            {% elif 100 < product[head] < 300 %}
+            <p style="color: orange;" class="inv_amnt">
+                {{ product[head] }}
+            </p>
+            {% elif product[head] <= 100 %}
+            <p style="color: red;" class="inv_amnt">
+                {{ product[head] }}
+            </p>
+            {% endif %}
+        {% else %}
+            {{ product[head] }}
+        {% endif %}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>

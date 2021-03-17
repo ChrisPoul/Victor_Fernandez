@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <h1>
+        <a href="{{ url_for('inventory.inventory') }}">
+            {% block title %}Inventario{% endblock %}
+        </a>
+    </h1>
+    </a>
+    <a href="{{ url_for('inventory.inventory') }}">
+        <h1>Volver a Buscar</h1>
+    </a>
+{% endblock %}
+
+{% block content %}
+{% include 'inventory/inv_body.html' %}
+{% endblock %}
